@@ -23,11 +23,11 @@ Confirm the site is production-ready: responsive, accessible, and free of obviou
 - netlify-deploy.todo.md
 
 ## Tasks
-- [ ] Run `npm run lint` — 0 errors
-- [ ] Run `npm run build` — 0 errors
+- [x] Run `npm run lint` — 0 errors
+- [x] Run `npm run build` — 0 errors
 - [ ] Responsive check: Home at 375/768/1280 — no overflow, no broken layout
-- [ ] Responsive check: Projects, About, Contact, History at 375px
-- [ ] Keyboard nav: Tab through Home — all interactive elements reachable and focusable
+- [x] Responsive check: Projects, About, Contact, History at 375px
+- [x] Keyboard nav: Tab through Home — all interactive elements reachable and focusable
 - [ ] Check heading order on each page with DevTools or browser extension
 - [ ] Verify `<nav>` landmark wraps primary navigation in Header
 - [ ] Verify `<main>` landmark wraps page content in Layout

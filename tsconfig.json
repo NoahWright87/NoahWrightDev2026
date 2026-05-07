@@ -38,6 +38,8 @@
   ],
   "exclude": [
     "node_modules",
-    "nextscaffoldtmp"
+    "nextscaffoldtmp",
+    "playwright.config.ts",
+    "tests"
   ]
 }

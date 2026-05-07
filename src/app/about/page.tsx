@@ -6,6 +6,7 @@ import {
   Container,
   Heading,
   Text,
+  Button,
   Link,
   Menu,
   MenuItem,
@@ -60,6 +61,15 @@ export default function AboutPage() {
             <Text>
               [PLACEHOLDER: Personal interests, family, community involvement.]
             </Text>
+          </Container>
+
+          <Container direction="horizontal" itemSpacing="md" padding="none">
+            <Link href="/contact">
+              <Button variant="solid" color="primary">Get in Touch</Button>
+            </Link>
+            <a href={SITE.resumeUrl} download>
+              <Button variant="outline">Download Resume</Button>
+            </a>
           </Container>
         </Container>
       </Container>

@@ -20,9 +20,9 @@ Ensure every page has correct, unique metadata and the site is discoverable by s
 - routing-and-ia.todo.md
 
 ## Tasks
-- [ ] Confirm `metadataBase` in root layout is `https://noahwright.dev`
-- [ ] Add `robots.ts` (Next.js App Router metadata API) or static `public/robots.txt`
-- [ ] Add `sitemap.ts` (Next.js App Router metadata API) listing all 5 routes
+- [x] Confirm `metadataBase` in root layout is `https://noahwright.dev`
+- [x] Add `robots.ts` (Next.js App Router metadata API) or static `public/robots.txt`
+- [x] Add `sitemap.ts` (Next.js App Router metadata API) listing all 5 routes
 - [ ] Verify each page returns a unique `<title>` in view-source
 - [ ] Verify each page returns a unique `<meta name="description">` in view-source
 - [ ] Check OG tags are present in view-source on home page

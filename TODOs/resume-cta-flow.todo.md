@@ -22,7 +22,7 @@ Ensure the resume PDF is in place, the CTA on the home page works end-to-end, an
 - [ ] Confirm `SITE.resumeUrl` in `src/lib/site.ts` matches filename exactly
 - [ ] Confirm home page `<Button as="a" href={SITE.resumeUrl} download>` renders a real `<a download>` tag in the HTML
 - [ ] Test download: desktop Chrome, desktop Safari or Firefox, mobile Chrome
-- [ ] Add `[[headers]]` in `netlify.toml` for `/*.pdf` to force `Content-Disposition: attachment` if download attribute alone isn't sufficient
+- [x] Add `[[headers]]` in `netlify.toml` for `/*.pdf` to force `Content-Disposition: attachment` if download attribute alone isn't sufficient
 
 ## Verification
 - Clicking the button on home page downloads the correct PDF file

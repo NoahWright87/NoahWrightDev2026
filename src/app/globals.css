@@ -34,3 +34,17 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+/* @noahwright/design adds desktop-only gutter borders to Container at >=1024px.
+   Disable them for this site to keep layout surfaces clean and consistent. */
+@media (min-width: 1024px) {
+  .nw-container--gutters,
+  .nw-container--gutter-border-subtle,
+  .nw-container--gutter-border-medium,
+  .nw-container--gutter-border-strong,
+  .nw-container--gutter-shadow-sm,
+  .nw-container--gutter-shadow-md,
+  .nw-container--gutter-shadow-lg {
+    box-shadow: none !important;
+  }
+}

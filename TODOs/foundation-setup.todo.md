@@ -33,9 +33,9 @@ Establish a runnable Next.js App Router project with the design system installed
 - [x] Create `src/lib/site.ts`
 - [x] Create `src/lib/projects.ts`
 - [x] Create `netlify.toml` with build command
-- [ ] Add resume PDF placeholder to `public/` (or document where it should be placed)
-- [ ] Run `npm run build` — confirm 0 errors
-- [ ] Run `npm run lint` — confirm 0 errors
+- [x] Add resume PDF placeholder to `public/` (or document where it should be placed)
+- [x] Run `npm run build` — confirm 0 errors
+- [x] Run `npm run lint` — confirm 0 errors
 
 ## Verification
 - `npm run build` exits with code 0 locally
