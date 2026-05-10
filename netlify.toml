@@ -6,6 +6,7 @@
   NEXT_TELEMETRY_DISABLED = "1"
   NODE_VERSION = "20"
   NPM_FLAGS = "--legacy-peer-deps"
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_CLARITY_ID"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
