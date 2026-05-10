@@ -9,8 +9,8 @@ export const SITE = {
   tagline: "[PLACEHOLDER: engineering leader tagline]",
   description:
     "[PLACEHOLDER: 1-2 sentence site description for SEO and home hero]",
-  email: "hello@noahwright.dev",
-  linkedIn: "https://www.linkedin.com/in/noahwright87",
+  email: "noah@noahwright.dev",
+  linkedIn: "https://www.linkedin.com/in/noah-wright-dev/",
   resumeUrl: "/noah-wright-resume-2026.pdf",
   /** URL of the previous site iteration — update when archive.noahwright.dev is live */
   previousSiteUrl: "https://noahwright.dev",
