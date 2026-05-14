@@ -24,7 +24,7 @@ Establish the visual identity of the new site by configuring real brand colors a
 - [ ] Visual check: home page looks intentional in both light and dark system preference
 - [ ] Decide on font strategy (system stack vs. custom font)
 - [ ] If custom font: load via `next/font` and inject family token into theme
-- [ ] Remove any remaining scaffold CSS classes from `page.module.css` (or delete the file)
+- [x] Remove any remaining scaffold CSS classes from `page.module.css` (or delete the file)
 
 ## Verification
 - Theme tokens appear in DevTools `:root` with correct values

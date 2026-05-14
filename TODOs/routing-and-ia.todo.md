@@ -24,9 +24,9 @@ Confirm all launch routes exist, are reachable, and return correct HTTP status c
 - [x] `/about` — About page created
 - [x] `/contact` — Contact page created
 - [x] `/history` — History page created
-- [ ] Confirm `/history` appears in footer or secondary nav (decide placement)
-- [ ] Verify each page has unique title and description metadata
-- [ ] Navigate all routes in dev mode — confirm no 404s or broken links
+- [x] Confirm `/history` appears in footer or secondary nav (decide placement)
+- [x] Verify each page has unique title and description metadata
+- [x] Navigate all routes in dev mode — confirm no 404s or broken links
 - [x] Confirm nav items in Header match the defined `NAV_ITEMS` in `src/lib/site.ts`
 - [x] Smoke-test mobile nav (hamburger opens, links work, closes after tap)
 

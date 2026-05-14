@@ -20,8 +20,8 @@ Ensure `@noahwright/design` styles, components, and theme utilities all load cor
 - [x] Import `@noahwright/design/dist/index.css` in root layout
 - [x] Verify CSS actually reaches browser in dev mode (check DevTools for component class names like `nw-button`)
 - [x] Run `npm run build` — confirm no "can't resolve" or CSS import errors
-- [ ] If ESM resolution errors occur, add `transpilePackages: ["@noahwright/design"]` to `next.config.ts`
-- [ ] Confirm `<style id="nw-theme">` is present in page source (SSR injection working)
+- [x] If ESM resolution errors occur, add `transpilePackages: ["@noahwright/design"]` to `next.config.ts`
+- [x] Confirm `<style id="nw-theme">` is present in page source (SSR injection working)
 - [x] Smoke-test each component type used site-wide: Header, Footer, Layout, Container, Heading, Text, Button, Link, Card, Pill, Menu, MenuItem, HamburgerMenu
 
 ## Verification

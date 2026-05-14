@@ -16,9 +16,9 @@ Provide a minimal, honest record of past site iterations for curious visitors an
 - foundation-setup.todo.md ✅
 
 ## Tasks
-- [ ] Confirm link text and URL for previous site in `SITE.previousSiteUrl`
+- [x] Confirm link text and URL for previous site in `SITE.previousSiteUrl`
 - [ ] Review history page copy — update dates, stack descriptions, and iteration notes as needed
-- [ ] Decide: should History appear in footer nav, secondary nav, or only via direct URL?
+- [x] Decide: should History appear in footer nav, secondary nav, or only via direct URL?
 - [ ] Once archive.noahwright.dev is live, update `SITE.previousSiteUrl`
 
 ## Verification
