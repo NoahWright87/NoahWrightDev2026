@@ -39,9 +39,6 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
           center={
             <Container direction="vertical" itemSpacing="xs" padding="none">
               <Text>© {new Date().getFullYear()} {SITE.name}</Text>
-              <nav aria-label="Secondary">
-                <Link href="/history">History</Link>
-              </nav>
             </Container>
           }
         />

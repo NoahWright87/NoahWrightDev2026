@@ -3,7 +3,8 @@ import HomePageClient from "@/components/pages/HomePageClient";
 
 export const metadata: Metadata = {
   title: "Home",
-  description: "[PLACEHOLDER: Home page description for metadata and SEO.]",
+  description:
+    "Noah Wright is an engineering leader and software developer building practical products, strong teams, and thoughtful user experiences.",
 };
 
 export default function HomePage() {

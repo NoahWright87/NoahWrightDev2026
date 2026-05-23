@@ -1,6 +1,7 @@
 "use client";
 
-import { Container, Heading, Text, Card, Link, Pill } from "@noahwright/design";
+import { Container, Heading, Text, Card, Link, Image, Button } from "@noahwright/design";
+import GitHubIcon from "../icons/GitHubIcon";
 import SiteShell from "@/components/SiteShell";
 import { projects } from "@/lib/projects";
 
@@ -10,7 +11,10 @@ export default function ProjectsPageClient() {
       <Container padding="xl">
         <Container direction="vertical" itemSpacing="lg">
           <Heading level={1}>Projects</Heading>
-          <Text>[PLACEHOLDER: brief intro describing the types of projects shown here]</Text>
+          <Text>
+            A mix of tools, games, and platform experiments that reflect how I like to build:
+            practical foundations, interesting technical constraints, and a little room for play.
+          </Text>
         </Container>
       </Container>
 
@@ -25,22 +29,41 @@ export default function ProjectsPageClient() {
                   ? project.tags.join(" · ")
                   : undefined
               }
-            >
-              <Text>{project.summary}</Text>
-              <div style={{ marginTop: "0.75rem" }}>
-                <Container direction="horizontal" itemSpacing="sm" padding="none">
-                  {project.tags.map((tag) => (
-                    <Pill key={tag}>{tag}</Pill>
-                  ))}
-                </Container>
-              </div>
-              {project.href && (
-                <div style={{ marginTop: "0.75rem" }}>
-                  <Link href={project.href} isExternal>
-                    {project.hrefLabel ?? project.href}
+              footer={
+                <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", gap: "0.75rem" }}>
+                  {project.id === "noahwrightdev2026" ? (
+                    <Link href="/history">
+                      <Button variant="outline">History</Button>
+                    </Link>
+                  ) : null}
+                  <Link href={project.repoUrl} isExternal>
+                    <Button variant="ghost">
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                        <GitHubIcon size={18} />
+                        GitHub
+                      </span>
+                    </Button>
+                  </Link>
+                  <Link href={project.liveUrl} isExternal>
+                    <Button variant="solid">Live Site</Button>
                   </Link>
                 </div>
-              )}
+              }
+            >
+              <div style={{ display: "flex", alignItems: "flex-start", gap: "1.5rem" }}>
+                <div style={{ flex: 1 }}>
+                  <Text>{project.summary}</Text>
+                </div>
+                <div style={{ flexShrink: 0, alignSelf: "flex-start" }}>
+                  <Image
+                    src={project.imageSrc}
+                    alt={`${project.name} placeholder preview image`}
+                    aspectRatio="16/9"
+                    rounded="md"
+                    style={{ minWidth: 160, maxWidth: 220 }}
+                  />
+                </div>
+              </div>
             </Card>
           ))}
         </Container>

@@ -3,7 +3,8 @@ import ProjectsPageClient from "@/components/pages/ProjectsPageClient";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: "[PLACEHOLDER: Projects page description for metadata and SEO.]",
+  description:
+    "Explore software, game, and design system projects by Noah Wright, including live demos and source code.",
 };
 
 export default function ProjectsPage() {

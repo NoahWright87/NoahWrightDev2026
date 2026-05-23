@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Container, Heading, Text, Button, Link } from "@noahwright/design";
 import SiteShell from "@/components/SiteShell";
+import LinkedInIcon from "@/components/icons/LinkedInIcon";
+import ResumeIcon from "@/components/icons/ResumeIcon";
 import { SITE } from "@/lib/site";
 
 const HERO_ROTATION = [
@@ -80,10 +82,20 @@ export default function HomePageClient() {
           </div>
           <Container direction="horizontal" itemSpacing="sm">
             <a href={SITE.resumeUrl} download>
-              <Button variant="solid" color="primary">Download Resume</Button>
+              <Button variant="solid" color="primary">
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <ResumeIcon size={18} />
+                  Download Resume
+                </span>
+              </Button>
             </a>
             <a href={SITE.linkedIn} target="_blank" rel="noreferrer">
-              <Button variant="outline">LinkedIn</Button>
+              <Button variant="outline">
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <LinkedInIcon size={18} />
+                  LinkedIn
+                </span>
+              </Button>
             </a>
           </Container>
         </Container>
