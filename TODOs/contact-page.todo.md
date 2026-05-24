@@ -19,12 +19,12 @@ Finalize the contact page with real copy and confirmed working links. Launch tar
 - design-system-integration.todo.md
 
 ## Tasks
-- [ ] Write real welcome message sentence(s)
-- [ ] Confirm `SITE.email` is correct
-- [ ] Confirm `SITE.linkedIn` is correct
-- [ ] Remove all `[PLACEHOLDER]` strings from `src/app/contact/page.tsx`
-- [ ] Test email link opens mail client correctly
-- [ ] Test LinkedIn button opens in new tab
+- [x] Write real welcome message sentence(s)
+- [x] Confirm `SITE.email` is correct
+- [x] Confirm `SITE.linkedIn` is correct
+- [x] Remove all `[PLACEHOLDER]` strings from `src/app/contact/page.tsx`
+- [x] Test email link opens mail client correctly
+- [x] Test LinkedIn button opens in new tab
 
 ## Verification
 - No `[PLACEHOLDER]` text visible

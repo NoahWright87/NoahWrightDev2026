@@ -6,12 +6,12 @@
 
 export const SITE = {
   name: "Noah Wright",
-  tagline: "[PLACEHOLDER: engineering leader tagline]",
+  tagline: "Engineering leader building tools that help teams move faster",
   description:
-    "[PLACEHOLDER: 1-2 sentence site description for SEO and home hero]",
+    "I build practical software that empowers engineers to ship with confidence. From enablement platforms to playful side projects, I focus on clear UX, strong guardrails, and measurable outcomes.",
   email: "noah@noahwright.dev",
   linkedIn: "https://www.linkedin.com/in/noah-wright-dev/",
-  resumeUrl: "/noah-wright-resume-2026.pdf",
+  resumeUrl: "/resume",
   /** URL of the previous site iteration — update when archive.noahwright.dev is live */
   previousSiteUrl: "https://noahwright.dev",
 } as const;

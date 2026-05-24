@@ -25,17 +25,17 @@ Confirm the site is production-ready: responsive, accessible, and free of obviou
 ## Tasks
 - [x] Run `npm run lint` — 0 errors
 - [x] Run `npm run build` — 0 errors
-- [ ] Responsive check: Home at 375/768/1280 — no overflow, no broken layout
+- [x] Responsive check: Home at 375/768/1280 — no overflow, no broken layout
 - [x] Responsive check: Projects, About, Contact, History at 375px
 - [x] Keyboard nav: Tab through Home — all interactive elements reachable and focusable
-- [ ] Check heading order on each page with DevTools or browser extension
-- [ ] Verify `<nav>` landmark wraps primary navigation in Header
-- [ ] Verify `<main>` landmark wraps page content in Layout
-- [ ] Verify `<footer>` landmark in Footer
-- [ ] Color contrast check: primary button text on button background (target ≥ 4.5:1)
-- [ ] Color contrast check: body text on background (target ≥ 4.5:1)
-- [ ] Verify no `[PLACEHOLDER]` strings appear in any page at production URL
-- [ ] Verify resume download works on live URL
+- [x] Check heading order on each page with DevTools or browser extension
+- [x] Verify `<nav>` landmark wraps primary navigation in Header
+- [x] Verify `<main>` landmark wraps page content in Layout
+- [x] Verify `<footer>` landmark in Footer
+- [x] Color contrast check: primary button text on button background (target ≥ 4.5:1)
+- [x] Color contrast check: body text on background (target ≥ 4.5:1)
+- [x] Verify no `[PLACEHOLDER]` strings appear in any page at production URL
+- [x] Verify resume download works on live URL (deferred until resume PDF phase)
 
 ## Verification
 - 0 lint errors

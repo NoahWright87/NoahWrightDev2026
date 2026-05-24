@@ -19,13 +19,13 @@ Replace all placeholder sections with real personal and professional narrative t
 - design-system-integration.todo.md
 
 ## Tasks
-- [ ] Decide final section headings
-- [ ] Write "Who I Am" narrative paragraph
-- [ ] Write "What I Build" or professional-focus paragraph
-- [ ] Write personal/outside-work paragraph (optional but recommended for warmth)
-- [ ] Remove all `[PLACEHOLDER]` strings from `src/app/about/page.tsx`
+- [x] Decide final section headings
+- [x] Write "Who I Am" narrative paragraph
+- [x] Write "What I Build" or professional-focus paragraph
+- [x] Write personal/outside-work paragraph (optional but recommended for warmth)
+- [x] Remove all `[PLACEHOLDER]` strings from `src/app/about/page.tsx`
 - [x] Add CTA at bottom of about page pointing to Contact or Resume
-- [ ] Visual check at 375px, 768px, 1280px
+- [x] Visual check at 375px, 768px, 1280px
 
 ## Verification
 - No `[PLACEHOLDER]` text visible

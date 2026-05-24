@@ -22,13 +22,13 @@ Configure Netlify to build and deploy the Next.js App Router site correctly on e
 ## Tasks
 - [x] Install `@netlify/plugin-nextjs` as a dev dependency: `npm install -D @netlify/plugin-nextjs`
 - [x] Update `netlify.toml` to use Next.js runtime plugin (see below)
-- [ ] Create Netlify site via Netlify dashboard or CLI, linked to this repo
+- [x] Create Netlify site via Netlify dashboard or CLI, linked to this repo
 - [x] Set `NODE_VERSION = "20"` in Netlify build environment
-- [ ] Add `NEXT_PUBLIC_CLARITY_ID` environment variable once Clarity project is created
-- [ ] Connect `noahwright.dev` custom domain in Netlify DNS settings
-- [ ] Enable HTTPS (Netlify auto-provisions Let's Encrypt)
+- [x] Add `NEXT_PUBLIC_CLARITY_ID` environment variable once Clarity project is created
+- [x] Connect `noahwright.dev` custom domain in Netlify DNS settings
+- [x] Enable HTTPS (Netlify auto-provisions Let's Encrypt)
 - [x] Add PDF header rule to `netlify.toml` for `/*.pdf` files
-- [ ] Trigger first deploy — confirm build passes and site is reachable
+- [x] Trigger first deploy — confirm build passes and site is reachable
 
 ## netlify.toml target state
 ```toml
@@ -53,7 +53,7 @@ Configure Netlify to build and deploy the Next.js App Router site correctly on e
 - Netlify build log shows 0 errors
 - Live domain `https://noahwright.dev` returns the home page
 - HTTPS cert is active (padlock in browser)
-- Resume PDF download works on live domain
+- Resume PDF download works on live domain (deferred until PDF phase)
 
 ## Done When
 Site is live at `https://noahwright.dev` and all pages and assets are reachable.

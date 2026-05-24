@@ -9,4 +9,8 @@ export const theme: Theme = {
   // Colors — will be filled in during the theme-and-brand phase
   // primary: "#...",
   // secondary: "#...",
+  primary: "#D75B1D",
+  secondary: "#6E356A",
+  foreground: "#2A1328",
+  background: "#F2E3F1",
 };

@@ -19,12 +19,12 @@ Integrate Microsoft Clarity session recording and heatmaps via a Next.js Script 
 - netlify-deploy.todo.md
 
 ## Tasks
-- [ ] Create Clarity project at clarity.microsoft.com — obtain tracking ID
+- [x] Create Clarity project at clarity.microsoft.com — obtain tracking ID
 - [ ] Add `NEXT_PUBLIC_CLARITY_ID` to `.env.local` (local dev, not committed)
 - [x] Add `.env.local` to `.gitignore` if not already present
 - [x] Add Clarity Script component to `src/app/layout.tsx` (conditional on env var)
-- [ ] Add `NEXT_PUBLIC_CLARITY_ID` to Netlify environment variables via Netlify dashboard
-- [ ] Deploy to Netlify and verify Clarity shows incoming sessions
+- [x] Add `NEXT_PUBLIC_CLARITY_ID` to Netlify environment variables via Netlify dashboard
+- [x] Deploy to Netlify and verify Clarity shows incoming sessions
 
 ## Verification
 - In production, DevTools Network shows `clarity.ms` script loaded
