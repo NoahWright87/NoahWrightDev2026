@@ -46,10 +46,7 @@ Clear statement of when this TODO file can be deleted.
 
 | File | Phase | Status |
 |---|---|---|
-| foundation-setup.todo.md | 1 | Active |
-| design-system-integration.todo.md | 1 | Active |
 | theme-and-brand.todo.md | 1 | Active |
-| routing-and-ia.todo.md | 2 | Active |
 | home-page.todo.md | 4 | Active |
 | projects-page.todo.md | 4 | Active |
 | about-page.todo.md | 4 | Active |
@@ -60,3 +57,11 @@ Clear statement of when this TODO file can be deleted.
 | seo-and-metadata.todo.md | 5 | Active |
 | netlify-deploy.todo.md | 5 | Active |
 | qa-and-accessibility.todo.md | 6 | Active |
+
+## Route-local TODO files
+
+These TODOs live next to their feature code when that is more practical than keeping them in this folder.
+
+| File | Area | Status |
+|---|---|---|
+| ../src/app/resume/resume.todo.md | Resume route | Active |

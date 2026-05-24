@@ -81,14 +81,14 @@ export default function HomePageClient() {
             </div>
           </div>
           <Container direction="horizontal" itemSpacing="sm">
-            <a href={SITE.resumeUrl} download>
+            <Link href={SITE.resumeUrl}>
               <Button variant="solid" color="primary">
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                   <ResumeIcon size={18} />
-                  Download Resume
+                  View Resume
                 </span>
               </Button>
-            </a>
+            </Link>
             <a href={SITE.linkedIn} target="_blank" rel="noreferrer">
               <Button variant="outline">
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
@@ -105,6 +105,7 @@ export default function HomePageClient() {
         <Container direction="horizontal" itemSpacing="md">
           <Link href="/projects">View Projects →</Link>
           <Link href="/about">About Me →</Link>
+          <Link href="/resume">Resume →</Link>
           <Link href="/contact">Get in Touch →</Link>
         </Container>
       </Container>

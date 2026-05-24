@@ -13,7 +13,7 @@ export default function ContactPageClient() {
         <Container direction="vertical" itemSpacing="lg">
           <Heading level={1}>Get in Touch</Heading>
           <Text>
-            I'm always interested in new opportunities, collaborations, and interesting conversations. Whether you have a project in mind, want to discuss engineering leadership, or just want to connect, feel free to reach out.
+            I&rsquo;m always interested in new opportunities, collaborations, and interesting conversations. Whether you have a project in mind, want to discuss engineering leadership, or just want to connect, feel free to reach out.
           </Text>
           <Container direction="horizontal" itemSpacing="sm">
             <a href={`mailto:${SITE.email}`}>

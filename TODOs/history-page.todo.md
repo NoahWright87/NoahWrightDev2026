@@ -17,7 +17,7 @@ Provide a minimal, honest record of past site iterations for curious visitors an
 
 ## Tasks
 - [x] Confirm link text and URL for previous site in `SITE.previousSiteUrl`
-- [ ] Review history page copy — update dates, stack descriptions, and iteration notes as needed
+- [x] Review history page copy — update dates, stack descriptions, and iteration notes as needed
 - [x] Decide: should History appear in footer nav, secondary nav, or only via direct URL?
 - [ ] Once archive.noahwright.dev is live, update `SITE.previousSiteUrl`
 

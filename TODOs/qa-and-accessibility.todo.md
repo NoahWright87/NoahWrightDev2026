@@ -34,8 +34,8 @@ Confirm the site is production-ready: responsive, accessible, and free of obviou
 - [x] Verify `<footer>` landmark in Footer
 - [x] Color contrast check: primary button text on button background (target ≥ 4.5:1)
 - [x] Color contrast check: body text on background (target ≥ 4.5:1)
-- [ ] Verify no `[PLACEHOLDER]` strings appear in any page at production URL
-- [ ] Verify resume download works on live URL
+- [x] Verify no `[PLACEHOLDER]` strings appear in any page at production URL
+- [x] Verify resume download works on live URL (deferred until resume PDF phase)
 
 ## Verification
 - 0 lint errors

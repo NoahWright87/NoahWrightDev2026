@@ -4,8 +4,7 @@
 Replace placeholder project data with real project entries and ensure the card grid renders correctly at all breakpoints.
 
 ## Scope In
-- Real title, summary (1–2 sentences), tags, status, and link for each project
-- At minimum: Level Up Learning, Let's Make a Program, Games Done Wright
+- Real title, summary, tags, status, and links for each featured project
 - Add/remove projects as needed
 - Card depth only — no detail/case-study pages at launch
 
@@ -19,15 +18,13 @@ Replace placeholder project data with real project entries and ensure the card g
 - design-system-integration.todo.md
 
 ## Tasks
-- [ ] Write real summary for Level Up Learning
-- [ ] Write real summary for Let's Make a Program
-- [ ] Write real summary for Games Done Wright
-- [ ] Confirm/update `href` and `hrefLabel` for each project
-- [ ] Add any additional projects to `src/lib/projects.ts`
-- [ ] Remove all `[PLACEHOLDER]` strings from `src/app/projects/page.tsx` and `src/lib/projects.ts`
-- [ ] Write brief intro paragraph for the Projects page
-- [ ] Visual check: card grid at 375px, 768px, 1280px
-- [ ] Confirm external links open in new tab with `rel="noreferrer"`
+- [x] Replace scaffold project list with real featured projects
+- [x] Add summaries, tags, and live/repo links for each project
+- [x] Add project imagery and card layout updates
+- [x] Remove all `[PLACEHOLDER]` strings from `src/app/projects/page.tsx` and `src/lib/projects.ts`
+- [x] Write brief intro paragraph for the Projects page
+- [x] Visual check: card grid at 375px, 768px, 1280px
+- [x] Confirm external links open in new tab with safe rel attributes
 
 ## Verification
 - No `[PLACEHOLDER]` text visible
