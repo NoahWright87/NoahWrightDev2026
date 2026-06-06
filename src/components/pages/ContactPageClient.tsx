@@ -17,19 +17,13 @@ export default function ContactPageClient() {
           </Text>
           <Container direction="horizontal" itemSpacing="sm">
             <a href={`mailto:${SITE.email}`}>
-              <Button variant="solid" color="primary">
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                  <EmailIcon size={18} />
-                  Email Me
-                </span>
+              <Button variant="solid" color="primary" icon={<EmailIcon size={18} />}>
+                Email Me
               </Button>
             </a>
             <a href={SITE.linkedIn} target="_blank" rel="noreferrer">
-              <Button variant="outline">
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                  <LinkedInIcon size={18} />
-                  Connect on LinkedIn
-                </span>
+              <Button variant="outline" icon={<LinkedInIcon size={18} />}>
+                Connect on LinkedIn
               </Button>
             </a>
           </Container>
