@@ -1,6 +1,6 @@
 "use client";
 
-import { Container, Heading, Text, Card, Link, Image, Button } from "@noahwright/design";
+import { Container, Heading, Text, Card, CardFooter, Link, Image, Button } from "@noahwright/design";
 import GitHubIcon from "../icons/GitHubIcon";
 import SiteShell from "@/components/SiteShell";
 import { projects } from "@/lib/projects";
@@ -30,24 +30,23 @@ export default function ProjectsPageClient() {
                   : undefined
               }
               footer={
-                <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", gap: "0.75rem" }}>
-                  {project.id === "noahwrightdev2026" ? (
-                    <Link href="/history">
-                      <Button variant="outline">History</Button>
-                    </Link>
-                  ) : null}
-                  <Link href={project.repoUrl} isExternal>
-                    <Button variant="ghost">
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-                        <GitHubIcon size={18} />
+                <CardFooter align="end">
+                  <Container direction="horizontal" itemSpacing="sm" padding="none" noGutters>
+                    {project.id === "noahwrightdev2026" ? (
+                      <Link href="/history">
+                        <Button variant="outline">History</Button>
+                      </Link>
+                    ) : null}
+                    <Link href={project.repoUrl} isExternal>
+                      <Button variant="ghost" icon={<GitHubIcon size={18} />}>
                         GitHub
-                      </span>
-                    </Button>
-                  </Link>
-                  <Link href={project.liveUrl} isExternal>
-                    <Button variant="solid">Live Site</Button>
-                  </Link>
-                </div>
+                      </Button>
+                    </Link>
+                    <Link href={project.liveUrl} isExternal>
+                      <Button variant="solid">Live Site</Button>
+                    </Link>
+                  </Container>
+                </CardFooter>
               }
             >
               <div style={{ display: "flex", alignItems: "flex-start", gap: "1.5rem" }}>
