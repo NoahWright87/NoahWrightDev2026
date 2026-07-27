@@ -33,15 +33,6 @@ export default function ProjectsPageClient() {
                   ))}
                 </Container>
               ) : undefined}
-              image={(
-                <Image
-                  src={project.imageSrc}
-                  alt={`${project.name} placeholder preview image`}
-                  aspectRatio="16/9"
-                  rounded="md"
-                />
-              )}
-              mediaPosition={index % 2 === 0 ? "left" : "right"}
               footer={
                 <CardFooter align="end">
                   <Container direction="horizontal" itemSpacing="sm" padding="none" noGutters>
@@ -62,7 +53,27 @@ export default function ProjectsPageClient() {
                 </CardFooter>
               }
             >
-              <Text>{project.summary}</Text>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: index % 2 === 0 ? "row" : "row-reverse",
+                  alignItems: "flex-start",
+                  gap: "1.5rem",
+                }}
+              >
+                <div style={{ flex: 1 }}>
+                  <Text>{project.summary}</Text>
+                </div>
+                <div style={{ flexShrink: 0, alignSelf: "flex-start" }}>
+                  <Image
+                    src={project.imageSrc}
+                    alt={`${project.name} placeholder preview image`}
+                    aspectRatio="16/9"
+                    rounded="md"
+                    style={{ minWidth: 160, maxWidth: 220 }}
+                  />
+                </div>
+              </div>
             </Card>
           ))}
         </Container>
