@@ -7,7 +7,7 @@ import { SITE } from "@/lib/site";
 export default function AboutPageClient() {
   return (
     <SiteShell>
-      <Container padding="lg" gutterBorder="medium">
+      <Container padding="lg">
         <Container direction="vertical" itemSpacing="md">
           <Heading level={1}>About</Heading>
 

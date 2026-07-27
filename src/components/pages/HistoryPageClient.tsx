@@ -7,7 +7,7 @@ import { SITE } from "@/lib/site";
 export default function HistoryPageClient() {
   return (
     <SiteShell>
-      <Container padding="xl" gutterBorder="medium">
+      <Container padding="xl">
         <Container direction="vertical" itemSpacing="lg">
           <Heading level={1}>Site History</Heading>
           <Text>
@@ -17,7 +17,7 @@ export default function HistoryPageClient() {
         </Container>
       </Container>
 
-      <Container padding="lg" gutterBorder="medium">
+      <Container padding="lg">
         <Container direction="vertical" itemSpacing="lg">
           <Container direction="vertical" itemSpacing="sm">
             <Heading level={2}>2026 — This Site</Heading>

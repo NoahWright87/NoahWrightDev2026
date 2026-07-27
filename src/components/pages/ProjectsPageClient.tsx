@@ -8,7 +8,7 @@ import { projects } from "@/lib/projects";
 export default function ProjectsPageClient() {
   return (
     <SiteShell>
-      <Container padding="xl" gutterBorder="medium">
+      <Container padding="xl">
         <Container direction="vertical" itemSpacing="lg">
           <Heading level={1}>Projects</Heading>
           <Text>
@@ -18,7 +18,7 @@ export default function ProjectsPageClient() {
         </Container>
       </Container>
 
-      <Container padding="lg" gutterBorder="medium">
+      <Container padding="lg">
         <Container direction="vertical" itemSpacing="md">
           {projects.map((project, index) => (
             <Card

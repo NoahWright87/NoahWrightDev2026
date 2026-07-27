@@ -4,7 +4,6 @@ import {
   Header,
   Footer,
   Layout,
-  Container,
   Text,
   Link,
   Menu,
@@ -37,9 +36,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
       footer={
         <Footer
           center={
-            <Container direction="vertical" itemSpacing="xs" padding="none">
-              <Text>© {new Date().getFullYear()} {SITE.name}</Text>
-            </Container>
+            <Text>© {new Date().getFullYear()} {SITE.name}</Text>
           }
         />
       }

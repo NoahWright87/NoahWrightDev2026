@@ -78,7 +78,7 @@ export default function HomePageClient() {
 
   return (
     <SiteShell>
-      <Container padding="xl" gutterBorder="medium">
+      <Container padding="xl">
         <Container direction="vertical" itemSpacing="lg">
           <Heading level={1}>{SITE.name}</Heading>
           <div
@@ -107,7 +107,7 @@ export default function HomePageClient() {
         </Container>
       </Container>
 
-      <Container padding="lg" gutterBorder="medium">
+      <Container padding="lg">
         <Container direction="horizontal" itemSpacing="md">
           <Link href="/projects">View Projects →</Link>
           <Link href="/about">About Me →</Link>
