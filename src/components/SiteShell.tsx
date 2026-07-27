@@ -37,7 +37,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
       footer={
         <Footer
           center={
-            <Container direction="vertical" itemSpacing="xs" padding="none">
+            <Container direction="vertical" itemSpacing="xs" padding="none" centered fullWidth={false}>
               <Text>© {new Date().getFullYear()} {SITE.name}</Text>
             </Container>
           }

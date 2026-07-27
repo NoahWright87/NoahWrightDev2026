@@ -9,7 +9,7 @@ import { SITE } from "@/lib/site";
 export default function ContactPageClient() {
   return (
     <SiteShell>
-      <Container padding="xl">
+      <Container padding="xl" gutterBorder="medium">
         <Container direction="vertical" itemSpacing="lg">
           <Heading level={1}>Get in Touch</Heading>
           <Text>

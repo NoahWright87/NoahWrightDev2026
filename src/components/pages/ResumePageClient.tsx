@@ -6,7 +6,7 @@ import SiteShell from "@/components/SiteShell";
 export default function ResumePageClient() {
   return (
     <SiteShell>
-      <Container padding="lg">
+      <Container padding="lg" gutterBorder="medium">
         <Container direction="vertical" itemSpacing="md">
           <Heading level={1}>Resume</Heading>
           <Text>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Container, Heading, Text, Card, CardFooter, Link, Image, Button } from "@noahwright/design";
+import { Container, Heading, Text, Card, CardFooter, Link, Image, Button, Pill } from "@noahwright/design";
 import GitHubIcon from "../icons/GitHubIcon";
 import SiteShell from "@/components/SiteShell";
 import { projects } from "@/lib/projects";
@@ -8,7 +8,7 @@ import { projects } from "@/lib/projects";
 export default function ProjectsPageClient() {
   return (
     <SiteShell>
-      <Container padding="xl">
+      <Container padding="xl" gutterBorder="medium">
         <Container direction="vertical" itemSpacing="lg">
           <Heading level={1}>Projects</Heading>
           <Text>
@@ -18,17 +18,30 @@ export default function ProjectsPageClient() {
         </Container>
       </Container>
 
-      <Container padding="lg">
+      <Container padding="lg" gutterBorder="medium">
         <Container direction="vertical" itemSpacing="md">
-          {projects.map((project) => (
+          {projects.map((project, index) => (
             <Card
               key={project.id}
               title={project.name}
-              subtitle={
-                project.tags.length > 0
-                  ? project.tags.join(" · ")
-                  : undefined
-              }
+              subtitle={project.tags.length > 0 ? (
+                <Container direction="horizontal" itemSpacing="xs" padding="none" noGutters>
+                  {project.tags.map((tag) => (
+                    <Pill key={`${project.id}-${tag}`} size="small">
+                      {tag}
+                    </Pill>
+                  ))}
+                </Container>
+              ) : undefined}
+              image={(
+                <Image
+                  src={project.imageSrc}
+                  alt={`${project.name} placeholder preview image`}
+                  aspectRatio="16/9"
+                  rounded="md"
+                />
+              )}
+              mediaPosition={index % 2 === 0 ? "left" : "right"}
               footer={
                 <CardFooter align="end">
                   <Container direction="horizontal" itemSpacing="sm" padding="none" noGutters>
@@ -49,20 +62,7 @@ export default function ProjectsPageClient() {
                 </CardFooter>
               }
             >
-              <div style={{ display: "flex", alignItems: "flex-start", gap: "1.5rem" }}>
-                <div style={{ flex: 1 }}>
-                  <Text>{project.summary}</Text>
-                </div>
-                <div style={{ flexShrink: 0, alignSelf: "flex-start" }}>
-                  <Image
-                    src={project.imageSrc}
-                    alt={`${project.name} placeholder preview image`}
-                    aspectRatio="16/9"
-                    rounded="md"
-                    style={{ minWidth: 160, maxWidth: 220 }}
-                  />
-                </div>
-              </div>
+              <Text>{project.summary}</Text>
             </Card>
           ))}
         </Container>
