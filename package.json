@@ -12,7 +12,7 @@
     "test:visual:ui": "playwright test --ui"
   },
   "dependencies": {
-    "@noahwright/design": "^1.1.0",
+    "@noahwright/design": "^1.1.1",
     "next": "^15.3.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

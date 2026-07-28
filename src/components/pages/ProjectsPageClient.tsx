@@ -1,6 +1,6 @@
 "use client";
 
-import { Container, Heading, Text, Card, CardFooter, Link, Image, Button, Pill } from "@noahwright/design";
+import { Container, Heading, Text, Card, CardFooter, Link, Image, Button, Pill, Carousel } from "@noahwright/design";
 import GitHubIcon from "../icons/GitHubIcon";
 import SiteShell from "@/components/SiteShell";
 import { projects } from "@/lib/projects";
@@ -33,6 +33,21 @@ export default function ProjectsPageClient() {
                   ))}
                 </Container>
               ) : undefined}
+              image={
+                <Carousel
+                  items={project.images.map((src, i) => (
+                    <Image
+                      key={i}
+                      src={src}
+                      alt={`${project.name} screenshot ${i + 1}`}
+                      aspectRatio="16/9"
+                    />
+                  ))}
+                  aria-label={`${project.name} screenshots`}
+                />
+              }
+              mediaPosition={index % 2 === 0 ? "left" : "right"}
+              longDescription={<Text>{project.summary}</Text>}
               footer={
                 <CardFooter align="end">
                   <Container direction="horizontal" itemSpacing="sm" padding="none" noGutters>
@@ -52,29 +67,7 @@ export default function ProjectsPageClient() {
                   </Container>
                 </CardFooter>
               }
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: index % 2 === 0 ? "row" : "row-reverse",
-                  alignItems: "flex-start",
-                  gap: "1.5rem",
-                }}
-              >
-                <div style={{ flex: 1 }}>
-                  <Text>{project.summary}</Text>
-                </div>
-                <div style={{ flexShrink: 0, alignSelf: "flex-start" }}>
-                  <Image
-                    src={project.imageSrc}
-                    alt={`${project.name} placeholder preview image`}
-                    aspectRatio="16/9"
-                    rounded="md"
-                    style={{ minWidth: 160, maxWidth: 220 }}
-                  />
-                </div>
-              </div>
-            </Card>
+            />
           ))}
         </Container>
       </Container>

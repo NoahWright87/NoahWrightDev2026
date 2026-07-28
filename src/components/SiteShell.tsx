@@ -4,6 +4,7 @@ import {
   Header,
   Footer,
   Layout,
+  Container,
   Text,
   Link,
   Menu,
@@ -41,7 +42,11 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
         />
       }
     >
-      {children}
+      <Container direction="vertical" alignItems="center" padding="none" noGutters>
+        <Container direction="vertical" fullWidth={false} width="min(100%, 1000px)" padding="none" noGutters>
+          {children}
+        </Container>
+      </Container>
     </Layout>
   );
 }
