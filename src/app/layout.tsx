@@ -1,6 +1,6 @@
 ﻿import type { Metadata } from "next";
 import Script from "next/script";
-import { theme } from "@/lib/theme";
+import { theme, darkTheme } from "@/lib/theme";
 import { buildThemeCss } from "@/lib/themeCss";
 import "@noahwright/design/styles.css";
 import "./globals.css";
@@ -31,7 +31,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const clarityId = process.env.NEXT_PUBLIC_CLARITY_ID;
-  const themeCss = buildThemeCss(theme);
+  const themeCss = buildThemeCss(theme, darkTheme);
 
   return (
     <html lang="en">
