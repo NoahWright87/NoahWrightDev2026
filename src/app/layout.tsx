@@ -1,6 +1,6 @@
 ﻿import type { Metadata } from "next";
 import Script from "next/script";
-import { theme } from "@/lib/theme";
+import { theme, darkTheme } from "@/lib/theme";
 import { buildThemeCss } from "@/lib/themeCss";
 import "@noahwright/design/styles.css";
 import "./globals.css";
@@ -31,11 +31,15 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const clarityId = process.env.NEXT_PUBLIC_CLARITY_ID;
-  const themeCss = buildThemeCss(theme);
+  const themeCss = buildThemeCss(theme, darkTheme);
 
   return (
     <html lang="en">
-      <head>{themeCss ? <style id="nw-theme">{themeCss}</style> : null}</head>
+      <head>
+        {themeCss ? <style id="nw-theme">{themeCss}</style> : null}
+        {/* Blocking script: sets data-theme before first paint to prevent dark mode flash */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var m=localStorage.getItem('nw-theme-mode');if(m==='dark'||m==='light'){document.documentElement.dataset.theme=m;}else if(window.matchMedia('(prefers-color-scheme:dark)').matches){document.documentElement.dataset.theme='dark';}}catch(e){}})();` }} />
+      </head>
       <body>
         {children}
         {clarityId && (

@@ -38,7 +38,19 @@ const HERO_ROTATION = [
 const ROTATION_MS = 5000;
 const FADE_MS = 350;
 
+function shuffleHeroRotation() {
+  const shuffled = [...HERO_ROTATION];
+
+  for (let i = shuffled.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled;
+}
+
 export default function HomePageClient() {
+  const [heroRotation] = useState(() => shuffleHeroRotation());
   const [heroIndex, setHeroIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -50,15 +62,15 @@ export default function HomePageClient() {
       setIsVisible(false);
 
       window.setTimeout(() => {
-        setHeroIndex((prev) => (prev + 1) % HERO_ROTATION.length);
+        setHeroIndex((prev) => (prev + 1) % heroRotation.length);
         setIsVisible(true);
       }, FADE_MS);
     }, ROTATION_MS);
 
     return () => window.clearInterval(intervalId);
-  }, [isPaused]);
+  }, [heroRotation.length, isPaused]);
 
-  const hero = HERO_ROTATION[heroIndex];
+  const hero = heroRotation[heroIndex];
   const heroFadeStyle = {
     opacity: isVisible ? 1 : 0,
     transition: `opacity ${FADE_MS}ms ease` as const,
