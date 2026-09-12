@@ -48,3 +48,27 @@ a {
     box-shadow: none !important;
   }
 }
+
+/* Blinking caret for the home page's typewriter hero title. */
+.home-hero__cursor {
+  display: inline-block;
+  width: 3px;
+  height: 0.9em;
+  margin-left: 3px;
+  vertical-align: -0.1em;
+  background: currentColor;
+}
+
+@keyframes home-hero-blink {
+  50% { opacity: 0; }
+}
+
+.home-hero__cursor--blink {
+  animation: home-hero-blink 1s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero__cursor--blink {
+    animation: none;
+  }
+}
