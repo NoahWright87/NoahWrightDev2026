@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Hero, TextCarousel, Carousel, Container, Text, Button, Link } from "@noahwright/design";
+import { Hero, TextCarousel, Carousel, Container, Heading, Text, Button, Link } from "@noahwright/design";
 import SiteShell from "@/components/SiteShell";
 import LinkedInIcon from "@/components/icons/LinkedInIcon";
 import ResumeIcon from "@/components/icons/ResumeIcon";
@@ -43,8 +43,12 @@ export default function HomePageClient() {
     <SiteShell>
       <Container padding="xl">
         <Hero
-          title={<>👋 I&apos;m Noah</>}
-          tagline={<TextCarousel items={[...heroTitles]} animation="typewriter" />}
+          title={<Heading level={1}>👋 I&apos;m Noah</Heading>}
+          tagline={
+            <Heading level={2}>
+              <TextCarousel items={[...heroTitles]} animation="typewriter" />
+            </Heading>
+          }
           description={<Text>{SITE.description}</Text>}
           actions={
             <>
