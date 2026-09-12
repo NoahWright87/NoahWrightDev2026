@@ -72,3 +72,65 @@ a {
     animation: none;
   }
 }
+
+/* Hero layout: intro column + rotating photo placeholder, side by side on desktop. */
+.home-hero__row {
+  display: flex;
+  align-items: center;
+}
+
+.home-hero__text {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+/* Photo placeholders stack on top of each other so swapping the active one crossfades. */
+.home-hero__photos {
+  position: relative;
+  flex: 0 0 auto;
+  width: 220px;
+  aspect-ratio: 1 / 1;
+}
+
+.home-hero__photo {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 20px;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  background: color-mix(in srgb, var(--foreground, #000) 6%, var(--background, #fff));
+  color: color-mix(in srgb, var(--foreground, #000) 55%, transparent);
+  font-size: 0.8rem;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 900ms ease;
+}
+
+.home-hero__photo--active {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero__photo {
+    transition: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .home-hero__row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .home-hero__photos {
+    width: 100%;
+    max-width: 260px;
+    margin: 0 auto;
+  }
+}
