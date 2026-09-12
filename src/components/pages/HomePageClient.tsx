@@ -1,12 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import { Hero, TextCarousel, Carousel, Container, Heading, Text, Button, Link } from "@noahwright/design";
+import {
+  Hero,
+  TextCarousel,
+  Carousel,
+  Card,
+  CardGrid,
+  Container,
+  Heading,
+  Text,
+  Button,
+  Link,
+} from "@noahwright/design";
 import SiteShell from "@/components/SiteShell";
-import LinkedInIcon from "@/components/icons/LinkedInIcon";
-import ResumeIcon from "@/components/icons/ResumeIcon";
 import PortraitIcon from "@/components/icons/PortraitIcon";
 import { SITE } from "@/lib/site";
+
+const EXPLORE_CARDS = [
+  { title: "Projects", description: "See what I've built.", href: "/projects" },
+  { title: "About Me", description: "The story behind the resume.", href: "/about" },
+  { title: "Resume", description: "Experience, skills, and the PDF.", href: "/resume" },
+  { title: "Get in Touch", description: "Say hello or start a conversation.", href: "/contact" },
+] as const;
 
 // TODO: swap for real photos — each slot becomes an <img> with its own alt text,
 // and Carousel's `decorative` flag should come off once the images carry real content.
@@ -43,6 +59,8 @@ export default function HomePageClient() {
     <SiteShell>
       <Container padding="xl">
         <Hero
+          background="subtle"
+          bottomBorder="gradient"
           title={<Heading level={1}>👋 I&apos;m Noah</Heading>}
           tagline={
             <Heading level={2}>
@@ -51,18 +69,11 @@ export default function HomePageClient() {
           }
           description={<Text>{SITE.description}</Text>}
           actions={
-            <>
-              <Link href={SITE.resumeUrl}>
-                <Button variant="solid" color="primary" icon={<ResumeIcon size={18} />}>
-                  View Resume
-                </Button>
-              </Link>
-              <a href={SITE.linkedIn} target="_blank" rel="noreferrer">
-                <Button variant="outline" icon={<LinkedInIcon size={18} />}>
-                  LinkedIn
-                </Button>
-              </a>
-            </>
+            <Link href="/projects">
+              <Button variant="solid" color="primary">
+                My Projects
+              </Button>
+            </Link>
           }
           media={
             <Carousel
@@ -78,12 +89,14 @@ export default function HomePageClient() {
       </Container>
 
       <Container padding="lg">
-        <Container direction="horizontal" itemSpacing="md">
-          <Link href="/projects">View Projects →</Link>
-          <Link href="/about">About Me →</Link>
-          <Link href="/resume">Resume →</Link>
-          <Link href="/contact">Get in Touch →</Link>
-        </Container>
+        <Heading level={2}>Explore</Heading>
+        <CardGrid minCardWidth="220px">
+          {EXPLORE_CARDS.map((card) => (
+            <Card key={card.href} href={card.href} title={card.title} interactive>
+              <Text tone="muted">{card.description}</Text>
+            </Card>
+          ))}
+        </CardGrid>
       </Container>
     </SiteShell>
   );
