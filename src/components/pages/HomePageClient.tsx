@@ -57,36 +57,34 @@ export default function HomePageClient() {
 
   return (
     <SiteShell>
-      <Container padding="xl">
-        <Hero
-          background="subtle"
-          bottomBorder="gradient"
-          title={<Heading level={1}>👋 I&apos;m Noah</Heading>}
-          tagline={
-            <Heading level={2}>
-              <TextCarousel items={[...heroTitles]} animation="typewriter" />
-            </Heading>
-          }
-          description={<Text>{SITE.description}</Text>}
-          actions={
-            <Link href="/projects">
-              <Button variant="solid" color="primary">
-                My Projects
-              </Button>
-            </Link>
-          }
-          media={
-            <Carousel
-              items={PHOTO_PLACEHOLDERS}
-              aspectRatio="1 / 1"
-              interval={4000}
-              showControls={false}
-              decorative
-              className="home-hero-photo-carousel"
-            />
-          }
-        />
-      </Container>
+      <Hero
+        background="subtle"
+        bottomBorder="gradient"
+        title={<Heading level={1}>👋 I&apos;m Noah</Heading>}
+        tagline={
+          <Heading level={2}>
+            <TextCarousel items={[...heroTitles]} animation="typewriter" />
+          </Heading>
+        }
+        description={<Text>{SITE.description}</Text>}
+        actions={
+          <Link href="/projects">
+            <Button variant="solid" color="primary">
+              My Projects
+            </Button>
+          </Link>
+        }
+        media={
+          <Carousel
+            items={PHOTO_PLACEHOLDERS}
+            aspectRatio="1 / 1"
+            interval={4000}
+            showControls={false}
+            decorative
+            className="home-hero-photo-carousel"
+          />
+        }
+      />
 
       <Container padding="lg">
         <Heading level={2}>Explore</Heading>
