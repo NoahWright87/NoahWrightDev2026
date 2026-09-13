@@ -33,10 +33,15 @@ const PHOTO_PLACEHOLDERS = [1, 2, 3].map((n) => (
   </div>
 ));
 
+// Deliberately share words across entries (e.g. "Software engineer" / "Software
+// builder") so the typewriter's word-diffing can edit just the differing part of a
+// transition instead of clearing and retyping the whole phrase.
 const HERO_TITLES = [
-  "Software engineering leader",
-  "Engineer.  Problem solver.  Lifelong learner.",
-  "Custom-obsessed product builder",
+  "Software engineer",
+  "Software builder",
+  "I build cool stuff",
+  "Problem-solving leader",
+  "Lifelong learner",
   "AI-wielding magician",
   "Self-deprecating jokester",
 ] as const;
