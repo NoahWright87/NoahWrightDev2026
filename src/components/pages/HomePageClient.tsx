@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Hero,
   TextCarousel,
@@ -53,7 +53,13 @@ function shuffle<T>(items: readonly T[]): T[] {
 }
 
 export default function HomePageClient() {
-  const [heroTitles] = useState(() => shuffle(HERO_TITLES));
+  // Start in declared order so server and client render identical markup on
+  // first paint; shuffle only after mount to avoid a hydration mismatch.
+  const [heroTitles, setHeroTitles] = useState<readonly string[]>(HERO_TITLES);
+
+  useEffect(() => {
+    setHeroTitles(shuffle(HERO_TITLES));
+  }, []);
 
   return (
     <SiteShell>

@@ -68,3 +68,16 @@ a {
   font-size: 0.8rem;
   font-weight: 500;
 }
+
+/* Matches Hero's own media-shrink breakpoint: at 80px wide there's no room for the
+   "Photo N" label or a 40px icon, so drop the label and shrink the icon to fit. */
+@media (max-width: 720px) {
+  .home-hero-photo span {
+    display: none;
+  }
+
+  .home-hero-photo svg {
+    width: 28px;
+    height: 28px;
+  }
+}
