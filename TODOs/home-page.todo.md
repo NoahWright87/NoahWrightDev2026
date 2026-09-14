@@ -12,7 +12,6 @@ Replace all `[PLACEHOLDER]` content on the home page with real, final copy and c
 
 ## Scope Out
 - Blog/posts section
-- Real profile photos (rotating placeholder slots exist; swap in real photos + alt text later — see TODO comment in `HomePageClient.tsx`)
 
 ## Dependencies
 - theme-and-brand.todo.md
@@ -31,7 +30,7 @@ Replace all `[PLACEHOLDER]` content on the home page with real, final copy and c
 - [x] Check home page renders well at 375px, 768px, 1280px
 - [x] Hero title rotates through several taglines with a typewriter animation (via `design`'s `TextCarousel`)
 - [x] Hero CTA is a single "My Projects" button routing to `/projects`
-- [x] Rotating photo placeholder slots added beside the hero text (real photos deferred, see Scope Out)
+- [x] Rotating photo carousel beside the hero text now uses real portraits (`public/images/noah/`, ten AI-generated style variations plus the original) with per-image alt text
 - [x] Hero has a distinguishing background tint and gradient bottom border (via `design`'s `Hero` `background`/`bottomBorder` props)
 - [x] Quick-nav links to /projects, /about, /resume, /contact are now a card group (via `design`'s `Card`/`CardGrid`)
 

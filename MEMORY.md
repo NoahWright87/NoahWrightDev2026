@@ -30,8 +30,8 @@ Use this file to keep short, durable notes that help future chat sessions resume
 ## Portrait Assets
 
 - The original photograph and ten generated portrait styles live in `public/images/noah/`; that directory's README records provenance, filenames and art direction.
-- Future portrait carousel should preserve broad pose/background/color continuity while allowing strong, authentic character redesign per style. Carousel implementation remains deferred.
 - The image-generation tool did not expose its exact backend model/version; do not invent an attribution.
+- Home page hero now uses these as its rotating `Carousel` media (`HomePageClient.tsx`), replacing the earlier icon+label placeholder. Serves resized (max 600px) WebP derivatives from `public/images/noah/web/` rather than the full-resolution originals directly — the carousel mounts all slides at once (crossfade, not on-demand), so the raw ~17MB set would otherwise load eagerly on every visit. Regenerate `web/` (command in that folder's README) if a source portrait is ever replaced or added.
 
 ## Update Rule
 

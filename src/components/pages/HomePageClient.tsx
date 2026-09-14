@@ -9,12 +9,12 @@ import {
   CardGrid,
   Container,
   Heading,
+  Image,
   Text,
   Button,
   Link,
 } from "@noahwright/design";
 import SiteShell from "@/components/SiteShell";
-import PortraitIcon from "@/components/icons/PortraitIcon";
 import { SITE } from "@/lib/site";
 
 const EXPLORE_CARDS = [
@@ -24,13 +24,27 @@ const EXPLORE_CARDS = [
   { title: "Get in Touch", description: "Say hello or start a conversation.", href: "/contact" },
 ] as const;
 
-// TODO: swap for real photos — each slot becomes an <img> with its own alt text,
-// and Carousel's `decorative` flag should come off once the images carry real content.
-const PHOTO_PLACEHOLDERS = [1, 2, 3].map((n) => (
-  <div className="home-hero-photo" key={n}>
-    <PortraitIcon size={40} />
-    <span>Photo {n}</span>
-  </div>
+// Real portrait + ten AI-generated style variations. Source files (full-resolution
+// PNG/JPG, ~17MB total) live in public/images/noah/ — see that folder's README for
+// provenance and art direction. The hero rotates through public/images/noah/web/,
+// resized (max 600px) WebP derivatives of the same set sized for eager-loading all
+// slides at once; regenerate those if the source images ever change.
+const PORTRAIT_STYLES = [
+  { file: "noah-original.webp", alt: "Photo of Noah" },
+  { file: "noah-simpsons.webp", alt: "Noah illustrated in a Simpsons cartoon style" },
+  { file: "noah-archer.webp", alt: "Noah illustrated in an Archer-style adult animation" },
+  { file: "noah-bobs-burgers.webp", alt: "Noah illustrated in a Bob's Burgers cartoon style" },
+  { file: "noah-pixar.webp", alt: "Noah illustrated in a Pixar-style 3D animated character" },
+  { file: "noah-8-bit.webp", alt: "Noah illustrated as a chunky 8-bit video game portrait" },
+  { file: "noah-16-bit.webp", alt: "Noah illustrated as a 16-bit RPG game portrait" },
+  { file: "noah-star-trek.webp", alt: "Noah illustrated in a Star Trek Starfleet uniform" },
+  { file: "noah-rubber-hose.webp", alt: "Noah illustrated in a 1930s rubber-hose cartoon style" },
+  { file: "noah-comic-book.webp", alt: "Noah illustrated as a superhero comic book character" },
+  { file: "noah-starcraft.webp", alt: "Noah illustrated as a StarCraft Terran unit portrait" },
+] as const;
+
+const PORTRAIT_SLIDES = PORTRAIT_STYLES.map(({ file, alt }) => (
+  <Image key={file} src={`/images/noah/web/${file}`} alt={alt} rounded="none" />
 ));
 
 const HERO_TITLES = [
@@ -91,7 +105,7 @@ export default function HomePageClient() {
         }
         media={
           <Carousel
-            items={PHOTO_PLACEHOLDERS}
+            items={PORTRAIT_SLIDES}
             aspectRatio="1 / 1"
             interval={4000}
             showControls={false}
