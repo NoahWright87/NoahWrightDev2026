@@ -26,6 +26,7 @@ Use this file to keep short, durable notes that help future chat sessions resume
   - When major interaction/polish primitives are missing, open issues in the `design` repository and add them there instead of implementing one-off local CSS/JS behavior.
   - In progress: home page hero (rotating title, photo carousel, styled background/border) and the quick-nav-links-as-cards treatment were built as reusable `design` primitives (`Hero`, `TextCarousel`, `useTypewriter`/`usePrefersReducedMotion` atoms, `Carousel` `showControls`/`decorative` props; `Card`/`CardGrid` already existed) rather than one-off local code, per the rule above.
   - Release flow while `design` changes are unreleased: open a PR in `design` (triggers an ephemeral pre-release publish under an `pr-<N>` npm dist-tag, commented on that PR), pin this site's `@noahwright/design` dependency to that exact pre-release version in a PR here so Netlify builds a real deploy preview against it, then once the `design` PR is reviewed and merged (publishing the real version to npm), bump this site's dependency to that real version before merging this site's PR.
+  - `design` PR #20 (Hero organism, TextCarousel, typewriter rework, mobile menu fix) merged and published the real `1.2.0` to npm; this site is re-pinned to `1.2.0` (no longer the `1.2.0-pr20.c0077c0` preview).
 
 ## Portrait Assets
 
