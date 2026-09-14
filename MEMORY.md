@@ -27,6 +27,12 @@ Use this file to keep short, durable notes that help future chat sessions resume
   - In progress: home page hero (rotating title, photo carousel, styled background/border) and the quick-nav-links-as-cards treatment were built as reusable `design` primitives (`Hero`, `TextCarousel`, `useTypewriter`/`usePrefersReducedMotion` atoms, `Carousel` `showControls`/`decorative` props; `Card`/`CardGrid` already existed) rather than one-off local code, per the rule above.
   - Release flow while `design` changes are unreleased: open a PR in `design` (triggers an ephemeral pre-release publish under an `pr-<N>` npm dist-tag, commented on that PR), pin this site's `@noahwright/design` dependency to that exact pre-release version in a PR here so Netlify builds a real deploy preview against it, then once the `design` PR is reviewed and merged (publishing the real version to npm), bump this site's dependency to that real version before merging this site's PR.
 
+## Portrait Assets
+
+- The original photograph and ten generated portrait styles live in `public/images/noah/`; that directory's README records provenance, filenames and art direction.
+- Future portrait carousel should preserve broad pose/background/color continuity while allowing strong, authentic character redesign per style. Carousel implementation remains deferred.
+- The image-generation tool did not expose its exact backend model/version; do not invent an attribution.
+
 ## Update Rule
 
 Keep notes short and factual. Update this file when a decision would matter to a new chat.
