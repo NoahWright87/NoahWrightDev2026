@@ -16,6 +16,7 @@ import {
 } from "@noahwright/design";
 import SiteShell from "@/components/SiteShell";
 import { SITE } from "@/lib/site";
+import { portraits } from "@/lib/portraits";
 
 const EXPLORE_CARDS = [
   { title: "Projects", description: "See what I've built.", href: "/projects" },
@@ -24,27 +25,12 @@ const EXPLORE_CARDS = [
   { title: "Get in Touch", description: "Say hello or start a conversation.", href: "/contact" },
 ] as const;
 
-// Real portrait + ten AI-generated style variations. Source files (full-resolution
-// PNG/JPG, ~17MB total) live in public/images/noah/ — see that folder's README for
-// provenance and art direction. The hero rotates through public/images/noah/web/,
-// resized (max 600px) WebP derivatives of the same set sized for eager-loading all
-// slides at once; regenerate those if the source images ever change.
-const PORTRAIT_STYLES = [
-  { file: "noah-original.webp", alt: "Photo of Noah" },
-  { file: "noah-simpsons.webp", alt: "Noah illustrated in a Simpsons cartoon style" },
-  { file: "noah-archer.webp", alt: "Noah illustrated in an Archer-style adult animation" },
-  { file: "noah-bobs-burgers.webp", alt: "Noah illustrated in a Bob's Burgers cartoon style" },
-  { file: "noah-pixar.webp", alt: "Noah illustrated in a Pixar-style 3D animated character" },
-  { file: "noah-8-bit.webp", alt: "Noah illustrated as a chunky 8-bit video game portrait" },
-  { file: "noah-16-bit.webp", alt: "Noah illustrated as a 16-bit RPG game portrait" },
-  { file: "noah-star-trek.webp", alt: "Noah illustrated in a Star Trek Starfleet uniform" },
-  { file: "noah-rubber-hose.webp", alt: "Noah illustrated in a 1930s rubber-hose cartoon style" },
-  { file: "noah-comic-book.webp", alt: "Noah illustrated as a superhero comic book character" },
-  { file: "noah-starcraft.webp", alt: "Noah illustrated as a StarCraft Terran unit portrait" },
-] as const;
-
-const PORTRAIT_SLIDES = PORTRAIT_STYLES.map(({ file, alt }) => (
-  <Image key={file} src={`/images/noah/web/${file}`} alt={alt} rounded="none" />
+// Real portrait + ten AI-generated style variations (full detail in @/lib/portraits
+// and public/images/noah/README.md). The hero rotates through the resized WebP
+// derivatives in public/images/noah/web/, sized for eager-loading all slides at once;
+// regenerate those (see that folder's README) if the source images ever change.
+const PORTRAIT_SLIDES = portraits.map(({ id, file, alt }) => (
+  <Image key={id} src={`/images/noah/web/${file}.webp`} alt={alt} rounded="none" />
 ));
 
 const HERO_TITLES = [
@@ -104,14 +90,20 @@ export default function HomePageClient() {
           </Link>
         }
         media={
-          <Carousel
-            items={PORTRAIT_SLIDES}
-            aspectRatio="1 / 1"
-            interval={4000}
-            showControls={false}
-            decorative
-            className="home-hero-photo-carousel"
-          />
+          // A plain anchor (rather than the design system's `Link`, which doesn't
+          // support `aria-label`) since the carousel inside is `decorative`
+          // (aria-hidden) — without a label of its own, the link would have no
+          // accessible name at all.
+          <a href="/portraits" aria-label="See Noah's other portrait styles" className="home-hero-photo-link">
+            <Carousel
+              items={PORTRAIT_SLIDES}
+              aspectRatio="1 / 1"
+              interval={4000}
+              showControls={false}
+              decorative
+              className="home-hero-photo-carousel"
+            />
+          </a>
         }
       />
 

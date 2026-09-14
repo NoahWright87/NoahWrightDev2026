@@ -32,6 +32,7 @@ Use this file to keep short, durable notes that help future chat sessions resume
 - The original photograph and ten generated portrait styles live in `public/images/noah/`; that directory's README records provenance, filenames and art direction.
 - The image-generation tool did not expose its exact backend model/version; do not invent an attribution.
 - Home page hero now uses these as its rotating `Carousel` media (`HomePageClient.tsx`), replacing the earlier icon+label placeholder. Serves resized (max 600px) WebP derivatives from `public/images/noah/web/` rather than the full-resolution originals directly — the carousel mounts all slides at once (crossfade, not on-demand), so the raw ~17MB set would otherwise load eagerly on every visit. Regenerate `web/` (command in that folder's README) if a source portrait is ever replaced or added.
+- The hero photo links to `/portraits` (a plain `<a>`, not the design system's `Link`, since it needs an `aria-label` the design-system component doesn't support — the carousel it wraps is `decorative`/aria-hidden, so without one the link would have no accessible name at all). That page lists all eleven portraits as `Card`s (style, short description, and an expandable "how it was made" note) — content lives in `src/lib/portraits.ts`, summarized from `public/images/noah/README.md` rather than duplicating it in full; that page links out to the README on GitHub for the complete generation notes/prompts.
 
 ## Update Rule
 

@@ -51,8 +51,26 @@ a {
 
 /* Home hero: rotating title, static description, and portrait carousel now come from
    @noahwright/design's Hero/TextCarousel/Carousel. Only the carousel frame's own
-   border look is specific to this site. */
+   border look, and the link wrapping it through to /portraits, are specific to this
+   site. */
 .home-hero-photo-carousel {
   border-radius: 20px;
   border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.home-hero-photo-link {
+  display: block;
+  border-radius: 20px;
+  transition: transform 150ms ease;
+}
+
+.home-hero-photo-link:hover,
+.home-hero-photo-link:focus-visible {
+  transform: scale(1.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero-photo-link {
+    transition: none;
+  }
 }
