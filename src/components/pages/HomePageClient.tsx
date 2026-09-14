@@ -33,17 +33,21 @@ const PHOTO_PLACEHOLDERS = [1, 2, 3].map((n) => (
   </div>
 ));
 
-// Deliberately share words across entries (e.g. "Software engineer" / "Software
-// builder") so the typewriter's word-diffing can edit just the differing part of a
-// transition instead of clearing and retyping the whole phrase.
 const HERO_TITLES = [
-  "Software engineer",
-  "Software builder",
-  "I build cool stuff",
-  "Problem-solving leader",
-  "Lifelong learner",
-  "AI-wielding magician",
-  "Self-deprecating jokester",
+  "👔 Software engineering manager",
+  "🏗️ Builder of useful software",
+  "😎 Building cool little side projects",
+  "🤓 Nerding out over AI",
+  "🧙 Wielding AI minions like a computer wizard",
+  "💺 Chair Force veteran 🫡",
+  "🇺🇸 Air Force veteran 🫡",
+  "🧑‍🔬 Computer scientist experimenting with AI",
+  "🤡 Lifelong self-deprecating jokester",
+  "🎮 Been gaming since before I could read",
+  "🧑‍💻 Always curious, lifelong learner",
+  "🛠️ Tinkerer, over-engineerer, problem-solver",
+  "🚧 Learning in public -- pardon the mess!",
+  "🤖 Keeping robots busy on my side projects",
 ] as const;
 
 function shuffle<T>(items: readonly T[]): T[] {
