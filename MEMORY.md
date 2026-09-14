@@ -25,6 +25,12 @@ Use this file to keep short, durable notes that help future chat sessions resume
   - New UI/interaction "juice" should come from shared design-system capabilities where possible.
   - When major interaction/polish primitives are missing, open issues in the `design` repository and add them there instead of implementing one-off local CSS/JS behavior.
 
+## Portrait Assets
+
+- Ten generated portrait styles live in `public/images/noah/`; that directory's README records provenance, filenames and art direction. The source photograph is not included yet.
+- Future portrait carousel should preserve broad pose/background/color continuity while allowing strong, authentic character redesign per style. Carousel implementation remains deferred.
+- The image-generation tool did not expose its exact backend model/version; do not invent an attribution.
+
 ## Update Rule
 
 Keep notes short and factual. Update this file when a decision would matter to a new chat.
