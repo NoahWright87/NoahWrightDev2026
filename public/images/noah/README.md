@@ -1,11 +1,12 @@
 # Noah portrait variations
 
-Ten AI-generated visual interpretations of Noah's portrait, collected for a future carousel that crossfades between styles. These are image assets; the carousel itself is not implemented by this addition. The original photograph was supplied during the generation session and is not included in this commit.
+Noah's original photograph and ten AI-generated visual interpretations, collected for a future carousel that crossfades between styles. These are image assets; the carousel itself is not implemented by this addition.
 
 ## Files
 
 | File | Style and generation direction |
 | --- | --- |
+| [noah-original.jpg](noah-original.jpg) | Original user-supplied photograph, uploaded as `2582.jpg`; unchanged JPEG, 1536 × 1530. |
 | [noah-simpsons.png](noah-simpsons.png) | Revised Simpsons character design: yellow skin, exaggerated cartoon anatomy, simple cel shapes and broad tooth-band smile. Replaces the first, less stylized Simpsons attempt. |
 | [noah-archer.png](noah-archer.png) | Archer-inspired adult animation: angular anatomy, controlled outlines and sculpted cel shading. This is the earlier, more anatomically faithful sample; no stronger redesign was generated for Archer. |
 | [noah-bobs-burgers.png](noah-bobs-burgers.png) | Bob's Burgers character design: rounded head, long simple nose, dot pupils, thin outlines and simplified sloping shoulders. |
@@ -21,7 +22,7 @@ All generated files are 1254 × 1254 PNGs. They have been copied directly from t
 
 ## How they were made
 
-- **Source:** the same original photograph supplied by Noah as `2582.jpg` (JPEG, 1536 × 1530). Every variant was generated directly from that photograph; variants were not chained through one another. The source photograph is not included in this commit.
+- **Source:** the same original photograph supplied by Noah as `2582.jpg` (JPEG, 1536 × 1530). Every variant was generated directly from that photograph; variants were not chained through one another. The original is preserved without re-encoding as [noah-original.jpg](noah-original.jpg).
 - **Creative direction:** Noah selected the styles, reviewed samples and asked for much stronger character redesign after the first Simpsons/Archer pair looked too much like filters.
 - **Generation interface:** ChatGPT Work's built-in OpenAI image generation/editing tool, `image_gen.imagegen`, invoked by the Codex assistant with the original as a referenced image and a separate text prompt for each output.
 - **Image model / version:** the OpenAI image model provided by ChatGPT in September 2026. The tool did not expose the exact backend model ID or version, so this is a date-based attribution rather than a claim about a specific GPT Image or DALL·E release.
@@ -49,6 +50,6 @@ Use the file table above for each style's additional instructions. Star Trek int
 
 Files in this directory are served at `/images/noah/`, for example `/images/noah/noah-simpsons.png`. Keep explicit filenames in any future carousel list rather than treating every file in the folder as a slide.
 
-Use a consistent square display area. The generated portraits are approximately compositionally aligned rather than registered pixel-for-pixel. Review transitions when implementing the carousel, especially for exaggerated faces and the StarCraft HUD. Preserve these full-resolution generated files if making optimized web derivatives.
+Use a consistent square display area. The original photograph is slightly wider than square (1536 × 1530). The generated portraits are approximately compositionally aligned rather than registered pixel-for-pixel. Review transitions when implementing the carousel, especially for exaggerated faces and the StarCraft HUD. Preserve these full-resolution generated files if making optimized web derivatives.
 
 The set includes every generated style available at the time of this addition, using the revised Simpsons image instead of the superseded first attempt. Magic: The Gathering and other brainstormed styles have not yet been generated.
