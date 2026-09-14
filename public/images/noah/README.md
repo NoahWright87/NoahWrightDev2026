@@ -53,3 +53,25 @@ Files in this directory are served at `/images/noah/`, for example `/images/noah
 Use a consistent square display area. The original photograph is slightly wider than square (1536 × 1530). The generated portraits are approximately compositionally aligned rather than registered pixel-for-pixel. Review transitions when implementing the carousel, especially for exaggerated faces and the StarCraft HUD. Preserve these full-resolution generated files if making optimized web derivatives.
 
 The set includes every generated style available at the time of this addition, using the revised Simpsons image instead of the superseded first attempt. Magic: The Gathering and other brainstormed styles have not yet been generated.
+
+## Web-optimized derivatives
+
+The home page hero carousel renders all eleven slides at once (they crossfade in place rather than mounting on demand), so serving these full-resolution PNGs/JPEG directly would mean ~17MB loaded eagerly on every visit. `web/` holds a resized (longest side capped at 600px, ample for the hero's largest on-screen size even at high pixel density) WebP copy of each file, generated with Pillow:
+
+```python
+from PIL import Image
+import os
+
+MAX_DIM = 600
+for f in os.listdir("public/images/noah"):
+    if not f.endswith((".png", ".jpg")):
+        continue
+    im = Image.open(f"public/images/noah/{f}").convert("RGB")
+    w, h = im.size
+    scale = MAX_DIM / max(w, h)
+    if scale < 1:
+        im = im.resize((round(w * scale), round(h * scale)), Image.LANCZOS)
+    im.save(f"public/images/noah/web/{os.path.splitext(f)[0]}.webp", "WEBP", quality=82, method=6)
+```
+
+This brings the set down to well under 1MB total. Regenerate `web/` (same command) if a source file in this directory is ever replaced or a new style is added; the hero references `web/*.webp`, never the full-resolution originals directly.

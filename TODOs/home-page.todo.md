@@ -5,16 +5,13 @@ Replace all `[PLACEHOLDER]` content on the home page with real, final copy and c
 
 ## Scope In
 - Real hero heading (name + positioning line)
-- Real 2–3 sentence personal pitch
-- Resume CTA strategy (resume page first; PDF deferred)
-- LinkedIn secondary CTA pointing to correct profile URL
-- Quick-nav links to /projects, /about, /contact
+- Real 2–3 sentence personal pitch, static regardless of which rotating title shows
+- Hero CTA: single "My Projects" button to /projects; Resume and LinkedIn reachable via the card group / Contact page instead of hero buttons
+- Quick-nav links to /projects, /about, /resume, /contact as a card group
 - Page-level OG metadata (image if available)
 
 ## Scope Out
 - Blog/posts section
-- Animated hero or scroll-reveal effects (post-launch)
-- Profile photo (add only if available and sized correctly)
 
 ## Dependencies
 - theme-and-brand.todo.md
@@ -29,8 +26,13 @@ Replace all `[PLACEHOLDER]` content on the home page with real, final copy and c
 - [x] Update `SITE.email` if needed
 - [x] Remove all `[PLACEHOLDER]` strings from `src/app/page.tsx`
 - [ ] (Later) Test resume CTA end-to-end once `/resume` exists
-- [x] Test LinkedIn button — opens correct profile in new tab
+- [x] Test LinkedIn button — now lives on the Contact page rather than the hero; opens correct profile in new tab
 - [x] Check home page renders well at 375px, 768px, 1280px
+- [x] Hero title rotates through several taglines with a typewriter animation (via `design`'s `TextCarousel`)
+- [x] Hero CTA is a single "My Projects" button routing to `/projects`
+- [x] Rotating photo carousel beside the hero text now uses real portraits (`public/images/noah/`, ten AI-generated style variations plus the original) with per-image alt text
+- [x] Hero has a distinguishing background tint and gradient bottom border (via `design`'s `Hero` `background`/`bottomBorder` props)
+- [x] Quick-nav links to /projects, /about, /resume, /contact are now a card group (via `design`'s `Card`/`CardGrid`)
 
 ## Verification
 - No `[PLACEHOLDER]` text visible in browser

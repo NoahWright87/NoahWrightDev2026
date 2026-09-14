@@ -1,45 +1,57 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Container, Heading, Text, Button, Link } from "@noahwright/design";
+import {
+  Hero,
+  TextCarousel,
+  Carousel,
+  Card,
+  CardGrid,
+  Container,
+  Heading,
+  Image,
+  Text,
+  Button,
+  Link,
+} from "@noahwright/design";
 import SiteShell from "@/components/SiteShell";
-import LinkedInIcon from "@/components/icons/LinkedInIcon";
-import ResumeIcon from "@/components/icons/ResumeIcon";
 import { SITE } from "@/lib/site";
+import { portraits } from "@/lib/portraits";
 
-const HERO_ROTATION = [
-  {
-    tagline: "Software engineering leader",
-    pitch:
-      "I guide my team to build high-quality software .  I provide the structure and the direction, then I let them surprise me with their ingenuity.",
-  },
-  {
-    tagline: "Engineer.  Problem solver.  Lifelong learner.",
-    pitch:
-      "Programming was my hobby before it was my job.  Solving puzzles is fun, and this field is FULL of challenging puzzles.",
-  },
-  {
-    tagline: "Custom-obsessed product builder",
-    pitch:
-      "I was my first customer.  I build the products I wish existed to help make people's jobs easier and less frustrating.",
-  },
-  {
-    tagline: "AI-wielding magician",
-    pitch:
-      "I used to type magic words and bring computers to life.  Now I summon agentic AI minions to build things for me.",
-  },
-  {
-    tagline: "Self-deprecating jokester",
-    pitch:
-      "Happy people make better products.  Humility, empathy, and a little fun go a long way in building a productive engineering culture.",
-  },
+const EXPLORE_CARDS = [
+  { title: "Projects", description: "See what I've built.", href: "/projects" },
+  { title: "About Me", description: "The story behind the resume.", href: "/about" },
+  { title: "Resume", description: "Experience, skills, and the PDF.", href: "/resume" },
+  { title: "Get in Touch", description: "Say hello or start a conversation.", href: "/contact" },
 ] as const;
 
-const ROTATION_MS = 5000;
-const FADE_MS = 350;
+// Real portrait + ten AI-generated style variations (full detail in @/lib/portraits
+// and public/images/noah/README.md). The hero rotates through the resized WebP
+// derivatives in public/images/noah/web/, sized for eager-loading all slides at once;
+// regenerate those (see that folder's README) if the source images ever change.
+const PORTRAIT_SLIDES = portraits.map(({ id, file, alt }) => (
+  <Image key={id} src={`/images/noah/web/${file}.webp`} alt={alt} rounded="none" />
+));
 
-function shuffleHeroRotation() {
-  const shuffled = [...HERO_ROTATION];
+const HERO_TITLES = [
+  "👔 Software engineering manager",
+  "🏗️ Builder of useful software",
+  "😎 Building cool little side projects",
+  "🤓 Nerding out over AI",
+  "🧙 Wielding AI minions like a computer wizard",
+  "💺 Chair Force veteran 🫡",
+  "🇺🇸 Air Force veteran 🫡",
+  "🧑‍🔬 Computer scientist experimenting with AI",
+  "🤡 Lifelong self-deprecating jokester",
+  "🎮 Been gaming since before I could read",
+  "🧑‍💻 Always curious, lifelong learner",
+  "🛠️ Tinkerer, over-engineerer, problem-solver",
+  "🚧 Learning in public -- pardon the mess!",
+  "🤖 Keeping robots busy on my side projects",
+] as const;
+
+function shuffle<T>(items: readonly T[]): T[] {
+  const shuffled = [...items];
 
   for (let i = shuffled.length - 1; i > 0; i -= 1) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -50,70 +62,60 @@ function shuffleHeroRotation() {
 }
 
 export default function HomePageClient() {
-  const [heroRotation] = useState(() => shuffleHeroRotation());
-  const [heroIndex, setHeroIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
+  // Start in declared order so server and client render identical markup on
+  // first paint; shuffle only after mount to avoid a hydration mismatch.
+  const [heroTitles, setHeroTitles] = useState<readonly string[]>(HERO_TITLES);
 
   useEffect(() => {
-    if (isPaused) return;
-
-    const intervalId = window.setInterval(() => {
-      setIsVisible(false);
-
-      window.setTimeout(() => {
-        setHeroIndex((prev) => (prev + 1) % heroRotation.length);
-        setIsVisible(true);
-      }, FADE_MS);
-    }, ROTATION_MS);
-
-    return () => window.clearInterval(intervalId);
-  }, [heroRotation.length, isPaused]);
-
-  const hero = heroRotation[heroIndex];
-  const heroFadeStyle = {
-    opacity: isVisible ? 1 : 0,
-    transition: `opacity ${FADE_MS}ms ease` as const,
-  };
+    setHeroTitles(shuffle(HERO_TITLES));
+  }, []);
 
   return (
     <SiteShell>
-      <Container padding="xl">
-        <Container direction="vertical" itemSpacing="lg">
-          <Heading level={1}>{SITE.name}</Heading>
-          <div
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-          >
-            <div style={heroFadeStyle}>
-              <Container direction="vertical" itemSpacing="sm" padding="none">
-                <Heading level={2}>{hero.tagline}</Heading>
-                <Text>{hero.pitch}</Text>
-              </Container>
-            </div>
-          </div>
-          <Container direction="horizontal" itemSpacing="sm">
-            <Link href={SITE.resumeUrl}>
-              <Button variant="solid" color="primary" icon={<ResumeIcon size={18} />}>
-                View Resume
-              </Button>
-            </Link>
-            <a href={SITE.linkedIn} target="_blank" rel="noreferrer">
-              <Button variant="outline" icon={<LinkedInIcon size={18} />}>
-                LinkedIn
-              </Button>
-            </a>
-          </Container>
-        </Container>
-      </Container>
+      <Hero
+        background="subtle"
+        bottomBorder="gradient"
+        title={<Heading level={1}>👋 I&apos;m Noah</Heading>}
+        tagline={
+          <Heading level={2}>
+            <TextCarousel items={[...heroTitles]} animation="typewriter" />
+          </Heading>
+        }
+        description={<Text>{SITE.description}</Text>}
+        actions={
+          <Link href="/projects">
+            <Button variant="solid" color="primary">
+              My Projects
+            </Button>
+          </Link>
+        }
+        media={
+          // A plain anchor (rather than the design system's `Link`, which doesn't
+          // support `aria-label`) since the carousel inside is `decorative`
+          // (aria-hidden) — without a label of its own, the link would have no
+          // accessible name at all.
+          <a href="/portraits" aria-label="See Noah's other portrait styles" className="home-hero-photo-link">
+            <Carousel
+              items={PORTRAIT_SLIDES}
+              aspectRatio="1 / 1"
+              interval={4000}
+              showControls={false}
+              decorative
+              className="home-hero-photo-carousel"
+            />
+          </a>
+        }
+      />
 
       <Container padding="lg">
-        <Container direction="horizontal" itemSpacing="md">
-          <Link href="/projects">View Projects →</Link>
-          <Link href="/about">About Me →</Link>
-          <Link href="/resume">Resume →</Link>
-          <Link href="/contact">Get in Touch →</Link>
-        </Container>
+        <Heading level={2}>Explore</Heading>
+        <CardGrid minCardWidth="220px">
+          {EXPLORE_CARDS.map((card) => (
+            <Card key={card.href} href={card.href} title={card.title} interactive>
+              <Text tone="muted">{card.description}</Text>
+            </Card>
+          ))}
+        </CardGrid>
       </Container>
     </SiteShell>
   );
