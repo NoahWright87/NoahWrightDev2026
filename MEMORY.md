@@ -18,6 +18,10 @@ Use this file to keep short, durable notes that help future chat sessions resume
 - Resume flow is phased:
   - Phase 1: `/resume` page exists as placeholder and is the current resume CTA destination.
   - Phase 2: downloadable PDF can be added later.
+- Resume direction is a **branching timeline**, not a flat job list: Noah had a dual career (USAF active duty, then USAF Reserve part-time alongside a full-time civilian engineering job), and the page should show the two tracks and their overlap. Reference is the *look* of a git branch graph, not literal git semantics (commits/merges) — that framing was explicitly rejected.
+  - Five throwaway layout prototypes are live at `/resume1`–`/resume5` (linked from `/resume`, `noindex`, excluded from `sitemap.ts`): Branch Rail, Parallel Tracks, Time Scrubber, Metro Map, Quiet Spine. All render the same fake data from `src/lib/resumeDemo.ts` so only presentation differs.
+  - All prototype code is deliberately local and temporary (`src/components/pages/resume-variants/`). Once a direction is picked, the winner becomes a reusable `design` primitive per the design-system-first rule below; then delete the prototype routes, `resumeDemo.ts`, and the variants folder.
+  - Real resume content does not exist yet anywhere in the repo — `resumeDemo.ts` is invented placeholder data shaped to match the real career's structure. Do not mistake it for fact.
 - Netlify is the deployment platform; `netlify.toml` is configured for Next.js plugin usage.
 - Clarity integration is implemented in code and controlled by `NEXT_PUBLIC_CLARITY_ID`.
 - Portfolio site direction is design-system-first:

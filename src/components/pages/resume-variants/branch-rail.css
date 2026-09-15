@@ -1,0 +1,339 @@
+/* TEMPORARY prototype styles — /resume1 "Branch Rail". */
+
+.br {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--br-rail-w, 116px) minmax(0, 1fr);
+  gap: 0;
+}
+
+.br__rail {
+  position: relative;
+  width: var(--br-rail-w, 116px);
+}
+
+.br__svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+}
+
+.br__line {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.br__svg--drawn .br__line--service {
+  animation: br-draw 900ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.br__svg--drawn .br__line--civilian {
+  animation: br-draw 1100ms cubic-bezier(0.4, 0, 0.2, 1) 260ms forwards;
+}
+
+@keyframes br-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.br__cap {
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.br__svg--drawn .br__cap {
+  animation: br-fade 400ms ease 1200ms forwards;
+}
+
+.br__overlap {
+  fill: color-mix(in srgb, var(--foreground) 6%, transparent);
+  opacity: 0;
+}
+
+.br__svg--drawn .br__overlap {
+  animation: br-fade 600ms ease 900ms forwards;
+}
+
+@keyframes br-fade {
+  to {
+    opacity: 1;
+  }
+}
+
+.br__node circle {
+  transition: r 160ms ease, filter 160ms ease;
+}
+
+.br__node--active circle {
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--primary) 70%, transparent));
+}
+
+.br__pulse {
+  opacity: 0.28;
+  transform-origin: center;
+  animation: br-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes br-pulse {
+  0%,
+  100% {
+    opacity: 0.1;
+    r: 8;
+  }
+  50% {
+    opacity: 0.32;
+    r: 13;
+  }
+}
+
+.br__marker {
+  opacity: 0;
+}
+
+.br__svg--drawn .br__marker {
+  animation: br-fade 400ms ease 1300ms forwards;
+}
+
+/* ---- rows ---- */
+
+.br__rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 26px;
+}
+
+.br__row {
+  position: relative;
+}
+
+/* Only hide rows once JS is driving the reveal, so content is never stranded
+   invisible without JS or in print. */
+.br--enhanced .br__row {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 520ms ease, transform 520ms ease;
+}
+
+.br--enhanced .br__row--visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Short connector from the rail node across to the card. */
+.br__row::before {
+  content: "";
+  position: absolute;
+  top: 34px;
+  left: -18px;
+  width: 18px;
+  height: 2px;
+  background: var(--lane-color);
+  opacity: 0.45;
+  transition: opacity 160ms ease;
+}
+
+.br__row--active::before {
+  opacity: 1;
+}
+
+.br__card {
+  display: grid;
+  gap: 10px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  border-left: 3px solid var(--lane-color);
+  background: color-mix(in srgb, var(--foreground) 3%, transparent);
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.br__card:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.br__row--active .br__card {
+  border-color: color-mix(in srgb, var(--lane-color) 45%, transparent);
+  border-left-color: var(--lane-color);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--foreground) 12%, transparent);
+  transform: translateX(2px);
+}
+
+.br__card-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px 16px;
+}
+
+.br__card-title h3 {
+  margin: 0;
+}
+
+.br__org {
+  margin: 2px 0 0;
+  font-weight: 600;
+  opacity: 0.8;
+  font-size: 0.95rem;
+}
+
+.br__card-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.br__date {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.br__markers {
+  margin: 0;
+  padding: 10px 12px;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--lane-color) 10%, transparent);
+  font-size: 0.85rem;
+}
+
+.br__markers li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.br__marker-kind {
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--lane-color) 28%, transparent);
+}
+
+.br__marker-date {
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- minimap ---- */
+
+.br-mini {
+  display: none;
+}
+
+@media (min-width: 1180px) {
+  .br-mini {
+    display: block;
+    position: fixed;
+    top: 50%;
+    right: 24px;
+    transform: translateY(-50%);
+    z-index: 20;
+    padding: 10px 8px 6px;
+    border-radius: 14px;
+    border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+    background: color-mix(in srgb, var(--background) 88%, transparent);
+    backdrop-filter: blur(6px);
+    animation: br-fade 500ms ease 700ms both;
+  }
+}
+
+.br-mini__window {
+  fill: color-mix(in srgb, var(--foreground) 12%, transparent);
+  transition: y 120ms linear, height 120ms linear;
+}
+
+.br-mini__node {
+  transition: r 160ms ease;
+}
+
+.br-mini__hit {
+  cursor: pointer;
+}
+
+.br-mini__caption {
+  margin: 6px 0 0;
+  text-align: center;
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+/* ---- narrow screens: same structure, tighter rail ---- */
+
+@media (max-width: 640px) {
+  .br {
+    --br-rail-w: 46px;
+  }
+
+  .br__row::before {
+    left: -10px;
+    width: 10px;
+  }
+
+  .br__card {
+    padding: 14px;
+  }
+
+  .br__card-meta {
+    align-items: flex-start;
+  }
+}
+
+@media print {
+  .br--enhanced .br__row {
+    opacity: 1;
+    transform: none;
+  }
+
+  .br-mini {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .br__line,
+  .br__cap,
+  .br__overlap,
+  .br__marker {
+    animation: none !important;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  .br__pulse {
+    animation: none;
+  }
+
+  .br--enhanced .br__row {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .br__card {
+    transition: none;
+  }
+
+  .br-mini {
+    animation: none;
+  }
+}
