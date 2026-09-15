@@ -1,0 +1,357 @@
+/* TEMPORARY prototype styles — /resume3 "Time Scrubber". */
+
+.ts {
+  display: grid;
+  gap: 18px;
+}
+
+.ts__scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ts__chart {
+  position: relative;
+  min-width: 660px;
+  padding: 26px 0 30px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  background: color-mix(in srgb, var(--foreground) 3%, transparent);
+}
+
+.ts__overlap {
+  position: absolute;
+  top: 0;
+  bottom: 22px;
+  background: color-mix(in srgb, var(--foreground) 7%, transparent);
+  border-left: 1px dashed color-mix(in srgb, currentColor 35%, transparent);
+  border-right: 1px dashed color-mix(in srgb, currentColor 35%, transparent);
+  pointer-events: none;
+}
+
+.ts__overlap-label {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+.ts__gridline {
+  position: absolute;
+  top: 22px;
+  bottom: 24px;
+  width: 1px;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  pointer-events: none;
+}
+
+.ts__gridline--major {
+  background: color-mix(in srgb, currentColor 16%, transparent);
+}
+
+.ts__playhead {
+  position: absolute;
+  top: 16px;
+  bottom: 22px;
+  width: 1px;
+  background: var(--primary);
+  pointer-events: none;
+  z-index: 4;
+}
+
+.ts__playhead-label {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--primary);
+  color: var(--background);
+}
+
+.ts__lane {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px;
+}
+
+.ts__lane-name {
+  width: 62px;
+  flex: none;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: right;
+}
+
+.ts__track {
+  position: relative;
+  flex: 1;
+  height: 42px;
+}
+
+.ts__track-base {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 30px;
+  border-radius: 8px;
+}
+
+.ts__segment {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 30px;
+  min-width: 10px;
+  padding: 0 8px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  color: var(--background);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+}
+
+.ts__segment:hover {
+  filter: brightness(1.1);
+  transform: translateY(-50%) scaleY(1.12);
+}
+
+.ts__segment:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 2px;
+}
+
+.ts__segment--selected {
+  border-color: var(--foreground);
+  box-shadow: 0 3px 12px color-mix(in srgb, var(--foreground) 30%, transparent);
+  z-index: 3;
+}
+
+.ts__segment-label {
+  pointer-events: none;
+}
+
+.ts__marker {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  transform: translateY(-50%) rotate(45deg);
+  background: var(--background);
+  border: 2px solid;
+  border-radius: 2px;
+  z-index: 3;
+}
+
+.ts__axis {
+  position: relative;
+  height: 16px;
+  margin-top: 6px;
+}
+
+.ts__axis-label {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-size: 0.68rem;
+  opacity: 0.65;
+  font-variant-numeric: tabular-nums;
+}
+
+.ts__hint {
+  margin: 0;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* ---- detail panel ---- */
+
+.ts__detail {
+  display: grid;
+  gap: 10px;
+  padding: 18px 20px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  border-top: 3px solid var(--lane-color);
+  background: color-mix(in srgb, var(--lane-color) 6%, transparent);
+}
+
+.ts__detail-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px 20px;
+  align-items: flex-start;
+}
+
+.ts__detail-head h2 {
+  margin: 4px 0 0;
+}
+
+.ts__detail-lane {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--lane-color);
+}
+
+.ts__detail-org {
+  margin: 2px 0 0;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.ts__detail-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ts__detail-date {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
+.ts__detail-len {
+  font-size: 0.78rem;
+  opacity: 0.65;
+}
+
+.ts__detail-markers {
+  margin: 0;
+  padding: 10px 12px;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--lane-color) 10%, transparent);
+  font-size: 0.88rem;
+}
+
+.ts__detail-markers li {
+  display: grid;
+  gap: 2px;
+}
+
+.ts__detail-markers span {
+  opacity: 0.7;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- compact list ---- */
+
+.ts__list {
+  display: grid;
+  gap: 10px;
+}
+
+.ts__list-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+}
+
+.ts__list-row {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr) 40px;
+  gap: 12px;
+  align-items: baseline;
+  width: 100%;
+  padding: 9px 12px;
+  border: none;
+  border-left: 3px solid var(--lane-color);
+  border-radius: 0 8px 8px 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 140ms ease;
+}
+
+.ts__list-row:hover {
+  background: color-mix(in srgb, var(--lane-color) 10%, transparent);
+}
+
+.ts__list-row:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+.ts__list-row--selected {
+  background: color-mix(in srgb, var(--lane-color) 16%, transparent);
+}
+
+.ts__list-date {
+  font-size: 0.8rem;
+  opacity: 0.72;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ts__list-role {
+  display: grid;
+  gap: 1px;
+}
+
+.ts__list-org {
+  font-size: 0.82rem;
+  opacity: 0.7;
+}
+
+.ts__list-len {
+  font-size: 0.78rem;
+  opacity: 0.6;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 700px) {
+  .ts__list-row {
+    grid-template-columns: minmax(0, 1fr) 40px;
+  }
+
+  .ts__list-date {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ts__segment {
+    transition: none;
+  }
+
+  .ts__segment:hover {
+    transform: translateY(-50%);
+  }
+}

@@ -1,0 +1,184 @@
+/* TEMPORARY prototype styles — /resume4 "Metro Map". */
+
+.mm {
+  display: grid;
+  grid-template-columns: 332px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.mm__map-wrap {
+  position: sticky;
+  top: 90px;
+}
+
+.mm__map {
+  position: relative;
+  max-width: 100%;
+}
+
+.mm__svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.mm__station {
+  transition: r 160ms ease, stroke-width 160ms ease;
+}
+
+.mm__interchange {
+  opacity: 0.75;
+}
+
+.mm__label {
+  position: absolute;
+  transform: translateY(-50%);
+  display: grid;
+  gap: 1px;
+  width: 188px;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.mm__label:hover {
+  background: color-mix(in srgb, var(--lane-color) 12%, transparent);
+}
+
+.mm__label:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.mm__label--selected {
+  background: color-mix(in srgb, var(--lane-color) 16%, transparent);
+  border-color: color-mix(in srgb, var(--lane-color) 45%, transparent);
+}
+
+.mm__label-role {
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.22;
+  /* Two lines max, so a long title can never grow into the next station. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mm__label--selected .mm__label-role {
+  color: var(--lane-color);
+}
+
+.mm__label-meta {
+  font-size: 0.7rem;
+  line-height: 1.2;
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mm__terminus-note {
+  position: absolute;
+  left: 0;
+  width: 68px;
+  text-align: center;
+  font-size: 0.6rem;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* ---- detail ---- */
+
+.mm__detail {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  padding: 20px 22px;
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  border-left: 4px solid var(--lane-color);
+  background: color-mix(in srgb, var(--lane-color) 6%, transparent);
+}
+
+.mm__detail h2 {
+  margin: 0;
+}
+
+.mm__detail-lane {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--lane-color);
+}
+
+.mm__detail-org {
+  margin: 0;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.mm__detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  font-size: 0.85rem;
+  opacity: 0.85;
+  font-variant-numeric: tabular-nums;
+}
+
+.mm__detail-markers {
+  margin: 0;
+  padding: 10px 12px;
+  list-style: none;
+  display: grid;
+  gap: 5px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--lane-color) 12%, transparent);
+  font-size: 0.86rem;
+}
+
+.mm__detail-markers span {
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- narrow: map on top, detail below ---- */
+
+@media (max-width: 900px) {
+  .mm {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .mm__map-wrap {
+    position: static;
+    overflow-x: auto;
+  }
+
+  .mm__map {
+    margin: 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mm__station,
+  .mm__label {
+    transition: none;
+  }
+}
