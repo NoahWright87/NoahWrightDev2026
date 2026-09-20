@@ -15,7 +15,7 @@ Each carries an in-page pace control (snappy / standard / cinematic).
 |---|---|---|
 | `/resume6` | Pinned Rail | Strictly one job per stop, even through the overlap |
 | `/resume7` | Dual Focus | Identical, but splits into two cards through the overlap |
-| `/resume8` | Time Reel | To-scale tree; scroll maps to a year, so concurrency falls out of the model |
+| `/resume8` | Time Reel | To-scale tree with year ticks; a date label rides the marker and updates as you scroll |
 
 ### Round 1 — the original five
 | Route | Name | Idea |
@@ -27,8 +27,11 @@ Each carries an in-page pace control (snappy / standard / cinematic).
 | `/resume5` | Quiet Spine | Restrained; glance strip up top, then three chapters with collapsed details |
 
 ## Settled
+- One job on screen at a time.
 - Mobile keeps the pinned effect on a thin rail rather than falling back to a plain list.
 - Scroll pacing is tunable in-page instead of being guessed up front.
+- The scroll marker, the line fill behind it, and any date label all track scroll
+  position exactly — no easing, no settling after the scroll stops.
 
 ## Tasks
 - [x] Build round 1 layout prototypes against placeholder data

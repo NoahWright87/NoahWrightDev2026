@@ -175,6 +175,8 @@ export interface StopFade {
   nextOpacity: number;
   /** Continuous position across stops, for placing the scroll indicator. */
   position: number;
+  /** How far through the active stop's own slice, 0 to 1. */
+  local: number;
 }
 
 /**
@@ -205,7 +207,7 @@ function clamp01(value: number): number {
  */
 export function stopFade(progress: number, count: number): StopFade {
   if (count <= 1) {
-    return { active: 0, next: null, activeOpacity: 1, nextOpacity: 0, position: 0 };
+    return { active: 0, next: null, activeOpacity: 1, nextOpacity: 0, position: 0, local: progress };
   }
 
   const scaled = Math.min(progress * count, count - 0.0001);
@@ -214,7 +216,7 @@ export function stopFade(progress: number, count: number): StopFade {
 
   const fadeStart = 1 - FADE_BAND;
   if (local < fadeStart || active === count - 1) {
-    return { active, next: null, activeOpacity: 1, nextOpacity: 0, position: active };
+    return { active, next: null, activeOpacity: 1, nextOpacity: 0, position: active, local };
   }
 
   const u = (local - fadeStart) / FADE_BAND;
@@ -224,6 +226,7 @@ export function stopFade(progress: number, count: number): StopFade {
     activeOpacity: 1 - clamp01(u / OUT_RAMP),
     nextOpacity: clamp01((u - IN_DELAY) / (1 - IN_DELAY)),
     position: active + u,
+    local,
   };
 }
 

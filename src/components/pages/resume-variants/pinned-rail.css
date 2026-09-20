@@ -6,6 +6,12 @@
   position: relative;
 }
 
+/* The to-scale rail carries year ticks down its left edge, so it needs a
+   little more width than the evenly spaced one. */
+.pr--scale {
+  --pr-rail-w: 152px;
+}
+
 /* Without JS, or under reduced motion, this is a plain stacked list. */
 .pr__sticky {
   display: grid;
@@ -66,8 +72,42 @@
   filter: drop-shadow(0 0 7px color-mix(in srgb, var(--primary) 65%, transparent));
 }
 
+/* No transition. The marker is a readout of scroll position, so it has to
+   track it exactly — a transition makes it chase every frame, lagging behind
+   during a scroll and then gliding to catch up once the scroll stops. */
 .pr__marker {
-  transition: transform 90ms linear;
+  transition: none;
+}
+
+.pr__tick-line {
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.08;
+}
+
+.pr__tick-label {
+  font-size: 9px;
+  fill: currentColor;
+  opacity: 0.4;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Date label riding the marker — same rule: no transition. */
+.pr__readout {
+  position: absolute;
+  left: 0;
+  transform: translateY(-50%);
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: var(--foreground);
+  color: var(--background);
+  font-size: 0.66rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: none;
+  z-index: 5;
 }
 
 .pr__marker-line {
@@ -209,8 +249,14 @@
     gap: 10px;
   }
 
-  .pr__jump-label {
+  .pr__jump-label,
+  .pr__tick-label {
     display: none;
+  }
+
+  .pr__readout {
+    font-size: 0.6rem;
+    padding: 2px 5px;
   }
 
   /* A pair cannot sit side by side at this width — the second card stacks

@@ -30,8 +30,8 @@ const ROUND_TWO = [
     slug: "resume8",
     name: "Time Reel",
     summary:
-      "Scrolling moves through time rather than through jobs. The tree is drawn to scale, a year readout rides the chevron, and whatever was running that year is what you see — so the stage opens into two panes on its own through the overlap. A four-year posting takes four years of scrolling.",
-    strength: "Concurrency falls out of the model instead of being special-cased.",
+      "One job at a time, like Pinned Rail, but the tree is drawn to scale — vertical distance is elapsed time. The line fills at the rate the years actually passed, year ticks run down the rail, and a date label rides the marker, updating continuously as you scroll.",
+    strength: "The rail doubles as a date axis you can read a year off.",
   },
 ];
 

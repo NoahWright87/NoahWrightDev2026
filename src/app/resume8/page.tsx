@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import TimeReel from "@/components/pages/resume-variants/TimeReel";
+import PinnedRailStage from "@/components/pages/resume-variants/PinnedRailStage";
 
 export const metadata: Metadata = {
   title: "Resume prototype — Time Reel",
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function Resume8Page() {
-  return <TimeReel />;
+  return <PinnedRailStage mode="single" railScale="toScale" />;
 }

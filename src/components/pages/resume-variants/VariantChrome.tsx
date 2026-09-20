@@ -21,7 +21,7 @@ import "./variant-chrome.css";
 export const VARIANTS = [
   { slug: "resume6", name: "Pinned Rail", blurb: "Pinned tree, one job at a time", round: 2 },
   { slug: "resume7", name: "Dual Focus", blurb: "Same, but splits through the overlap", round: 2 },
-  { slug: "resume8", name: "Time Reel", blurb: "Scroll through time, to scale", round: 2 },
+  { slug: "resume8", name: "Time Reel", blurb: "To-scale tree with a live date", round: 2 },
   { slug: "resume1", name: "Branch Rail", blurb: "Graph in a rail, content in one column", round: 1 },
   { slug: "resume2", name: "Parallel Tracks", blurb: "Two real columns through the overlap", round: 1 },
   { slug: "resume3", name: "Time Scrubber", blurb: "Horizontal time axis you explore", round: 1 },

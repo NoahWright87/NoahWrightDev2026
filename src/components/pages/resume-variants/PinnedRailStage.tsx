@@ -22,8 +22,11 @@ import {
   ENTRIES_CHRONOLOGICAL,
   FORK_YEAR,
   MERGE_YEAR,
+  TIMELINE_END,
+  TIMELINE_START,
   entryEnd,
   laneColorVar,
+  yearToFraction,
   type ResumeEntry,
 } from "@/lib/resumeDemo";
 import {
@@ -41,6 +44,16 @@ import {
 import "./pinned-rail.css";
 
 export type StageMode = "single" | "split";
+/** `toScale` makes vertical distance on the rail mean elapsed time. */
+export type RailScale = "even" | "toScale";
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+function formatYear(year: number): string {
+  const whole = Math.floor(year);
+  const month = Math.min(11, Math.max(0, Math.floor((year - whole) * 12)));
+  return `${MONTHS[month]} ${whole}`;
+}
 
 interface Stop {
   id: string;
@@ -82,21 +95,39 @@ function buildStops(mode: StageMode): Stop[] {
   return stops;
 }
 
-const MODE_COPY: Record<StageMode, { slug: string; name: string; idea: string }> = {
-  single: {
+interface Variant {
+  slug: string;
+  name: string;
+  idea: string;
+}
+
+/** Keyed by `${mode}:${railScale}`. */
+const VARIANT_COPY: Record<string, Variant> = {
+  "single:even": {
     slug: "resume6",
     name: "Pinned Rail",
-    idea: "The tree stays pinned while one job at a time fades in beside it. Strictly one job per stop, even through the years two ran at once — compare against Dual Focus, which is identical apart from that.",
+    idea: "The tree stays pinned while one job at a time fades in beside it, evenly spaced so every job gets the same room. Compare against Dual Focus, which is identical apart from how it handles the overlap.",
   },
-  split: {
+  "split:even": {
     slug: "resume7",
     name: "Dual Focus",
     idea: "Identical to Pinned Rail except through the overlap, where the stage splits and both concurrent jobs appear together. The one difference to judge is whether that split is worth the layout change.",
   },
+  "single:toScale": {
+    slug: "resume8",
+    name: "Time Reel",
+    idea: "One job at a time, but the tree is drawn to scale — vertical distance is elapsed time — so the line fills at the rate the years actually passed, and the date beside the marker updates continuously as you scroll.",
+  },
 };
 
-export default function PinnedRailStage({ mode }: { mode: StageMode }) {
-  const copy = MODE_COPY[mode];
+export default function PinnedRailStage({
+  mode,
+  railScale = "even",
+}: {
+  mode: StageMode;
+  railScale?: RailScale;
+}) {
+  const copy = VARIANT_COPY[`${mode}:${railScale}`];
   const stops = React.useMemo(() => buildStops(mode), [mode]);
   const reducedMotion = usePrefersReducedMotion();
 
@@ -114,7 +145,6 @@ export default function PinnedRailStage({ mode }: { mode: StageMode }) {
   const [fade, setFade] = React.useState(() => stopFade(0, stops.length));
 
   const active = stops[Math.min(fade.active, stops.length - 1)];
-  const next = fade.next !== null ? stops[Math.min(fade.next, stops.length - 1)] : null;
 
   /* Pinning only makes sense with JS and without a reduced-motion preference —
      a scroll-driven pinned pane is exactly the kind of motion that setting is
@@ -183,14 +213,17 @@ export default function PinnedRailStage({ mode }: { mode: StageMode }) {
     };
   }, [enhanced, stops.length, stickyHeight]);
 
-  /** Scroll so a given stop is centered in its slice. */
+  /**
+   * Land in the middle of a stop's slice, where its card is fully opaque —
+   * aiming at the start of the slice drops you mid-fade, with the job only
+   * partly visible.
+   */
   const scrollToStop = React.useCallback(
     (index: number) => {
       const section = sectionRef.current;
       if (!section || !enhanced) return;
       const travel = section.offsetHeight - stickyHeight;
-      const target =
-        section.offsetTop + ((index + 0.4) / stops.length) * travel;
+      const target = section.offsetTop + ((index + 0.5) / stops.length) * travel;
       window.scrollTo({ top: target, behavior: "smooth" });
     },
     [enhanced, stickyHeight, stops.length]
@@ -207,7 +240,7 @@ export default function PinnedRailStage({ mode }: { mode: StageMode }) {
       window.requestAnimationFrame(() => {
         const travel = section.offsetHeight - stickyHeight;
         window.scrollTo({
-          top: section.offsetTop + ((held + 0.4) / stops.length) * travel,
+          top: section.offsetTop + ((held + 0.5) / stops.length) * travel,
           behavior: "auto",
         });
       });
@@ -215,40 +248,62 @@ export default function PinnedRailStage({ mode }: { mode: StageMode }) {
     [enhanced, fade.active, stickyHeight, stops.length]
   );
 
-  /* ---- rail geometry: nodes evenly spaced down the pinned rail ---- */
+  /* ---- rail geometry ---- */
   const geometry = React.useMemo(() => {
     if (!rail || rail.height === 0) return null;
     const { width, height } = rail;
     const padTop = 34;
     const padBottom = 34;
     const usable = Math.max(1, height - padTop - padBottom);
-    const step = usable / Math.max(1, ENTRIES_CHRONOLOGICAL.length - 1);
+    const toScale = railScale === "toScale";
 
+    /* Even spacing gives every job the same room. Drawing to scale instead
+       makes vertical distance mean elapsed time, so the rail doubles as a
+       date axis and the marker's position can be read back as a year. */
     const nodes = ENTRIES_CHRONOLOGICAL.map((entry, i) => ({
       entry,
       x: laneX(width, laneIndex(entry.lane)),
-      y: padTop + i * step,
+      y: toScale
+        ? padTop + yearToFraction(entry.start) * usable
+        : padTop + i * (usable / Math.max(1, ENTRIES_CHRONOLOGICAL.length - 1)),
     }));
 
-    const yearToY = makeYearToY(
-      nodes.map((n) => ({ start: n.entry.start, y: n.y })),
-      height
-    );
+    const yearToY = toScale
+      ? (y: number) => padTop + yearToFraction(y) * usable
+      : makeYearToY(
+          nodes.map((n) => ({ start: n.entry.start, y: n.y })),
+          height
+        );
+
+    /** Read a rail position back as a date. Only meaningful when to scale. */
+    const yearAtY = (y: number) =>
+      TIMELINE_START + ((y - padTop) / usable) * (TIMELINE_END - TIMELINE_START);
+
     const firstCivilian = nodes.find((n) => n.entry.lane === "civilian");
 
     const paths = buildRailPaths({
       railWidth: width,
-      topY: padTop - 18,
-      bottomY: height - padBottom + 22,
+      topY: toScale ? yearToY(TIMELINE_START) : padTop - 18,
+      bottomY: toScale ? yearToY(TIMELINE_END) : height - padBottom + 22,
       forkY: yearToY(FORK_YEAR),
       civilianFirstY: firstCivilian ? firstCivilian.y : yearToY(FORK_YEAR) + 60,
       serviceEndY: yearToY(MERGE_YEAR),
     });
 
-    return { nodes, paths, yearToY };
-  }, [rail]);
+    const ticks: number[] = [];
+    if (toScale) {
+      for (let y = 2010; y <= Math.floor(TIMELINE_END); y += 2) ticks.push(y);
+    }
 
-  /** Chevron sits on the active stop's node, or between them when two are live. */
+    return { nodes, paths, yearToY, yearAtY, ticks, bottomY: paths.branch ? height - padBottom : height };
+  }, [rail, railScale]);
+
+  /**
+   * The marker travels from the active stop's node to the next one across that
+   * stop's *whole* slice, so it — and the date riding it — advance steadily the
+   * entire time you are scrolling. Tying it to the crossfade instead would park
+   * it on a node for most of the slice and then sprint between jobs.
+   */
   const markerY = React.useMemo(() => {
     if (!geometry) return 0;
     const meanY = (stop: Stop) => {
@@ -258,9 +313,14 @@ export default function PinnedRailStage({ mode }: { mode: StageMode }) {
       return ys.length ? ys.reduce((a, b) => a + b, 0) / ys.length : 0;
     };
     const from = meanY(active);
-    if (!next) return from;
-    return from + (meanY(next) - from) * (fade.position - fade.active);
-  }, [geometry, active, next, fade.position, fade.active]);
+    const upcoming = stops[fade.active + 1];
+    /* Past the last node there is nothing to aim at, so run on to the end of
+       the rail — otherwise the line stops filling early. */
+    const to = upcoming ? meanY(upcoming) : geometry.bottomY;
+    return from + (to - from) * Math.min(1, Math.max(0, fade.local));
+  }, [geometry, active, fade.active, fade.local, stops]);
+
+  const markerYear = geometry && railScale === "toScale" ? geometry.yearAtY(markerY) : null;
 
   const activeEntryIds = new Set(active.entries.map((e) => e.id));
 
@@ -272,7 +332,13 @@ export default function PinnedRailStage({ mode }: { mode: StageMode }) {
     <VariantShell current={copy.slug} name={copy.name} idea={copy.idea}>
       <Container padding="lg">
         <div
-          className={enhanced ? "pr pr--enhanced" : "pr"}
+          className={[
+            "pr",
+            enhanced && "pr--enhanced",
+            railScale === "toScale" && "pr--scale",
+          ]
+            .filter(Boolean)
+            .join(" ")}
           ref={sectionRef}
           style={sectionStyle}
         >
@@ -303,6 +369,21 @@ export default function PinnedRailStage({ mode }: { mode: StageMode }) {
                     )}
                     rx={12}
                   />
+
+                  {geometry.ticks.map((tick) => (
+                    <g key={tick}>
+                      <line
+                        x1={4}
+                        y1={geometry.yearToY(tick)}
+                        x2={rail.width - 4}
+                        y2={geometry.yearToY(tick)}
+                        className="pr__tick-line"
+                      />
+                      <text x={2} y={geometry.yearToY(tick) - 3} className="pr__tick-label">
+                        {tick}
+                      </text>
+                    </g>
+                  ))}
 
                   {/* Whole tree, dimmed — the part you have not reached yet. */}
                   <path
@@ -372,6 +453,15 @@ export default function PinnedRailStage({ mode }: { mode: StageMode }) {
                     />
                   </g>
                 </svg>
+              )}
+
+              {/* Date rides the marker. No CSS transition on either: both must
+                  track scroll exactly, or they lag behind and then catch up
+                  once scrolling stops. */}
+              {enhanced && markerYear !== null && (
+                <span className="pr__readout" style={{ top: markerY }}>
+                  {formatYear(markerYear)}
+                </span>
               )}
 
               {/* Clickable jump targets over the rail nodes. */}
