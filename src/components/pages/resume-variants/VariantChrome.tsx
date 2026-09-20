@@ -19,19 +19,22 @@ import {
 import "./variant-chrome.css";
 
 export const VARIANTS = [
-  { slug: "resume1", name: "Branch Rail", blurb: "Graph in a rail, content in one column" },
-  { slug: "resume2", name: "Parallel Tracks", blurb: "Two real columns through the overlap" },
-  { slug: "resume3", name: "Time Scrubber", blurb: "Horizontal time axis you explore" },
-  { slug: "resume4", name: "Metro Map", blurb: "Transit-map lines and stations" },
-  { slug: "resume5", name: "Quiet Spine", blurb: "Restrained, recruiter-first" },
+  { slug: "resume6", name: "Pinned Rail", blurb: "Pinned tree, one job at a time", round: 2 },
+  { slug: "resume7", name: "Dual Focus", blurb: "Same, but splits through the overlap", round: 2 },
+  { slug: "resume8", name: "Time Reel", blurb: "Scroll through time, to scale", round: 2 },
+  { slug: "resume1", name: "Branch Rail", blurb: "Graph in a rail, content in one column", round: 1 },
+  { slug: "resume2", name: "Parallel Tracks", blurb: "Two real columns through the overlap", round: 1 },
+  { slug: "resume3", name: "Time Scrubber", blurb: "Horizontal time axis you explore", round: 1 },
+  { slug: "resume4", name: "Metro Map", blurb: "Transit-map lines and stations", round: 1 },
+  { slug: "resume5", name: "Quiet Spine", blurb: "Restrained, recruiter-first", round: 1 },
 ] as const;
 
 export function VariantSwitcher({ current }: { current: string }) {
   return (
     <nav className="vchrome__switcher" aria-label="Resume layout prototypes">
-      <span className="vchrome__switcher-label">Prototype:</span>
+      <span className="vchrome__switcher-label">Round 2:</span>
       <ul className="vchrome__switcher-list">
-        {VARIANTS.map((v) => (
+        {VARIANTS.filter((v) => v.round === 2).map((v) => (
           <li key={v.slug}>
             <a
               href={`/${v.slug}`}
@@ -39,6 +42,24 @@ export function VariantSwitcher({ current }: { current: string }) {
                 v.slug === current
                   ? "vchrome__switcher-link vchrome__switcher-link--current"
                   : "vchrome__switcher-link"
+              }
+              aria-current={v.slug === current ? "page" : undefined}
+            >
+              {v.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <span className="vchrome__switcher-label">Round 1:</span>
+      <ul className="vchrome__switcher-list">
+        {VARIANTS.filter((v) => v.round === 1).map((v) => (
+          <li key={v.slug}>
+            <a
+              href={`/${v.slug}`}
+              className={
+                v.slug === current
+                  ? "vchrome__switcher-link vchrome__switcher-link--current vchrome__switcher-link--past"
+                  : "vchrome__switcher-link vchrome__switcher-link--past"
               }
               aria-current={v.slug === current ? "page" : undefined}
             >

@@ -1,0 +1,255 @@
+/* TEMPORARY prototype styles — /resume6 "Pinned Rail" and /resume7 "Dual Focus". */
+
+.pr {
+  --pr-top: 76px;
+  --pr-rail-w: 132px;
+  position: relative;
+}
+
+/* Without JS, or under reduced motion, this is a plain stacked list. */
+.pr__sticky {
+  display: grid;
+  grid-template-columns: var(--pr-rail-w) minmax(0, 1fr);
+  gap: 18px;
+}
+
+.pr--enhanced .pr__sticky {
+  position: sticky;
+  top: var(--pr-top);
+  height: calc(100svh - var(--pr-top) - 18px);
+  align-items: stretch;
+}
+
+/* ---- rail ---- */
+
+.pr__rail {
+  position: relative;
+  width: var(--pr-rail-w);
+}
+
+.pr--enhanced .pr__rail {
+  height: 100%;
+}
+
+.pr__svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+}
+
+.pr__line {
+  fill: none;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+.pr__line--dim {
+  opacity: 0.22;
+}
+
+.pr__cap {
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0.35;
+}
+
+.pr__overlap {
+  fill: color-mix(in srgb, var(--foreground) 7%, transparent);
+}
+
+.pr__node {
+  transition: r 200ms cubic-bezier(0.4, 0, 0.2, 1), opacity 200ms ease;
+}
+
+.pr__node--active {
+  filter: drop-shadow(0 0 7px color-mix(in srgb, var(--primary) 65%, transparent));
+}
+
+.pr__marker {
+  transition: transform 90ms linear;
+}
+
+.pr__marker-line {
+  stroke: var(--foreground);
+  stroke-width: 1;
+  opacity: 0.2;
+  stroke-dasharray: 2 4;
+}
+
+.pr__marker-chevron {
+  fill: none;
+  stroke: var(--foreground);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Invisible jump targets sitting over each rail node. */
+.pr__jump {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 34px;
+  transform: translateY(-50%);
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.pr__jump:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+  border-radius: 6px;
+}
+
+.pr__jump-label {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 6px;
+  padding: 4px 9px;
+  border-radius: 8px;
+  background: var(--foreground);
+  color: var(--background);
+  font-size: 0.72rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+  z-index: 6;
+}
+
+.pr__jump:hover .pr__jump-label,
+.pr__jump:focus-visible .pr__jump-label {
+  opacity: 1;
+}
+
+/* ---- stage ---- */
+
+.pr__stage {
+  position: relative;
+  min-width: 0;
+}
+
+.pr--enhanced .pr__stage {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.pr__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex: none;
+  padding-bottom: 8px;
+}
+
+.pr__counter {
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.pr__stops {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 26px;
+}
+
+.pr--enhanced .pr__stops {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: block;
+}
+
+.pr--enhanced .pr__stop {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  /* Opacity is set inline from scroll position; no transition, or it would
+     lag behind the scroll it is meant to track. */
+}
+
+.pr--enhanced .pr__stop--gone {
+  visibility: hidden;
+}
+
+.pr--enhanced .pr__stop > * {
+  flex: 1 1 0;
+  min-width: 0;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.pr__stop {
+  display: flex;
+  gap: 16px;
+}
+
+/* ---- narrow screens: thin rail, effect intact ---- */
+
+@media (max-width: 900px) {
+  .pr {
+    --pr-rail-w: 46px;
+  }
+
+  .pr__sticky {
+    gap: 10px;
+  }
+
+  .pr__jump-label {
+    display: none;
+  }
+
+  /* A pair cannot sit side by side at this width — the second card stacks
+     beneath the first and renders in its trimmed, header-only form. The first
+     card absorbs any overflow so the second is never pushed off-screen. */
+  .pr--enhanced .pr__stop--pair {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .pr--enhanced .pr__stop--pair > *:first-child {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .pr--enhanced .pr__stop--pair > *:last-child {
+    flex: 0 0 auto;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 560px) {
+  .pr {
+    --pr-top: 62px;
+  }
+
+  .pr__toolbar {
+    justify-content: space-between;
+  }
+}
+
+/* Reduced motion never reaches `pr--enhanced`, so the fallback list needs no
+   special casing here — but the cards should still not animate. */
+@media (prefers-reduced-motion: reduce) {
+  .pr__node,
+  .pr__marker,
+  .pr__jump-label {
+    transition: none;
+  }
+}

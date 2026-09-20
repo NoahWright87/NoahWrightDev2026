@@ -55,6 +55,18 @@
   border-style: dashed;
 }
 
+/* Earlier round, kept reachable for comparison but visually de-emphasised. */
+.vchrome__switcher-link--past {
+  opacity: 0.6;
+  font-size: 0.8rem;
+}
+
+.vchrome__switcher-link--past:hover,
+.vchrome__switcher-link--past:focus-visible,
+.vchrome__switcher-link--past.vchrome__switcher-link--current {
+  opacity: 1;
+}
+
 .vchrome__note {
   padding: 10px 14px;
   border-left: 3px solid var(--primary);

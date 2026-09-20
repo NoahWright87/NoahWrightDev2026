@@ -19,7 +19,11 @@ Use this file to keep short, durable notes that help future chat sessions resume
   - Phase 1: `/resume` page exists as placeholder and is the current resume CTA destination.
   - Phase 2: downloadable PDF can be added later.
 - Resume direction is a **branching timeline**, not a flat job list: Noah had a dual career (USAF active duty, then USAF Reserve part-time alongside a full-time civilian engineering job), and the page should show the two tracks and their overlap. Reference is the *look* of a git branch graph, not literal git semantics (commits/merges) — that framing was explicitly rejected.
-  - Five throwaway layout prototypes are live at `/resume1`–`/resume5` (linked from `/resume`, `noindex`, excluded from `sitemap.ts`): Branch Rail, Parallel Tracks, Time Scrubber, Metro Map, Quiet Spine. All render the same fake data from `src/lib/resumeDemo.ts` so only presentation differs.
+  - Throwaway layout prototypes are live at `/resume1`–`/resume8` (linked from `/resume`, `noindex`, excluded from `sitemap.ts`). All render the same fake data from `src/lib/resumeDemo.ts` so only presentation differs.
+    - Round 1 (`/resume1`–`/resume5`): Branch Rail, Parallel Tracks, Time Scrubber, Metro Map, Quiet Spine.
+    - Round 2 (`/resume6`–`/resume8`) combines what Noah liked from round 1 — Branch Rail's tree, Metro Map's one-thing-at-a-time focus, driven by scroll instead of clicks. The tree pins to the left for the whole section, a chevron tracks scroll position, and one job at a time fades in beside it. `/resume6` Pinned Rail (strictly one job per stop), `/resume7` Dual Focus (identical but splits into two cards through the overlap), `/resume8` Time Reel (to-scale tree; scroll maps to a year, so concurrency falls out of the model).
+    - Confirmed preferences from that round: mobile keeps the pinned effect with a thin rail (not a plain-list fallback); scroll pacing is adjustable in-page via a control that persists to `localStorage`.
+    - Crossfading *text* needs staggered ramps, not a true cross-dissolve — two cards at 50% opacity superimposed is unreadable mush. `scrollRail.ts` fades the outgoing card out before the incoming one rises; keep that property if this code is reworked.
   - All prototype code is deliberately local and temporary (`src/components/pages/resume-variants/`). Once a direction is picked, the winner becomes a reusable `design` primitive per the design-system-first rule below; then delete the prototype routes, `resumeDemo.ts`, and the variants folder.
   - Real resume content does not exist yet anywhere in the repo — `resumeDemo.ts` is invented placeholder data shaped to match the real career's structure. Do not mistake it for fact.
 - Netlify is the deployment platform; `netlify.toml` is configured for Next.js plugin usage.
@@ -31,6 +35,10 @@ Use this file to keep short, durable notes that help future chat sessions resume
   - In progress: home page hero (rotating title, photo carousel, styled background/border) and the quick-nav-links-as-cards treatment were built as reusable `design` primitives (`Hero`, `TextCarousel`, `useTypewriter`/`usePrefersReducedMotion` atoms, `Carousel` `showControls`/`decorative` props; `Card`/`CardGrid` already existed) rather than one-off local code, per the rule above.
   - Release flow while `design` changes are unreleased: open a PR in `design` (triggers an ephemeral pre-release publish under an `pr-<N>` npm dist-tag, commented on that PR), pin this site's `@noahwright/design` dependency to that exact pre-release version in a PR here so Netlify builds a real deploy preview against it, then once the `design` PR is reviewed and merged (publishing the real version to npm), bump this site's dependency to that real version before merging this site's PR.
   - `design` PR #20 (Hero organism, TextCarousel, typewriter rework, mobile menu fix) merged and published the real `1.2.0` to npm; this site is re-pinned to `1.2.0` (no longer the `1.2.0-pr20.c0077c0` preview).
+
+## Layout Gotchas
+
+- `globals.css` uses `overflow-x: clip` (not `hidden`) on `html, body`. Both stop horizontal overflow, but `hidden` makes the element a scroll container — it also forces `overflow-y` to `auto` — which silently breaks `position: sticky` for every descendant on the page. This was found when a pinned pane refused to pin despite a computed `position: sticky`. Do not change it back to `hidden`; verified with no horizontal overflow on any route at 1280px and 390px.
 
 ## Portrait Assets
 

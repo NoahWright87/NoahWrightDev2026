@@ -11,6 +11,30 @@ import SiteShell from "@/components/SiteShell";
  * (plus `src/lib/resumeDemo.ts` and `src/components/pages/resume-variants/`) go away.
  */
 
+const ROUND_TWO = [
+  {
+    slug: "resume6",
+    name: "Pinned Rail",
+    summary:
+      "The tree stays pinned to the left for the whole section while one job at a time fades in beside it, driven by scroll position. A chevron glides down the tree and the lanes fill in behind it. Strictly one job per stop, even through the years two careers ran at once.",
+    strength: "The cleanest read of the brief.",
+  },
+  {
+    slug: "resume7",
+    name: "Dual Focus",
+    summary:
+      "Identical to Pinned Rail in every respect but one: through the overlap the stage splits and both concurrent jobs appear together, then closes back to a single card afterwards.",
+    strength: "Isolates one question — is the split worth the layout change?",
+  },
+  {
+    slug: "resume8",
+    name: "Time Reel",
+    summary:
+      "Scrolling moves through time rather than through jobs. The tree is drawn to scale, a year readout rides the chevron, and whatever was running that year is what you see — so the stage opens into two panes on its own through the overlap. A four-year posting takes four years of scrolling.",
+    strength: "Concurrency falls out of the model instead of being special-cased.",
+  },
+];
+
 const PROTOTYPES = [
   {
     slug: "resume1",
@@ -61,16 +85,45 @@ export default function ResumePageClient() {
             than a flat list of jobs.
           </Text>
           <Text>
-            Five layout prototypes are below. Each one renders the same placeholder content, so the
-            only thing that differs is how the timeline is presented. Real content and a downloadable
-            PDF follow once a direction is picked.
+            Layout prototypes are below. Each one renders the same placeholder content, so the only
+            thing that differs is how the timeline is presented. Real content and a downloadable PDF
+            follow once a direction is picked.
           </Text>
         </Container>
       </Container>
 
       <Container padding="lg">
         <Container direction="vertical" itemSpacing="md">
-          <Heading level={2}>Layout prototypes</Heading>
+          <Heading level={2}>Round 2 — pinned tree, one job at a time</Heading>
+          <Text>
+            Built from the parts that worked in round one: Branch Rail&rsquo;s tree, Metro
+            Map&rsquo;s one-thing-at-a-time focus, and scrolling instead of clicking. All three pin
+            the tree to the left and reveal jobs as you scroll. Each carries a pace control so the
+            scroll distance per job can be tried at three settings.
+          </Text>
+          <CardGrid minCardWidth="300px">
+            {ROUND_TWO.map((proto, index) => (
+              <Card
+                key={proto.slug}
+                href={`/${proto.slug}`}
+                interactive
+                title={`${index + 1}. ${proto.name}`}
+                subtitle={proto.strength}
+                footer={<Text tone="muted">View prototype &rarr;</Text>}
+              >
+                <Text>{proto.summary}</Text>
+              </Card>
+            ))}
+          </CardGrid>
+        </Container>
+      </Container>
+
+      <Container padding="lg">
+        <Container direction="vertical" itemSpacing="md">
+          <Heading level={2}>Round 1 — the original five</Heading>
+          <Text>
+            Kept for reference and comparison.
+          </Text>
           <CardGrid minCardWidth="300px">
             {PROTOTYPES.map((proto, index) => (
               <Card
