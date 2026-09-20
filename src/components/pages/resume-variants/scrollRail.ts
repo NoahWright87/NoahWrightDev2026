@@ -106,7 +106,12 @@ export interface RailPaths {
   serviceX: number;
   civilianX: number;
   service: string;
+  /** Fork curve plus the whole civilian lane, as one path. */
   branch: string;
+  /** Just the fork curve, for callers drawing the lane in colored segments. */
+  branchCurve: string;
+  /** Where the fork curve lands on the civilian lane. */
+  branchCurveEndY: number;
   forkY: number;
   serviceEndY: number;
   overlapTop: number;
@@ -133,15 +138,18 @@ export function buildRailPaths(opts: {
   const curve = Math.min(gap, 88);
   const curveEnd = forkY + curve;
 
+  const branchCurve =
+    `M ${serviceX} ${forkY} ` +
+    `C ${serviceX} ${forkY + curve * 0.6}, ${civilianX} ${curveEnd - curve * 0.6}, ` +
+    `${civilianX} ${curveEnd}`;
+
   return {
     serviceX,
     civilianX,
     service: `M ${serviceX} ${topY} L ${serviceX} ${serviceEndY}`,
-    branch:
-      `M ${serviceX} ${forkY} ` +
-      `C ${serviceX} ${forkY + curve * 0.6}, ${civilianX} ${curveEnd - curve * 0.6}, ` +
-      `${civilianX} ${curveEnd} ` +
-      `L ${civilianX} ${bottomY}`,
+    branch: `${branchCurve} L ${civilianX} ${bottomY}`,
+    branchCurve,
+    branchCurveEndY: curveEnd,
     forkY,
     serviceEndY,
     overlapTop: forkY,
@@ -167,6 +175,8 @@ export function sectionProgress(sectionRect: DOMRect, stickyHeight: number): num
 export interface StopFade {
   /** Index of the stop currently in focus. */
   active: number;
+  /** Stop the marker is travelling *from*. Trails `active` through a handover. */
+  markerIndex: number;
   /** Index fading in behind it, or `null` when the active stop is settled. */
   next: number | null;
   /** Opacity of the active stop, 0 to 1. */
@@ -196,6 +206,13 @@ const FADE_BAND = 0.14;
 const OUT_RAMP = 0.5;
 const IN_DELAY = 0.35;
 
+/**
+ * Fraction of a slice the incoming card is already settled for before the
+ * marker actually reaches its dot. Without it the card arrives at the exact
+ * frame the marker lands, so tapping a dot catches the job still fading in.
+ */
+const SETTLE = 0.12;
+
 function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value));
 }
@@ -207,21 +224,45 @@ function clamp01(value: number): number {
  */
 export function stopFade(progress: number, count: number): StopFade {
   if (count <= 1) {
-    return { active: 0, next: null, activeOpacity: 1, nextOpacity: 0, position: 0, local: progress };
+    return {
+      active: 0,
+      markerIndex: 0,
+      next: null,
+      activeOpacity: 1,
+      nextOpacity: 0,
+      position: 0,
+      local: progress,
+    };
   }
 
-  const scaled = Math.min(progress * count, count - 0.0001);
-  const active = Math.min(Math.floor(scaled), count - 1);
-  const local = scaled - active;
+  /* The marker runs on the raw scale, so it sits exactly on a dot at the start
+     of that dot's slice. Card changes run on a scale shifted slightly earlier,
+     so the handover finishes while the marker is still short of the next dot. */
+  const raw = Math.min(progress * count, count - 0.0001);
+  const markerIndex = Math.min(Math.floor(raw), count - 1);
+  const local = raw - markerIndex;
+
+  const shifted = Math.min(raw + SETTLE, count - 0.0001);
+  const active = Math.min(Math.floor(shifted), count - 1);
+  const cardLocal = shifted - active;
 
   const fadeStart = 1 - FADE_BAND;
-  if (local < fadeStart || active === count - 1) {
-    return { active, next: null, activeOpacity: 1, nextOpacity: 0, position: active, local };
+  if (cardLocal < fadeStart || active === count - 1) {
+    return {
+      active,
+      markerIndex,
+      next: null,
+      activeOpacity: 1,
+      nextOpacity: 0,
+      position: active,
+      local,
+    };
   }
 
-  const u = (local - fadeStart) / FADE_BAND;
+  const u = (cardLocal - fadeStart) / FADE_BAND;
   return {
     active,
+    markerIndex,
     next: active + 1,
     activeOpacity: 1 - clamp01(u / OUT_RAMP),
     nextOpacity: clamp01((u - IN_DELAY) / (1 - IN_DELAY)),

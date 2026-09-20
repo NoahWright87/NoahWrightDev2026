@@ -128,8 +128,7 @@
 /* Invisible jump targets sitting over each rail node. */
 .pr__jump {
   position: absolute;
-  left: 0;
-  width: 100%;
+  /* Width is set inline from the measured lane spacing. */
   height: 34px;
   transform: translateY(-50%);
   padding: 0;
@@ -149,7 +148,9 @@
   left: 100%;
   top: 50%;
   transform: translateY(-50%);
-  margin-left: 6px;
+  /* Pushed clear of the rail regardless of which lane the button sits in, so a
+     service-lane label never lands on top of the civilian line. */
+  margin-left: var(--label-shift, 6px);
   padding: 4px 9px;
   border-radius: 8px;
   background: var(--foreground);
@@ -236,6 +237,86 @@
 .pr__stop {
   display: flex;
   gap: 16px;
+}
+
+/* ---- stacked stop: one card on top, concurrent jobs behind it as tabs ---- */
+
+.pr__stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-height: 0;
+}
+
+.pr--enhanced .pr__stop--stacked > * {
+  overflow: visible;
+}
+
+.pr__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: none;
+}
+
+.pr__tab {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 5px 12px;
+  border: 1px solid color-mix(in srgb, var(--lane-color) 40%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 140ms ease, background 140ms ease;
+}
+
+.pr__tab:hover {
+  opacity: 1;
+  background: color-mix(in srgb, var(--lane-color) 12%, transparent);
+}
+
+.pr__tab:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.pr__tab--on {
+  opacity: 1;
+  background: color-mix(in srgb, var(--lane-color) 18%, transparent);
+  border-color: var(--lane-color);
+}
+
+.pr__tab-org {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lane-color);
+}
+
+.pr__tab-role {
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 24ch;
+}
+
+.pr__stack-card {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+}
+
+.pr__stack-card > * {
+  width: 100%;
 }
 
 /* ---- narrow screens: thin rail, effect intact ---- */

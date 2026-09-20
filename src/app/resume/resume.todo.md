@@ -3,6 +3,9 @@
 ## Goal
 Ship a web resume built as a branching timeline that shows the dual USAF/civilian career and its overlap, then add PDF export/download support in a later phase.
 
+## Chosen direction
+`/resume8` Time Reel. Refine that one; the rest are kept only for reference.
+
 ## Current Phase — pick a layout
 Throwaway prototypes are live and linked from `/resume`. They all render the same
 fake data (`src/lib/resumeDemo.ts`) so only the presentation differs.
@@ -15,7 +18,7 @@ Each carries an in-page pace control (snappy / standard / cinematic).
 |---|---|---|
 | `/resume6` | Pinned Rail | Strictly one job per stop, even through the overlap |
 | `/resume7` | Dual Focus | Identical, but splits into two cards through the overlap |
-| `/resume8` | Time Reel | To-scale tree with year ticks; a date label rides the marker and updates as you scroll |
+| `/resume8` | **Time Reel** (chosen) | To-scale tree with year ticks, a date riding the marker, per-employer job colors, and concurrent jobs stacked behind tabs |
 
 ### Round 1 — the original five
 | Route | Name | Idea |
@@ -27,7 +30,9 @@ Each carries an in-page pace control (snappy / standard / cinematic).
 | `/resume5` | Quiet Spine | Restrained; glance strip up top, then three chapters with collapsed details |
 
 ## Settled
-- One job on screen at a time.
+- One job on screen at a time; a concurrent job sits behind it as a tab.
+- Colors carry the employer, so a promotion and a job change look different.
+- Tapping a dot lands the marker on that dot with the job fully readable.
 - Mobile keeps the pinned effect on a thin rail rather than falling back to a plain list.
 - Scroll pacing is tunable in-page instead of being guessed up front.
 - The scroll marker, the line fill behind it, and any date label all track scroll

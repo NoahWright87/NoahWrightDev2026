@@ -20,10 +20,13 @@ import "./job-card.css";
 export function JobCard({
   entry,
   compact = false,
+  color,
 }: {
   entry: ResumeEntry;
   /** Trims the card to its header — used for the second card in a tight pair. */
   compact?: boolean;
+  /** Overrides the lane color, e.g. with a per-job one. */
+  color?: string;
 }) {
   const markers = markersWithin(entry);
   const concurrent = entry.start >= FORK_YEAR && entry.start < MERGE_YEAR;
@@ -31,7 +34,7 @@ export function JobCard({
   return (
     <article
       className={compact ? "jc jc--compact" : "jc"}
-      style={{ ["--lane-color" as string]: laneColorVar(entry.lane) }}
+      style={{ ["--lane-color" as string]: color ?? laneColorVar(entry.lane) }}
     >
       <div className="jc__top">
         <span className="jc__lane">{laneById(entry.lane).label}</span>

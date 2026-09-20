@@ -8,5 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default function Resume8Page() {
-  return <PinnedRailStage mode="single" railScale="toScale" />;
+  return (
+    <PinnedRailStage mode="single" railScale="toScale" colorBy="job" concurrentTabs />
+  );
 }

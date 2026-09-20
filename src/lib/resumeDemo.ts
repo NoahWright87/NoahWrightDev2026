@@ -82,13 +82,20 @@ export const RESUME_LANES: ResumeLane[] = [
     label: "Civilian Engineering",
     shortLabel: "Civilian",
     color: "primary",
-    start: 2016.4,
+    start: 2016.45,
     end: null,
   },
 ];
 
-/** The year the single track becomes two — the centerpiece of every variant. */
-export const FORK_YEAR = 2016.4;
+/**
+ * The year the single track becomes two — the centerpiece of every variant.
+ *
+ * Reserve service starts a few weeks *before* the civilian job rather than the
+ * same day. That is realistic, and it matters to the layouts: identical dates
+ * would stack the two rail nodes on top of each other on a to-scale rail, so
+ * neither could be aimed at or read separately while scrolling.
+ */
+export const FORK_YEAR = 2016.3;
 /** The year the service track ends and the career is civilian-only again. */
 export const MERGE_YEAR = 2019.5;
 
@@ -121,8 +128,8 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     role: "Systems Craftsman, Staff Sergeant",
     org: "U.S. Air Force",
     start: 2013.1,
-    end: 2016.4,
-    dateLabel: "Feb 2013 — Jun 2016",
+    end: 2016.3,
+    dateLabel: "Feb 2013 — Apr 2016",
     commitment: "full-time",
     kind: "promotion",
     summary:
@@ -139,9 +146,9 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     lane: "service",
     role: "Technical Sergeant, Air Force Reserve",
     org: "U.S. Air Force Reserve",
-    start: 2016.4,
+    start: 2016.3,
     end: 2019.5,
-    dateLabel: "Jun 2016 — Jul 2019",
+    dateLabel: "Apr 2016 — Jul 2019",
     commitment: "part-time",
     kind: "promotion",
     summary:
@@ -158,7 +165,7 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     lane: "civilian",
     role: "Software Engineer I",
     org: "Cobalt Ridge Software",
-    start: 2016.4,
+    start: 2016.45,
     end: 2018.7,
     dateLabel: "Jun 2016 — Sep 2018",
     commitment: "full-time",
@@ -348,6 +355,52 @@ export function laneById(id: LaneId): ResumeLane {
 /** CSS color for a lane, as a design-system token reference. */
 export function laneColorVar(id: LaneId): string {
   return `var(--${laneById(id).color})`;
+}
+
+/* ------------------------------------------------------------------ */
+/* Per-job colors                                                      */
+/* ------------------------------------------------------------------ */
+
+/** Civilian employers, oldest first — each gets its own hue. */
+export const CIVILIAN_EMPLOYERS: string[] = ENTRIES_CHRONOLOGICAL.filter(
+  (entry) => entry.lane === "civilian"
+).reduce<string[]>((acc, entry) => (acc.includes(entry.org) ? acc : [...acc, entry.org]), []);
+
+/**
+ * Color for a single job.
+ *
+ * Service work is always the one Air Force blue — it is all the same employer,
+ * so there is nothing for a second hue to distinguish. Civilian jobs take a hue
+ * per employer and a shade per role within it, which is what makes a promotion
+ * (same hue, different shade) read differently from a move to a new company
+ * (a different hue entirely).
+ *
+ * Values live in `job-colors.css` so each has a light and a dark variant.
+ */
+export function jobColorVar(entry: ResumeEntry): string {
+  if (entry.lane === "service") return "var(--job-usaf)";
+  const employer = Math.max(0, CIVILIAN_EMPLOYERS.indexOf(entry.org));
+  const rolesHere = ENTRIES_CHRONOLOGICAL.filter(
+    (e) => e.lane === "civilian" && e.org === entry.org
+  );
+  const role = Math.max(0, rolesHere.findIndex((e) => e.id === entry.id));
+  return `var(--job-e${Math.min(employer, 2)}-${Math.min(role, 2)}, var(--primary))`;
+}
+
+/** The employer's own hue, for legends and grouping. */
+export function employerColorVar(org: string): string {
+  if (!CIVILIAN_EMPLOYERS.includes(org)) return "var(--job-usaf)";
+  return `var(--job-e${Math.min(CIVILIAN_EMPLOYERS.indexOf(org), 2)}-0, var(--primary))`;
+}
+
+/** True when this entry continues at the same employer as the one before it. */
+export function isSameEmployerAsPrevious(entry: ResumeEntry): boolean {
+  const index = ENTRIES_CHRONOLOGICAL.findIndex((e) => e.id === entry.id);
+  if (index <= 0) return false;
+  const previousSameLane = ENTRIES_CHRONOLOGICAL.slice(0, index)
+    .filter((e) => e.lane === entry.lane)
+    .pop();
+  return previousSameLane?.org === entry.org;
 }
 
 /** Decimal year -> 0..1 position across the whole timeline. */

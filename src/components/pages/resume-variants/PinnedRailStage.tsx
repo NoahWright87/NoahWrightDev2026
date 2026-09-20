@@ -1,16 +1,22 @@
 "use client";
 
 /**
- * TEMPORARY prototype — `/resume6` (single) and `/resume7` (split).
+ * TEMPORARY prototype — drives `/resume6`, `/resume7` and `/resume8`.
  *
  * A branch-style tree is pinned to the left for the whole section while one job
  * at a time fades in and out beside it, driven by scroll position. A chevron
  * glides down the tree and the lanes fill in behind it to show how far along
  * you are.
  *
- * The two modes differ in exactly one respect, so they can be compared cleanly:
- * `single` shows one job per stop even through the years two ran at once;
- * `split` merges those years into shared stops showing both jobs side by side.
+ * The props pick which variant this is:
+ * - `/resume6` single + even — one job per stop, every job given equal room.
+ * - `/resume7` split + even — the overlap years share a stop, both jobs shown
+ *   side by side. Otherwise identical to resume6, so the two isolate that one
+ *   question.
+ * - `/resume8` single + toScale + job colors + concurrent tabs — the current
+ *   favourite. Vertical distance is elapsed time, a date rides the marker, jobs
+ *   are colored by employer, and a concurrent job sits behind the stop's own as
+ *   a tab rather than taking the stage.
  */
 
 import * as React from "react";
@@ -25,6 +31,8 @@ import {
   TIMELINE_END,
   TIMELINE_START,
   entryEnd,
+  jobColorVar,
+  laneById,
   laneColorVar,
   yearToFraction,
   type ResumeEntry,
@@ -41,9 +49,12 @@ import {
   writeStoredPacing,
   type Pacing,
 } from "./scrollRail";
+import "./job-colors.css";
 import "./pinned-rail.css";
 
 export type StageMode = "single" | "split";
+/** `job` colors by employer and role; `lane` uses the two design-system tokens. */
+export type ColorBy = "lane" | "job";
 /** `toScale` makes vertical distance on the rail mean elapsed time. */
 export type RailScale = "even" | "toScale";
 
@@ -65,6 +76,16 @@ function overlaps(a: ResumeEntry, b: ResumeEntry): boolean {
   return a.start < entryEnd(b) && b.start < entryEnd(a);
 }
 
+/** Other-lane jobs already running the day this one starts. */
+function concurrentAtStart(entry: ResumeEntry): ResumeEntry[] {
+  return ENTRIES_CHRONOLOGICAL.filter(
+    (other) =>
+      other.lane !== entry.lane &&
+      entry.start >= other.start &&
+      entry.start < entryEnd(other)
+  );
+}
+
 /** The other lane's job running at the moment this one begins, if any. */
 function partnerFor(entry: ResumeEntry): ResumeEntry | undefined {
   return ENTRIES_CHRONOLOGICAL.find(
@@ -76,9 +97,20 @@ function partnerFor(entry: ResumeEntry): ResumeEntry | undefined {
   );
 }
 
-function buildStops(mode: StageMode): Stop[] {
+function buildStops(mode: StageMode, concurrentTabs: boolean): Stop[] {
   if (mode === "single") {
-    return ENTRIES_CHRONOLOGICAL.map((entry) => ({ id: entry.id, entries: [entry] }));
+    return ENTRIES_CHRONOLOGICAL.map((entry) => ({
+      id: entry.id,
+      /*
+       * `entries[0]` is the stop's own job and is what shows by default; any
+       * others are concurrent jobs offered as tabs behind it. Because reserve
+       * service is dated just before the first civilian role, the reserve stop
+       * finds nothing running yet and stands alone, while each civilian stop
+       * picks the reserve posting up as a tab. That is what puts the civilian
+       * card on top through the overlap without hiding the service one.
+       */
+      entries: concurrentTabs ? [entry, ...concurrentAtStart(entry)] : [entry],
+    }));
   }
 
   const stops: Stop[] = [];
@@ -93,6 +125,56 @@ function buildStops(mode: StageMode): Stop[] {
     stops.push({ id, entries: set });
   }
   return stops;
+}
+
+/**
+ * A stop whose job may be running alongside one on the other track. The stop's
+ * own job is on top; anything concurrent sits behind it as a tab, so the second
+ * career is visible and one click away without ever taking the stage uninvited.
+ */
+function StackedStop({
+  stop,
+  shown,
+  isActiveStop,
+  colorOf,
+  onPick,
+}: {
+  stop: Stop;
+  shown: ResumeEntry;
+  isActiveStop: boolean;
+  colorOf: (entry: ResumeEntry) => string;
+  onPick: (entryId: string) => void;
+}) {
+  const stacked = stop.entries.length > 1;
+  return (
+    <div className="pr__stack">
+      {stacked && (
+        <div className="pr__tabs" role="tablist" aria-label="Concurrent roles">
+          {stop.entries.map((entry) => {
+            const on = entry.id === shown.id;
+            return (
+              <button
+                key={entry.id}
+                type="button"
+                role="tab"
+                aria-selected={on}
+                tabIndex={isActiveStop ? 0 : -1}
+                className={on ? "pr__tab pr__tab--on" : "pr__tab"}
+                style={{ ["--lane-color" as string]: colorOf(entry) }}
+                onClick={() => onPick(entry.id)}
+              >
+                <span className="pr__tab-org">{laneById(entry.lane).shortLabel}</span>
+                <span className="pr__tab-role">{entry.role}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+      <div className="pr__stack-card">
+        <JobCard entry={shown} color={colorOf(shown)} />
+      </div>
+    </div>
+  );
 }
 
 interface Variant {
@@ -123,12 +205,23 @@ const VARIANT_COPY: Record<string, Variant> = {
 export default function PinnedRailStage({
   mode,
   railScale = "even",
+  colorBy = "lane",
+  concurrentTabs = false,
 }: {
   mode: StageMode;
   railScale?: RailScale;
+  colorBy?: ColorBy;
+  concurrentTabs?: boolean;
 }) {
   const copy = VARIANT_COPY[`${mode}:${railScale}`];
-  const stops = React.useMemo(() => buildStops(mode), [mode]);
+  const stops = React.useMemo(
+    () => buildStops(mode, concurrentTabs),
+    [mode, concurrentTabs]
+  );
+  const colorOf = React.useCallback(
+    (entry: ResumeEntry) => (colorBy === "job" ? jobColorVar(entry) : laneColorVar(entry.lane)),
+    [colorBy]
+  );
   const reducedMotion = usePrefersReducedMotion();
 
   const sectionRef = React.useRef<HTMLDivElement>(null);
@@ -144,7 +237,28 @@ export default function PinnedRailStage({
   const [narrow, setNarrow] = React.useState(false);
   const [fade, setFade] = React.useState(() => stopFade(0, stops.length));
 
-  const active = stops[Math.min(fade.active, stops.length - 1)];
+  /* Once the incoming card is the more visible of the two, it is the one the
+     reader is looking at — so the counter, the lit dot and the tab strip should
+     all follow it rather than the card on its way out. */
+  const activeIndex =
+    fade.next !== null && fade.nextOpacity > fade.activeOpacity ? fade.next : fade.active;
+  const active = stops[Math.min(activeIndex, stops.length - 1)];
+
+  /**
+   * Which card is on top within a stop that stacks concurrent jobs. Null means
+   * the stop's own job — so the civilian role wins by default and the service
+   * one is a deliberate choice. Cleared whenever the active stop changes, so a
+   * pick never carries over to a different moment in the career.
+   */
+  const [tabPick, setTabPick] = React.useState<{ stop: string; entry: string } | null>(null);
+  const selected =
+    tabPick && tabPick.stop === active.id
+      ? (active.entries.find((e) => e.id === tabPick.entry) ?? active.entries[0])
+      : active.entries[0];
+
+  React.useEffect(() => {
+    setTabPick((pick) => (pick && pick.stop !== active.id ? null : pick));
+  }, [active.id]);
 
   /* Pinning only makes sense with JS and without a reduced-motion preference —
      a scroll-driven pinned pane is exactly the kind of motion that setting is
@@ -214,38 +328,60 @@ export default function PinnedRailStage({
   }, [enhanced, stops.length, stickyHeight]);
 
   /**
-   * Land in the middle of a stop's slice, where its card is fully opaque —
-   * aiming at the start of the slice drops you mid-fade, with the job only
-   * partly visible.
+   * Land with the marker exactly on the stop's dot. The card is already fully
+   * opaque there because the handover finishes a little earlier in the previous
+   * slice — see `SETTLE` in `scrollRail.ts`.
    */
   const scrollToStop = React.useCallback(
     (index: number) => {
       const section = sectionRef.current;
       if (!section || !enhanced) return;
       const travel = section.offsetHeight - stickyHeight;
-      const target = section.offsetTop + ((index + 0.5) / stops.length) * travel;
-      window.scrollTo({ top: target, behavior: "smooth" });
+      window.scrollTo({
+        top: section.offsetTop + (index / stops.length) * travel,
+        behavior: "smooth",
+      });
     },
     [enhanced, stickyHeight, stops.length]
+  );
+
+  /**
+   * Tapping a dot goes to that job: scroll to the stop it leads, and bring it
+   * to the front there. When it is only ever a concurrent tab of the stop you
+   * are already on, switch tabs in place rather than scrolling away.
+   */
+  const goToEntry = React.useCallback(
+    (entryId: string) => {
+      const owner = stops.findIndex((stop) => stop.entries[0].id === entryId);
+      if (owner === -1) {
+        if (active.entries.some((e) => e.id === entryId)) {
+          setTabPick({ stop: active.id, entry: entryId });
+        }
+        return;
+      }
+      setTabPick(null);
+      scrollToStop(owner);
+    },
+    [active, scrollToStop, stops]
   );
 
   /* Changing pacing resizes the section, so hold the reader's place. */
   const changePacing = React.useCallback(
     (value: Pacing) => {
       const section = sectionRef.current;
-      const held = fade.active;
+      const held = activeIndex;
       setPacing(value);
       writeStoredPacing(value);
       if (!section || !enhanced) return;
       window.requestAnimationFrame(() => {
         const travel = section.offsetHeight - stickyHeight;
         window.scrollTo({
-          top: section.offsetTop + ((held + 0.5) / stops.length) * travel,
+          top: section.offsetTop + (held / stops.length) * travel,
           behavior: "auto",
         });
       });
     },
-    [enhanced, fade.active, stickyHeight, stops.length]
+    [enhanced, activeIndex, stickyHeight, stops.length]
   );
 
   /* ---- rail geometry ---- */
@@ -295,7 +431,34 @@ export default function PinnedRailStage({
       for (let y = 2010; y <= Math.floor(TIMELINE_END); y += 2) ticks.push(y);
     }
 
-    return { nodes, paths, yearToY, yearAtY, ticks, bottomY: paths.branch ? height - padBottom : height };
+    /*
+     * The civilian lane is drawn one segment per job so each can carry its own
+     * color: same hue as the segment above it means a promotion at the same
+     * employer, a new hue means a new company. Service stays a single path —
+     * it is all one employer, so there is nothing for a second color to say.
+     */
+    const civilianNodes = nodes.filter((n) => n.entry.lane === "civilian");
+    const civilianSegments = civilianNodes.map((node, i) => {
+      const next = civilianNodes[i + 1];
+      const endY = next ? next.y : height - padBottom + (toScale ? 0 : 22);
+      /* The first segment carries the fork curve in with it, so the branch
+         itself is already the colour of the job it leads to. */
+      const d =
+        i === 0
+          ? `${paths.branchCurve} L ${paths.civilianX} ${endY}`
+          : `M ${paths.civilianX} ${node.y} L ${paths.civilianX} ${endY}`;
+      return { id: node.entry.id, entry: node.entry, d };
+    });
+
+    return {
+      nodes,
+      paths,
+      civilianSegments,
+      yearToY,
+      yearAtY,
+      ticks,
+      bottomY: height - padBottom,
+    };
   }, [rail, railScale]);
 
   /**
@@ -307,22 +470,38 @@ export default function PinnedRailStage({
   const markerY = React.useMemo(() => {
     if (!geometry) return 0;
     const meanY = (stop: Stop) => {
-      const ys = stop.entries
+      /* A stacked stop's extra entries are concurrent jobs tucked behind it as
+         tabs, not co-occupants of the moment — so the marker aims at the stop's
+         own dot. Only a genuinely shared stop (the side-by-side variant) puts
+         the marker between two lanes. */
+      const anchors = concurrentTabs ? stop.entries.slice(0, 1) : stop.entries;
+      const ys = anchors
         .map((e) => geometry.nodes.find((n) => n.entry.id === e.id)?.y)
         .filter((y): y is number => y !== undefined);
       return ys.length ? ys.reduce((a, b) => a + b, 0) / ys.length : 0;
     };
-    const from = meanY(active);
-    const upcoming = stops[fade.active + 1];
+    const current = stops[Math.min(fade.markerIndex, stops.length - 1)];
+    const from = meanY(current);
+    const upcoming = stops[fade.markerIndex + 1];
     /* Past the last node there is nothing to aim at, so run on to the end of
        the rail — otherwise the line stops filling early. */
     const to = upcoming ? meanY(upcoming) : geometry.bottomY;
     return from + (to - from) * Math.min(1, Math.max(0, fade.local));
-  }, [geometry, active, fade.active, fade.local, stops]);
+  }, [geometry, fade.markerIndex, fade.local, stops, concurrentTabs]);
 
   const markerYear = geometry && railScale === "toScale" ? geometry.yearAtY(markerY) : null;
 
   const activeEntryIds = new Set(active.entries.map((e) => e.id));
+  const serviceColor =
+    colorBy === "job" ? "var(--job-usaf)" : laneColorVar("service");
+
+  /* Dot targets are capped to the gap between the two lanes so a service dot
+     and a civilian one that start weeks apart never cover each other. On a
+     narrow rail that leaves a small target, which is why the tab strip — not
+     the dots — is the primary way to reach a concurrent job on a phone. */
+  const jumpWidth = rail
+    ? Math.max(16, Math.min(44, Math.abs(laneX(rail.width, 1) - laneX(rail.width, 0)) - 3))
+    : 44;
 
   const sectionStyle: React.CSSProperties = enhanced
     ? { height: `calc(${stops.length * PACING_VH[pacing]}vh + ${stickyHeight}px)` }
@@ -385,31 +564,35 @@ export default function PinnedRailStage({
                     </g>
                   ))}
 
-                  {/* Whole tree, dimmed — the part you have not reached yet. */}
-                  <path
-                    className="pr__line pr__line--dim"
-                    d={geometry.paths.service}
-                    stroke={laneColorVar("service")}
-                  />
-                  <path
-                    className="pr__line pr__line--dim"
-                    d={geometry.paths.branch}
-                    stroke={laneColorVar("civilian")}
-                  />
-
-                  {/* Same tree at full strength, clipped to everything above the chevron. */}
-                  <g clipPath={`url(#${clipId}-trail)`}>
-                    <path
-                      className="pr__line"
-                      d={geometry.paths.service}
-                      stroke={laneColorVar("service")}
-                    />
-                    <path
-                      className="pr__line"
-                      d={geometry.paths.branch}
-                      stroke={laneColorVar("civilian")}
-                    />
-                  </g>
+                  {/* Whole tree twice: dimmed underneath for the part not yet
+                      reached, then again at full strength clipped to above the
+                      marker, which is what fills the line in as you scroll. */}
+                  {[false, true].map((lit) => {
+                    const lane = (
+                      <>
+                        <path
+                          className={lit ? "pr__line" : "pr__line pr__line--dim"}
+                          d={geometry.paths.service}
+                          stroke={serviceColor}
+                        />
+                        {geometry.civilianSegments.map((segment) => (
+                          <path
+                            key={segment.id}
+                            className={lit ? "pr__line" : "pr__line pr__line--dim"}
+                            d={segment.d}
+                            stroke={colorOf(segment.entry)}
+                          />
+                        ))}
+                      </>
+                    );
+                    return lit ? (
+                      <g key="lit" clipPath={`url(#${clipId}-trail)`}>
+                        {lane}
+                      </g>
+                    ) : (
+                      <g key="dim">{lane}</g>
+                    );
+                  })}
 
                   <line
                     className="pr__cap"
@@ -417,20 +600,22 @@ export default function PinnedRailStage({
                     y1={geometry.paths.serviceEndY}
                     x2={geometry.paths.serviceX + 7}
                     y2={geometry.paths.serviceEndY}
-                    stroke={laneColorVar("service")}
+                    stroke={serviceColor}
                   />
 
                   {geometry.nodes.map(({ entry, x, y }) => {
-                    const isActive = activeEntryIds.has(entry.id);
+                    const isActive = selected.id === entry.id;
+                    const inStop = activeEntryIds.has(entry.id);
                     const passed = y <= markerY;
+                    const color = colorOf(entry);
                     return (
                       <circle
                         key={entry.id}
                         cx={x}
                         cy={y}
-                        r={isActive ? 8 : 5}
-                        fill={isActive || passed ? laneColorVar(entry.lane) : "var(--background)"}
-                        stroke={laneColorVar(entry.lane)}
+                        r={isActive ? 8 : inStop ? 6.5 : 5}
+                        fill={isActive || passed ? color : "var(--background)"}
+                        stroke={color}
                         strokeWidth={2.5}
                         className={isActive ? "pr__node pr__node--active" : "pr__node"}
                         opacity={isActive || passed ? 1 : 0.55}
@@ -464,33 +649,38 @@ export default function PinnedRailStage({
                 </span>
               )}
 
-              {/* Clickable jump targets over the rail nodes. */}
+              {/* One jump target per dot, so every job is reachable — including
+                  a service posting that only ever appears as a concurrent tab. */}
               {enhanced &&
                 geometry &&
-                stops.map((stop, index) => {
-                  const node = geometry.nodes.find((n) => n.entry.id === stop.entries[0].id);
-                  if (!node) return null;
-                  return (
-                    <button
-                      key={stop.id}
-                      type="button"
-                      className="pr__jump"
-                      style={{ top: node.y }}
-                      onClick={() => scrollToStop(index)}
-                    >
-                      <span className="pr__jump-label">
-                        {stop.entries.map((e) => e.role).join(" + ")}
-                      </span>
-                    </button>
-                  );
-                })}
+                rail &&
+                geometry.nodes.map(({ entry, x, y }) => (
+                  <button
+                    key={entry.id}
+                    type="button"
+                    className="pr__jump"
+                    /* Scoped to its own lane column rather than the full rail
+                       width. Two jobs that start weeks apart sit only a few
+                       pixels apart on a to-scale rail, so full-width targets
+                       would overlap and the upper dot could never be hit. */
+                    style={{
+                      top: y,
+                      left: x - jumpWidth / 2,
+                      width: jumpWidth,
+                      ["--label-shift" as string]: `${rail.width - x + 14}px`,
+                    }}
+                    onClick={() => goToEntry(entry.id)}
+                  >
+                    <span className="pr__jump-label">{entry.role}</span>
+                  </button>
+                ))}
             </div>
 
             <div className="pr__stage">
               {enhanced && (
                 <div className="pr__toolbar">
                   <span className="pr__counter">
-                    {Math.min(fade.active + 1, stops.length)} / {stops.length}
+                    {Math.min(activeIndex + 1, stops.length)} / {stops.length}
                   </span>
                   <PacingControl value={pacing} onChange={changePacing} />
                 </div>
@@ -516,7 +706,8 @@ export default function PinnedRailStage({
                       key={stop.id}
                       className={[
                         "pr__stop",
-                        stop.entries.length > 1 && "pr__stop--pair",
+                        !concurrentTabs && stop.entries.length > 1 && "pr__stop--pair",
+                        concurrentTabs && "pr__stop--stacked",
                         enhanced && !shown && "pr__stop--gone",
                       ]
                         .filter(Boolean)
@@ -528,13 +719,23 @@ export default function PinnedRailStage({
                       }
                       aria-hidden={enhanced && opacity < 0.5 ? true : undefined}
                     >
-                      {stop.entries.map((entry, i) => (
-                        <JobCard
-                          key={entry.id}
-                          entry={entry}
-                          compact={stop.entries.length > 1 && i > 0 && narrow}
+                      {concurrentTabs ? (
+                        <StackedStop
+                          stop={stop}
+                          shown={stop.id === active.id ? selected : stop.entries[0]}
+                          isActiveStop={stop.id === active.id}
+                          colorOf={colorOf}
+                          onPick={(entryId) => setTabPick({ stop: stop.id, entry: entryId })}
                         />
-                      ))}
+                      ) : (
+                        stop.entries.map((entry, i) => (
+                          <JobCard
+                            key={entry.id}
+                            entry={entry}
+                            compact={stop.entries.length > 1 && i > 0 && narrow}
+                          />
+                        ))
+                      )}
                     </li>
                   );
                 })}
