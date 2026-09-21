@@ -1,12 +1,14 @@
 /**
- * TEMPORARY — fake resume data shared by the `/resume1`–`/resume5` layout
- * prototypes. Every variant renders from this one source so the only thing
- * that differs between them is the presentation.
+ * Resume content.
  *
- * None of this is real. It mirrors the *shape* of a dual-track career
- * (active duty -> reserves alongside a full-time civilian job -> civilian
- * only) so the branching visuals have something honest to draw. Replace with
- * real content once a layout is chosen, then delete the prototype routes.
+ * ⚠️ EVERY ENTRY BELOW IS INVENTED PLACEHOLDER DATA. The layout is settled but
+ * the content is not: the employers, dates, achievements, awards and degree are
+ * all fabricated, shaped only to match the structure of a dual-track career
+ * (active duty -> reserves alongside a full-time civilian job -> civilian only)
+ * so the branching timeline has something to draw.
+ *
+ * Replace it with the real history before this page goes live — it is linked
+ * from the home and About pages as Noah's actual resume.
  */
 
 export type LaneId = "service" | "civilian";
@@ -58,14 +60,6 @@ export interface ResumeMarker {
   label: string;
   detail: string;
   kind: MarkerKind;
-}
-
-/** A narrative beat — the moments the shape of the career actually changes. */
-export interface ResumeChapter {
-  id: string;
-  year: number;
-  label: string;
-  detail: string;
 }
 
 export const RESUME_LANES: ResumeLane[] = [
@@ -296,28 +290,6 @@ export const RESUME_MARKERS: ResumeMarker[] = [
   },
 ];
 
-export const RESUME_CHAPTERS: ResumeChapter[] = [
-  {
-    id: "chapter-enlist",
-    year: 2009.6,
-    label: "Enlisted",
-    detail: "Active duty begins — one track, full time.",
-  },
-  {
-    id: "chapter-fork",
-    year: FORK_YEAR,
-    label: "Two careers at once",
-    detail:
-      "Active duty ends and reserve service begins, alongside a full-time civilian engineering job. Both tracks run in parallel for three years.",
-  },
-  {
-    id: "chapter-merge",
-    year: MERGE_YEAR,
-    label: "Civilian only",
-    detail: "Service concludes after ten years; engineering becomes the single track.",
-  },
-];
-
 export const RESUME_SKILL_GROUPS: { category: string; skills: string[] }[] = [
   {
     category: "Leadership",
@@ -343,18 +315,10 @@ export const RESUME_SUMMARY =
 /** Entries sorted oldest-first, the reading order every variant uses. */
 export const ENTRIES_CHRONOLOGICAL = [...RESUME_ENTRIES].sort((a, b) => a.start - b.start);
 
-/** Entries sorted newest-first, for the variants that lead with the present. */
-export const ENTRIES_REVERSE_CHRONOLOGICAL = [...RESUME_ENTRIES].sort((a, b) => b.start - a.start);
-
 export function laneById(id: LaneId): ResumeLane {
   const lane = RESUME_LANES.find((l) => l.id === id);
   if (!lane) throw new Error(`Unknown lane: ${id}`);
   return lane;
-}
-
-/** CSS color for a lane, as a design-system token reference. */
-export function laneColorVar(id: LaneId): string {
-  return `var(--${laneById(id).color})`;
 }
 
 /* ------------------------------------------------------------------ */
@@ -387,20 +351,14 @@ export function jobColorVar(entry: ResumeEntry): string {
   return `var(--job-e${Math.min(employer, 2)}-${Math.min(role, 2)}, var(--primary))`;
 }
 
-/** The employer's own hue, for legends and grouping. */
-export function employerColorVar(org: string): string {
-  if (!CIVILIAN_EMPLOYERS.includes(org)) return "var(--job-usaf)";
-  return `var(--job-e${Math.min(CIVILIAN_EMPLOYERS.indexOf(org), 2)}-0, var(--primary))`;
-}
-
-/** True when this entry continues at the same employer as the one before it. */
-export function isSameEmployerAsPrevious(entry: ResumeEntry): boolean {
-  const index = ENTRIES_CHRONOLOGICAL.findIndex((e) => e.id === entry.id);
-  if (index <= 0) return false;
-  const previousSameLane = ENTRIES_CHRONOLOGICAL.slice(0, index)
-    .filter((e) => e.lane === entry.lane)
-    .pop();
-  return previousSameLane?.org === entry.org;
+/** The job a marker falls inside, so it can borrow that job's color. */
+export function markerEntry(marker: ResumeMarker): ResumeEntry | undefined {
+  return ENTRIES_CHRONOLOGICAL.find(
+    (entry) =>
+      entry.lane === marker.lane &&
+      marker.date >= entry.start &&
+      marker.date < entryEnd(entry)
+  );
 }
 
 /** Decimal year -> 0..1 position across the whole timeline. */
@@ -413,34 +371,9 @@ export function entryEnd(entry: ResumeEntry): number {
   return entry.end ?? TIMELINE_END;
 }
 
-/** Whole years an entry spans, rounded for display. */
-export function entryDurationYears(entry: ResumeEntry): number {
-  return Math.max(1, Math.round(entryEnd(entry) - entry.start));
-}
-
-/** "4 years" / "1 year". */
-export function entryDurationLabel(entry: ResumeEntry): string {
-  const years = entryDurationYears(entry);
-  return `${years} ${years === 1 ? "year" : "years"}`;
-}
-
 /** Markers that fall inside an entry's date range. */
 export function markersWithin(entry: ResumeEntry): ResumeMarker[] {
   return RESUME_MARKERS.filter(
     (m) => m.lane === entry.lane && m.date >= entry.start && m.date < entryEnd(entry)
   );
-}
-
-/** True while both lanes are running — the overlap window. */
-export function isOverlapYear(year: number): boolean {
-  return year >= FORK_YEAR && year < MERGE_YEAR;
-}
-
-/** Integer year ticks across the timeline, for axes and scrubbers. */
-export function yearTicks(step = 1): number[] {
-  const first = Math.ceil(TIMELINE_START);
-  const last = Math.floor(TIMELINE_END);
-  const ticks: number[] = [];
-  for (let y = first; y <= last; y += step) ticks.push(y);
-  return ticks;
 }

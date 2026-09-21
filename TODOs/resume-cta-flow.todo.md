@@ -16,12 +16,12 @@ Define and ship resume UX in two phases: publish a `/resume` page first, then ad
 - home-page.todo.md
 
 ## Tasks
-- [ ] Create `/resume` page with final content
-- [ ] Update `SITE.resumeUrl` in `src/lib/site.ts` to `/resume`
-- [ ] Verify home CTA routes correctly to `/resume`
+- [x] Create `/resume` page (timeline layout shipped; real content still pending — see `src/app/resume/resume.todo.md`)
+- [x] Update `SITE.resumeUrl` in `src/lib/site.ts` to `/resume`
+- [x] Verify home CTA routes correctly to `/resume`
 - [ ] (Phase 2) Export resume as PDF — filename: `noah-wright-resume-2026.pdf`
 - [ ] (Phase 2) Copy PDF to `public/noah-wright-resume-2026.pdf`
-- [ ] (Phase 2) Update CTA to support direct download if desired
+- [x] (Phase 2) Download button added at the top of `/resume`, pointing at `SITE.resumePdfUrl`
 - [ ] (Phase 2) Test download: desktop Chrome, desktop Safari or Firefox, mobile Chrome
 - [x] Add `[[headers]]` in `netlify.toml` for `/*.pdf` to force `Content-Disposition: attachment` if download attribute alone isn't sufficient
 

@@ -1,60 +1,44 @@
 # Resume Page
 
 ## Goal
-Ship a web resume built as a branching timeline that shows the dual USAF/civilian career and its overlap, then add PDF export/download support in a later phase.
+A web resume built as a branching timeline showing the dual USAF/civilian career
+and its overlap, plus a downloadable PDF.
 
-## Chosen direction
-`/resume8` Time Reel. Refine that one; the rest are kept only for reference.
+## Status
+The layout is **settled and shipped** at `/resume`. Eight prototypes were compared
+over two rounds; the winner is now the page and the rest are deleted. Two things
+are still outstanding, both content rather than design.
 
-## Current Phase — pick a layout
-Throwaway prototypes are live and linked from `/resume`. They all render the same
-fake data (`src/lib/resumeDemo.ts`) so only the presentation differs.
+## Outstanding
+- [ ] **Replace the placeholder content.** Everything in `src/lib/resume.ts` is
+      invented — employers, dates, achievements, awards, degree. The home and
+      About CTAs point here as Noah's real resume, so this must be done before
+      the page is treated as live.
+- [ ] **Add the PDF.** The "Download PDF" button points at
+      `SITE.resumePdfUrl` (`/noah-wright-resume-2026.pdf`); the file is not in
+      the repo yet, so the button 404s. Drop it at
+      `public/noah-wright-resume-2026.pdf` (see `public/RESUME_PLACEHOLDER.md`).
+      `netlify.toml` already forces `Content-Disposition: attachment` for `/*.pdf`.
+- [ ] Test the download across desktop Chrome, desktop Safari or Firefox, and
+      mobile Chrome once the file exists.
+- [ ] Consider adding `/resume` to the Playwright visual suite
+      (`tests/visual.spec.ts`) — it is not covered there. Note the timeline is
+      scroll-driven, so a full-page screenshot will not capture it meaningfully;
+      it needs a scroll-and-sample approach.
 
-### Round 2 — pinned tree, one job at a time
-Combines Branch Rail's tree with Metro Map's single-focus detail, driven by scroll.
-Each carries an in-page pace control (snappy / standard / cinematic).
-
-| Route | Name | Idea |
-|---|---|---|
-| `/resume6` | Pinned Rail | Strictly one job per stop, even through the overlap |
-| `/resume7` | Dual Focus | Identical, but splits into two cards through the overlap |
-| `/resume8` | **Time Reel** (chosen) | To-scale tree with year ticks, a date riding the marker, per-employer job colors, and concurrent jobs stacked behind tabs |
-
-### Round 1 — the original five
-| Route | Name | Idea |
-|---|---|---|
-| `/resume1` | Branch Rail | Graph in a narrow rail, content in one column at every width; sticky minimap doubles as jump nav |
-| `/resume2` | Parallel Tracks | Two real columns with a year spine; overlapping roles share a row |
-| `/resume3` | Time Scrubber | Horizontal axis, segment width is real duration, detail panel below |
-| `/resume4` | Metro Map | Schematic transit diagram with a 45° interchange; map holds still, detail swaps |
-| `/resume5` | Quiet Spine | Restrained; glance strip up top, then three chapters with collapsed details |
-
-## Settled
-- One job on screen at a time; a concurrent job sits behind it as a tab.
+## Settled (do not revisit without a reason)
+- One job on screen at a time; a concurrent job sits behind it as a tab, with the
+  civilian role on top by default.
+- The tree is drawn to scale — vertical distance is elapsed time — and a date
+  rides the scroll marker.
 - Colors carry the employer, so a promotion and a job change look different.
 - Tapping a dot lands the marker on that dot with the job fully readable.
-- Mobile keeps the pinned effect on a thin rail rather than falling back to a plain list.
-- Scroll pacing is tunable in-page instead of being guessed up front.
-- The scroll marker, the line fill behind it, and any date label all track scroll
+- Mobile keeps the pinned effect on a thin rail rather than falling back to a
+  plain list.
+- One viewport of scroll per job (chosen after trying faster and slower).
+- The scroll marker, the line fill behind it, and the date label all track scroll
   position exactly — no easing, no settling after the scroll stops.
 
-## Tasks
-- [x] Build round 1 layout prototypes against placeholder data
-- [x] Build round 2 pinned/scroll-driven prototypes
-- [ ] Pick a direction (or a hybrid) from the five
-- [ ] Rebuild the winner as a reusable primitive in the `design` repo (per the design-system-first rule in `MEMORY.md`)
-- [ ] Replace `resumeDemo.ts` with real resume content
-- [ ] Delete `/resume1`–`/resume8`, `src/lib/resumeDemo.ts`, and `src/components/pages/resume-variants/`
-- [ ] Restore `/resume` to the real resume page and confirm the home/About CTAs still land correctly
-- [ ] Decide if CTA should stay on `/resume` or switch to direct PDF download
-- [ ] (Phase 2) Add versioned PDF to `public/`
-- [ ] (Phase 2) Wire download button and verify browser behavior
-
-## Open Questions
-- Does the USAF track end cleanly, or should it visually rejoin the civilian track?
-- Does education want its own track, or stay a marker on an existing one?
-- Is the web view canonical with a separate plain PDF, or should the PDF mirror the timeline?
-
 ## Done When
-The `/resume` page has final content on the chosen layout, the prototype routes are gone,
-and the CTA strategy is finalized.
+`/resume` carries the real history, the PDF downloads correctly, and this file
+can be deleted.

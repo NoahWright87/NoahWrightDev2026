@@ -1,4 +1,5 @@
-/* TEMPORARY prototype styles — shared job card for /resume6–/resume8. */
+/* One job on the timeline stage. `--job-color` is set by the caller from the
+   employer palette in job-colors.css. */
 
 .jc {
   display: grid;
@@ -7,8 +8,8 @@
   padding: 20px 22px;
   border-radius: 16px;
   border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
-  border-left: 4px solid var(--lane-color);
-  background: color-mix(in srgb, var(--lane-color) 6%, transparent);
+  border-left: 4px solid var(--job-color);
+  background: color-mix(in srgb, var(--job-color) 6%, transparent);
 }
 
 .jc h3 {
@@ -29,7 +30,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   font-weight: 700;
-  color: var(--lane-color);
+  color: var(--job-color);
 }
 
 .jc__concurrent {
@@ -41,8 +42,8 @@
   border-radius: 999px;
   background: repeating-linear-gradient(
     90deg,
-    color-mix(in srgb, var(--secondary) 28%, transparent) 0 6px,
-    color-mix(in srgb, var(--primary) 28%, transparent) 6px 12px
+    color-mix(in srgb, var(--job-usaf) 28%, transparent) 0 6px,
+    color-mix(in srgb, var(--job-color) 28%, transparent) 6px 12px
   );
 }
 
@@ -66,9 +67,29 @@
   font-variant-numeric: tabular-nums;
 }
 
-.jc__body {
+.jc__commitment {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+.jc__commitment--part-time {
+  border-style: dashed;
+}
+
+.jc__highlights {
+  margin: 0;
+  padding-left: 18px;
   display: grid;
-  gap: 9px;
+  gap: 6px;
+  font-size: 0.92rem;
+  line-height: 1.5;
 }
 
 .jc__markers {
@@ -78,7 +99,7 @@
   display: grid;
   gap: 4px;
   border-radius: 10px;
-  background: color-mix(in srgb, var(--lane-color) 13%, transparent);
+  background: color-mix(in srgb, var(--job-color) 13%, transparent);
   font-size: 0.85rem;
 }
 
@@ -87,26 +108,10 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Header-only card — the second of a pair when there is no room to show both
-   in full. */
-.jc--compact {
-  background: color-mix(in srgb, var(--lane-color) 4%, transparent);
-  padding: 13px 16px;
+.jc__skills {
+  display: flex;
+  flex-wrap: wrap;
   gap: 5px;
-}
-
-.jc--compact h3 {
-  font-size: 1.02rem;
-}
-
-.jc--compact .jc__body {
-  display: none;
-}
-
-/* Redundant on a trimmed card: it is only ever shown beside the other career,
-   which says the same thing more clearly. */
-.jc--compact .jc__concurrent {
-  display: none;
 }
 
 @media (max-width: 900px) {

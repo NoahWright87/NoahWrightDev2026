@@ -1,91 +1,86 @@
-/* TEMPORARY prototype styles — /resume6 "Pinned Rail" and /resume7 "Dual Focus". */
+/* The pinned, to-scale resume timeline. */
 
-.pr {
-  --pr-top: 76px;
-  --pr-rail-w: 132px;
+.rt {
+  --rt-top: 76px;
+  /* Wide enough for two lanes plus the year ticks down the left edge. */
+  --rt-rail-w: 152px;
   position: relative;
 }
 
-/* The to-scale rail carries year ticks down its left edge, so it needs a
-   little more width than the evenly spaced one. */
-.pr--scale {
-  --pr-rail-w: 152px;
-}
-
 /* Without JS, or under reduced motion, this is a plain stacked list. */
-.pr__sticky {
+.rt__sticky {
   display: grid;
-  grid-template-columns: var(--pr-rail-w) minmax(0, 1fr);
+  grid-template-columns: var(--rt-rail-w) minmax(0, 1fr);
   gap: 18px;
 }
 
-.pr--enhanced .pr__sticky {
+.rt--enhanced .rt__sticky {
   position: sticky;
-  top: var(--pr-top);
-  height: calc(100svh - var(--pr-top) - 18px);
+  top: var(--rt-top);
+  height: calc(100svh - var(--rt-top) - 18px);
   align-items: stretch;
 }
 
 /* ---- rail ---- */
 
-.pr__rail {
+.rt__rail {
   position: relative;
-  width: var(--pr-rail-w);
+  width: var(--rt-rail-w);
 }
 
-.pr--enhanced .pr__rail {
+.rt--enhanced .rt__rail {
   height: 100%;
 }
 
-.pr__svg {
+.rt__svg {
   position: absolute;
   top: 0;
   left: 0;
   overflow: visible;
 }
 
-.pr__line {
+.rt__line {
   fill: none;
   stroke-width: 3.5;
   stroke-linecap: round;
 }
 
-.pr__line--dim {
+.rt__line--dim {
   opacity: 0.22;
 }
 
-.pr__cap {
+.rt__cap {
   stroke-width: 3;
   stroke-linecap: round;
   opacity: 0.35;
 }
 
-.pr__overlap {
+.rt__overlap {
   fill: color-mix(in srgb, var(--foreground) 7%, transparent);
 }
 
-.pr__node {
+.rt__node {
   transition: r 200ms cubic-bezier(0.4, 0, 0.2, 1), opacity 200ms ease;
 }
 
-.pr__node--active {
+.rt__node--active {
   filter: drop-shadow(0 0 7px color-mix(in srgb, var(--primary) 65%, transparent));
 }
 
 /* No transition. The marker is a readout of scroll position, so it has to
    track it exactly — a transition makes it chase every frame, lagging behind
    during a scroll and then gliding to catch up once the scroll stops. */
-.pr__marker {
+.rt__marker {
   transition: none;
 }
 
-.pr__tick-line {
+.rt__tick-line {
   stroke: currentColor;
   stroke-width: 1;
   opacity: 0.08;
 }
 
-.pr__tick-label {
+.rt__tick-label {
   font-size: 9px;
   fill: currentColor;
   opacity: 0.4;
@@ -93,7 +88,7 @@
 }
 
 /* Date label riding the marker — same rule: no transition. */
-.pr__readout {
+.rt__readout {
   position: absolute;
   left: 0;
   transform: translateY(-50%);
@@ -110,14 +105,14 @@
   z-index: 5;
 }
 
-.pr__marker-line {
+.rt__marker-line {
   stroke: var(--foreground);
   stroke-width: 1;
   opacity: 0.2;
   stroke-dasharray: 2 4;
 }
 
-.pr__marker-chevron {
+.rt__marker-chevron {
   fill: none;
   stroke: var(--foreground);
   stroke-width: 2.5;
@@ -126,7 +121,7 @@
 }
 
 /* Invisible jump targets sitting over each rail node. */
-.pr__jump {
+.rt__jump {
   position: absolute;
   /* Width is set inline from the measured lane spacing. */
   height: 34px;
@@ -137,13 +132,13 @@
   cursor: pointer;
 }
 
-.pr__jump:focus-visible {
+.rt__jump:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: -2px;
   border-radius: 6px;
 }
 
-.pr__jump-label {
+.rt__jump-label {
   position: absolute;
   left: 100%;
   top: 50%;
@@ -163,25 +158,25 @@
   z-index: 6;
 }
 
-.pr__jump:hover .pr__jump-label,
-.pr__jump:focus-visible .pr__jump-label {
+.rt__jump:hover .rt__jump-label,
+.rt__jump:focus-visible .rt__jump-label {
   opacity: 1;
 }
 
 /* ---- stage ---- */
 
-.pr__stage {
+.rt__stage {
   position: relative;
   min-width: 0;
 }
 
-.pr--enhanced .pr__stage {
+.rt--enhanced .rt__stage {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.pr__toolbar {
+.rt__toolbar {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -190,7 +185,7 @@
   padding-bottom: 8px;
 }
 
-.pr__counter {
+.rt__counter {
   font-size: 0.72rem;
   font-variant-numeric: tabular-nums;
   opacity: 0.6;
@@ -198,7 +193,7 @@
   white-space: nowrap;
 }
 
-.pr__stops {
+.rt__stops {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -206,14 +201,14 @@
   gap: 26px;
 }
 
-.pr--enhanced .pr__stops {
+.rt--enhanced .rt__stops {
   position: relative;
   flex: 1;
   min-height: 0;
   display: block;
 }
 
-.pr--enhanced .pr__stop {
+.rt--enhanced .rt__stop {
   position: absolute;
   inset: 0;
   display: flex;
@@ -223,25 +218,18 @@
      lag behind the scroll it is meant to track. */
 }
 
-.pr--enhanced .pr__stop--gone {
+.rt--enhanced .rt__stop--gone {
   visibility: hidden;
 }
 
-.pr--enhanced .pr__stop > * {
-  flex: 1 1 0;
-  min-width: 0;
-  max-height: 100%;
-  overflow-y: auto;
-}
-
-.pr__stop {
+.rt__stop {
   display: flex;
   gap: 16px;
 }
 
 /* ---- stacked stop: one card on top, concurrent jobs behind it as tabs ---- */
 
-.pr__stack {
+.rt__stack {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -249,18 +237,18 @@
   min-height: 0;
 }
 
-.pr--enhanced .pr__stop--stacked > * {
+.rt--enhanced .rt__stop--stacked > * {
   overflow: visible;
 }
 
-.pr__tabs {
+.rt__tabs {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   flex: none;
 }
 
-.pr__tab {
+.rt__tab {
   display: flex;
   align-items: baseline;
   gap: 7px;
@@ -275,23 +263,23 @@
   transition: opacity 140ms ease, background 140ms ease;
 }
 
-.pr__tab:hover {
+.rt__tab:hover {
   opacity: 1;
   background: color-mix(in srgb, var(--lane-color) 12%, transparent);
 }
 
-.pr__tab:focus-visible {
+.rt__tab:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
-.pr__tab--on {
+.rt__tab--on {
   opacity: 1;
   background: color-mix(in srgb, var(--lane-color) 18%, transparent);
   border-color: var(--lane-color);
 }
 
-.pr__tab-org {
+.rt__tab-org {
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -299,7 +287,7 @@
   color: var(--lane-color);
 }
 
-.pr__tab-role {
+.rt__tab-role {
   font-size: 0.8rem;
   white-space: nowrap;
   overflow: hidden;
@@ -307,7 +295,7 @@
   max-width: 24ch;
 }
 
-.pr__stack-card {
+.rt__stack-card {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
@@ -315,68 +303,49 @@
   align-items: center;
 }
 
-.pr__stack-card > * {
+.rt__stack-card > * {
   width: 100%;
 }
 
 /* ---- narrow screens: thin rail, effect intact ---- */
 
 @media (max-width: 900px) {
-  .pr {
-    --pr-rail-w: 46px;
+  .rt {
+    --rt-rail-w: 46px;
   }
 
-  .pr__sticky {
+  .rt__sticky {
     gap: 10px;
   }
 
-  .pr__jump-label,
-  .pr__tick-label {
+  .rt__jump-label,
+  .rt__tick-label {
     display: none;
   }
 
-  .pr__readout {
+  .rt__readout {
     font-size: 0.6rem;
     padding: 2px 5px;
   }
 
-  /* A pair cannot sit side by side at this width — the second card stacks
-     beneath the first and renders in its trimmed, header-only form. The first
-     card absorbs any overflow so the second is never pushed off-screen. */
-  .pr--enhanced .pr__stop--pair {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-
-  .pr--enhanced .pr__stop--pair > *:first-child {
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow-y: auto;
-  }
-
-  .pr--enhanced .pr__stop--pair > *:last-child {
-    flex: 0 0 auto;
-    overflow: visible;
-  }
 }
 
 @media (max-width: 560px) {
-  .pr {
-    --pr-top: 62px;
+  .rt {
+    --rt-top: 62px;
   }
 
-  .pr__toolbar {
+  .rt__toolbar {
     justify-content: space-between;
   }
 }
 
-/* Reduced motion never reaches `pr--enhanced`, so the fallback list needs no
+/* Reduced motion never reaches `rt--enhanced`, so the fallback list needs no
    special casing here — but the cards should still not animate. */
 @media (prefers-reduced-motion: reduce) {
-  .pr__node,
-  .pr__marker,
-  .pr__jump-label {
+  .rt__node,
+  .rt__marker,
+  .rt__jump-label {
     transition: none;
   }
 }

@@ -6,48 +6,17 @@
  * and the scroll-progress math.
  */
 
-import type { LaneId, ResumeEntry } from "@/lib/resumeDemo";
+import type { LaneId, ResumeEntry } from "@/lib/resume";
 
 /* ------------------------------------------------------------------ */
-/* Pacing                                                              */
+/* Pacing                                                             */
 /* ------------------------------------------------------------------ */
 
-export type Pacing = "snappy" | "standard" | "cinematic";
-
-/** Viewport heights of scrolling per stop. */
-export const PACING_VH: Record<Pacing, number> = {
-  snappy: 55,
-  standard: 100,
-  cinematic: 150,
-};
-
-export const PACING_ORDER: Pacing[] = ["snappy", "standard", "cinematic"];
-
-export const PACING_LABEL: Record<Pacing, string> = {
-  snappy: "Snappy",
-  standard: "Standard",
-  cinematic: "Cinematic",
-};
-
-export const PACING_STORAGE_KEY = "nw-resume-proto-pacing";
-
-/** Read the saved pacing. Storage can throw or be empty, so this never rejects. */
-export function readStoredPacing(): Pacing | null {
-  try {
-    const value = window.localStorage.getItem(PACING_STORAGE_KEY);
-    return value && (PACING_ORDER as string[]).includes(value) ? (value as Pacing) : null;
-  } catch {
-    return null;
-  }
-}
-
-export function writeStoredPacing(pacing: Pacing): void {
-  try {
-    window.localStorage.setItem(PACING_STORAGE_KEY, pacing);
-  } catch {
-    /* Private browsing or blocked storage — the choice just doesn't persist. */
-  }
-}
+/**
+ * Viewport heights of scrolling per job. One screen per job was chosen over
+ * faster and slower settings after trying all three in the browser.
+ */
+export const PACING_VH = 100;
 
 /* ------------------------------------------------------------------ */
 /* Rail geometry                                                       */
