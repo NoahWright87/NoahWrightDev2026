@@ -35,6 +35,7 @@ import {
   buildRailPaths,
   laneIndex,
   laneX,
+  mergeCurve,
   sectionProgress,
   stopFade,
 } from "./scrollRail";
@@ -278,14 +279,27 @@ export default function ResumeTimeline() {
     const yearAtY = (y: number) =>
       TIMELINE_START + ((y - padTop) / usable) * (TIMELINE_END - TIMELINE_START);
 
-    const firstCivilian = nodes.find((n) => n.entry.lane === "civilian");
+    const serviceNodes = nodes.filter((n) => n.entry.lane === "service");
+    const civilianNodes = nodes.filter((n) => n.entry.lane === "civilian");
+
+    /* Where the career splits in two: the first civilian job that starts at or
+       after the fork. Everything civilian before that belongs to an earlier
+       chapter, not to the branch. */
+    const forkNode = civilianNodes.find((n) => n.entry.start >= FORK_YEAR - 0.01);
+    /* Where an earlier civilian chapter runs into service: a civilian job that
+       ends exactly as the first service entry begins. */
+    const serviceStart = serviceNodes.length ? serviceNodes[0].entry.start : null;
+    const mergeNode =
+      serviceStart === null
+        ? undefined
+        : civilianNodes.find((n) => Math.abs(entryEnd(n.entry) - serviceStart) < 0.02);
 
     const paths = buildRailPaths({
       railWidth: width,
-      topY: yearToY(TIMELINE_START),
+      topY: serviceNodes.length ? serviceNodes[0].y : yearToY(TIMELINE_START),
       bottomY: yearToY(TIMELINE_END),
       forkY: yearToY(FORK_YEAR),
-      civilianFirstY: firstCivilian ? firstCivilian.y : yearToY(FORK_YEAR) + 60,
+      civilianFirstY: forkNode ? forkNode.y : yearToY(FORK_YEAR) + 60,
       serviceEndY: yearToY(MERGE_YEAR),
     });
 
@@ -293,28 +307,51 @@ export default function ResumeTimeline() {
     for (let y = 2010; y <= Math.floor(TIMELINE_END); y += 2) ticks.push(y);
 
     /*
-     * The civilian lane is drawn one segment per job so each can carry its own
-     * color: same hue as the segment above it means a promotion at the same
-     * employer, a new hue means a new company. Service stays a single path —
-     * it is all one employer, so there is nothing for a second color to say.
+     * Both lanes are drawn one segment per job, spanning that job's own start
+     * and end rather than running to the next node. That matters because the
+     * career is not continuous on either lane: there are years of service with
+     * no civilian job and a short gap between leaving active duty and joining
+     * the Reserve, and a segment that ran node-to-node would silently paper
+     * over both. Per-job segments also let each civilian job carry its own
+     * color — same hue as the one above means a promotion at the same
+     * employer, a new hue means a new company.
      */
-    const civilianNodes = nodes.filter((n) => n.entry.lane === "civilian");
-    const civilianSegments = civilianNodes.map((node, i) => {
-      const next = civilianNodes[i + 1];
-      const endY = next ? next.y : height - padBottom;
-      /* The first segment carries the fork curve in with it, so the branch
-         itself is already the colour of the job it leads to. */
-      const d =
-        i === 0
-          ? `${paths.branchCurve} L ${paths.civilianX} ${endY}`
-          : `M ${paths.civilianX} ${node.y} L ${paths.civilianX} ${endY}`;
-      return { id: node.entry.id, entry: node.entry, d };
-    });
+    const segmentFor = (node: (typeof nodes)[number]) => {
+      const endY = yearToY(entryEnd(node.entry));
+      if (node.entry.id === forkNode?.entry.id) {
+        /* Carries the fork curve in with it, so the branch is already the
+           color of the job it leads to. */
+        return `${paths.branchCurve} L ${paths.civilianX} ${endY}`;
+      }
+      if (node.entry.id === mergeNode?.entry.id) {
+        /* Bends into the service lane, so leaving this job to enlist reads as
+           one line becoming the other. */
+        const bend = Math.min(30, Math.max(12, endY - node.y));
+        return (
+          `M ${paths.civilianX} ${node.y} L ${paths.civilianX} ${endY - bend} ` +
+          mergeCurve({ railWidth: width, fromY: endY - bend, toY: endY })
+        );
+      }
+      return `M ${node.x} ${node.y} L ${node.x} ${endY}`;
+    };
+
+    const civilianSegments = civilianNodes.map((node) => ({
+      id: node.entry.id,
+      entry: node.entry,
+      d: segmentFor(node),
+    }));
+
+    const serviceSegments = serviceNodes.map((node) => ({
+      id: node.entry.id,
+      entry: node.entry,
+      d: segmentFor(node),
+    }));
 
     return {
       nodes,
       paths,
       civilianSegments,
+      serviceSegments,
       yearToY,
       yearAtY,
       ticks,
@@ -433,11 +470,14 @@ export default function ResumeTimeline() {
                   {[false, true].map((lit) => {
                     const lane = (
                       <>
-                        <path
-                          className={lit ? "rt__line" : "rt__line rt__line--dim"}
-                          d={geometry.paths.service}
-                          stroke={serviceColor}
-                        />
+                        {geometry.serviceSegments.map((segment) => (
+                          <path
+                            key={segment.id}
+                            className={lit ? "rt__line" : "rt__line rt__line--dim"}
+                            d={segment.d}
+                            stroke={serviceColor}
+                          />
+                        ))}
                         {geometry.civilianSegments.map((segment) => (
                           <path
                             key={segment.id}

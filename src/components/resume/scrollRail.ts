@@ -71,9 +71,22 @@ export function makeYearToY(
   };
 }
 
+/** A curve bending the civilian lane back into the service lane. */
+export function mergeCurve(opts: { railWidth: number; fromY: number; toY: number }): string {
+  const { railWidth, fromY, toY } = opts;
+  const serviceX = laneX(railWidth, 0);
+  const civilianX = laneX(railWidth, 1);
+  const span = Math.max(12, toY - fromY);
+  return (
+    `C ${civilianX} ${fromY + span * 0.6}, ${serviceX} ${toY - span * 0.6}, ` +
+    `${serviceX} ${toY}`
+  );
+}
+
 export interface RailPaths {
   serviceX: number;
   civilianX: number;
+  /** Whole-lane path. Callers drawing per-job segments use `branchCurve` instead. */
   service: string;
   /** Fork curve plus the whole civilian lane, as one path. */
   branch: string;

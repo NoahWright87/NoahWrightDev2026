@@ -6,14 +6,24 @@ and its overlap, plus a downloadable PDF.
 
 ## Status
 The layout is **settled and shipped** at `/resume`. Eight prototypes were compared
-over two rounds; the winner is now the page and the rest are deleted. Two things
-are still outstanding, both content rather than design.
+over two rounds; the winner is now the page and the rest are deleted. Real
+content is in, transcribed from LinkedIn — what remains is content cleanup and
+the PDF, not design.
 
 ## Outstanding
-- [ ] **Replace the placeholder content.** Everything in `src/lib/resume.ts` is
-      invented — employers, dates, achievements, awards, degree. The home and
-      About CTAs point here as Noah's real resume, so this must be done before
-      the page is treated as live.
+- [x] **Real content is in**, transcribed from LinkedIn (Sep 2026).
+- [ ] **Fill in `usaf-trainee`** — no summary or highlights; it was cut off in
+      the source screenshots and nothing was invented to fill it.
+- [ ] **Remove the "*More to come*" bullet** from `signify-manager`, or finish
+      the thought.
+- [ ] **Decide the Signify overlap.** `signify-senior` runs to Sep 2025 while
+      `signify-manager` starts Aug 2024, so the two overlap by a year on
+      LinkedIn and therefore on the timeline. Transcribed as given.
+- [ ] **Add the current role.** Noah noted LinkedIn is missing his latest one.
+- [ ] **Fill out truncated skills.** LinkedIn hides most tags behind "+N
+      skills", so each entry carries only the two or three that were visible.
+- [ ] **Replace `RESUME_SUMMARY`** — the one line of prose not taken from the
+      profile.
 - [ ] **Add the PDF.** The "Download PDF" button points at
       `SITE.resumePdfUrl` (`/noah-wright-resume-2026.pdf`); the file is not in
       the repo yet, so the button 404s. Drop it at
