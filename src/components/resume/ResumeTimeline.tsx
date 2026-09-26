@@ -24,17 +24,17 @@ import {
   MERGE_YEAR,
   TIMELINE_END,
   TIMELINE_START,
+  PRIMARY_TRACK,
   entryEnd,
   jobColorVar,
-  laneById,
+  trackLabel,
   yearToFraction,
   type ResumeEntry,
 } from "@/lib/resume";
 import {
   PACING_VH,
   buildRailPaths,
-  laneIndex,
-  laneX,
+  trackX,
   mergeCurve,
   sectionProgress,
   stopFade,
@@ -60,7 +60,7 @@ interface Stop {
 function concurrentAtStart(entry: ResumeEntry): ResumeEntry[] {
   return ENTRIES_CHRONOLOGICAL.filter(
     (other) =>
-      other.lane !== entry.lane &&
+      other.track !== entry.track &&
       entry.start >= other.start &&
       entry.start < entryEnd(other)
   );
@@ -100,7 +100,12 @@ function StackedStop({
     <div className="rt__stack">
       {stacked && (
         <div className="rt__tabs" role="tablist" aria-label="Concurrent roles">
-          {stop.entries.map((entry) => {
+          {/* Ordered by track so the strip reads left to right the same way the
+              rail does. Which one is showing is carried by the selected state,
+              not by position. */}
+          {[...stop.entries]
+            .sort((a, b) => a.track - b.track)
+            .map((entry) => {
             const on = entry.id === shown.id;
             return (
               <button
@@ -113,15 +118,15 @@ function StackedStop({
                 style={{ ["--lane-color" as string]: colorOf(entry) }}
                 onClick={() => onPick(entry.id)}
               >
-                <span className="rt__tab-org">{laneById(entry.lane).shortLabel}</span>
+                <span className="rt__tab-track">{trackLabel(entry.track)}</span>
                 <span className="rt__tab-role">{entry.role}</span>
               </button>
-            );
-          })}
+              );
+            })}
         </div>
       )}
       <div className="rt__stack-card">
-        <JobCard entry={shown} color={colorOf(shown)} />
+        <JobCard entry={shown} color={colorOf(shown)} showTrack={stacked} />
       </div>
     </div>
   );
@@ -269,7 +274,7 @@ export default function ResumeTimeline() {
        doubles as a date axis the marker's position can be read against. */
     const nodes = ENTRIES_CHRONOLOGICAL.map((entry) => ({
       entry,
-      x: laneX(width, laneIndex(entry.lane)),
+      x: trackX(width, entry.track),
       y: padTop + yearToFraction(entry.start) * usable,
     }));
 
@@ -279,24 +284,24 @@ export default function ResumeTimeline() {
     const yearAtY = (y: number) =>
       TIMELINE_START + ((y - padTop) / usable) * (TIMELINE_END - TIMELINE_START);
 
-    const serviceNodes = nodes.filter((n) => n.entry.lane === "service");
-    const civilianNodes = nodes.filter((n) => n.entry.lane === "civilian");
+    const primaryNodes = nodes.filter((n) => n.entry.track === PRIMARY_TRACK);
+    const branchNodes = nodes.filter((n) => n.entry.track !== PRIMARY_TRACK);
 
     /* Where the career splits in two: the first civilian job that starts at or
        after the fork. Everything civilian before that belongs to an earlier
        chapter, not to the branch. */
-    const forkNode = civilianNodes.find((n) => n.entry.start >= FORK_YEAR - 0.01);
+    const forkNode = branchNodes.find((n) => n.entry.start >= FORK_YEAR - 0.01);
     /* Where an earlier civilian chapter runs into service: a civilian job that
        ends exactly as the first service entry begins. */
-    const serviceStart = serviceNodes.length ? serviceNodes[0].entry.start : null;
+    const serviceStart = primaryNodes.length ? primaryNodes[0].entry.start : null;
     const mergeNode =
       serviceStart === null
         ? undefined
-        : civilianNodes.find((n) => Math.abs(entryEnd(n.entry) - serviceStart) < 0.02);
+        : branchNodes.find((n) => Math.abs(entryEnd(n.entry) - serviceStart) < 0.02);
 
     const paths = buildRailPaths({
       railWidth: width,
-      topY: serviceNodes.length ? serviceNodes[0].y : yearToY(TIMELINE_START),
+      topY: primaryNodes.length ? primaryNodes[0].y : yearToY(TIMELINE_START),
       bottomY: yearToY(TIMELINE_END),
       branchToY: forkNode ? forkNode.y : yearToY(FORK_YEAR),
       serviceEndY: yearToY(MERGE_YEAR),
@@ -335,13 +340,13 @@ export default function ResumeTimeline() {
       return `M ${node.x} ${node.y} L ${node.x} ${endY}`;
     };
 
-    const civilianSegments = civilianNodes.map((node) => ({
+    const branchSegments = branchNodes.map((node) => ({
       id: node.entry.id,
       entry: node.entry,
       d: segmentFor(node),
     }));
 
-    const serviceSegments = serviceNodes.map((node) => ({
+    const primarySegments = primaryNodes.map((node) => ({
       id: node.entry.id,
       entry: node.entry,
       d: segmentFor(node),
@@ -350,8 +355,8 @@ export default function ResumeTimeline() {
     return {
       nodes,
       paths,
-      civilianSegments,
-      serviceSegments,
+      branchSegments,
+      primarySegments,
       yearToY,
       yearAtY,
       ticks,
@@ -390,14 +395,13 @@ export default function ResumeTimeline() {
   const markerYear = geometry ? geometry.yearAtY(markerY) : null;
 
   const activeEntryIds = new Set(active.entries.map((e) => e.id));
-  const serviceColor = "var(--job-usaf)";
 
   /* Dot targets are capped to the gap between the two lanes so a service dot
      and a civilian one that start weeks apart never cover each other. On a
      narrow rail that leaves a small target, which is why the tab strip — not
      the dots — is the primary way to reach a concurrent job on a phone. */
   const jumpWidth = rail
-    ? Math.max(16, Math.min(44, Math.abs(laneX(rail.width, 1) - laneX(rail.width, 0)) - 3))
+    ? Math.max(16, Math.min(44, Math.abs(trackX(rail.width, 2) - trackX(rail.width, 1)) - 3))
     : 44;
 
   const sectionStyle: React.CSSProperties = enhanced
@@ -470,15 +474,15 @@ export default function ResumeTimeline() {
                   {[false, true].map((lit) => {
                     const lane = (
                       <>
-                        {geometry.serviceSegments.map((segment) => (
+                        {geometry.primarySegments.map((segment) => (
                           <path
                             key={segment.id}
                             className={lit ? "rt__line" : "rt__line rt__line--dim"}
                             d={segment.d}
-                            stroke={serviceColor}
+                            stroke={colorOf(segment.entry)}
                           />
                         ))}
-                        {geometry.civilianSegments.map((segment) => (
+                        {geometry.branchSegments.map((segment) => (
                           <path
                             key={segment.id}
                             className={lit ? "rt__line" : "rt__line rt__line--dim"}
@@ -497,14 +501,18 @@ export default function ResumeTimeline() {
                     );
                   })}
 
-                  <line
-                    className="rt__cap"
-                    x1={geometry.paths.serviceX - 7}
-                    y1={geometry.paths.serviceEndY}
-                    x2={geometry.paths.serviceX + 7}
-                    y2={geometry.paths.serviceEndY}
-                    stroke={serviceColor}
-                  />
+                  {geometry.primarySegments.length > 0 && (
+                    <line
+                      className="rt__cap"
+                      x1={geometry.paths.serviceX - 7}
+                      y1={geometry.paths.serviceEndY}
+                      x2={geometry.paths.serviceX + 7}
+                      y2={geometry.paths.serviceEndY}
+                      stroke={colorOf(
+                        geometry.primarySegments[geometry.primarySegments.length - 1].entry
+                      )}
+                    />
+                  )}
 
                   {geometry.nodes.map(({ entry, x, y }) => {
                     const isActive = selected.id === entry.id;

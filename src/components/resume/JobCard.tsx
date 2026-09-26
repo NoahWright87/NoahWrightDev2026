@@ -1,41 +1,38 @@
 "use client";
 
 import { Heading, Text, Pill } from "@noahwright/design";
-import {
-  FORK_YEAR,
-  MERGE_YEAR,
-  laneById,
-  markersWithin,
-  type ResumeEntry,
-} from "@/lib/resume";
+import { markersWithin, trackLabel, type ResumeEntry } from "@/lib/resume";
 import "./job-card.css";
 
 /** One job, as shown on the timeline stage. */
-export function JobCard({ entry, color }: { entry: ResumeEntry; color: string }) {
+export function JobCard({
+  entry,
+  color,
+  showTrack = false,
+}: {
+  entry: ResumeEntry;
+  color: string;
+  /**
+   * Name the track this job runs on. Only worth saying while another job is
+   * running alongside it — otherwise there is only one line to be on.
+   */
+  showTrack?: boolean;
+}) {
   const markers = markersWithin(entry);
-  const concurrent = entry.start >= FORK_YEAR && entry.start < MERGE_YEAR;
+  /* Full-time is the default and says nothing; part-time is the exception and
+     is the whole reason a job can share a stretch of the timeline. */
+  const showCommitment = entry.commitment !== "full-time";
 
   return (
     <article className="jc" style={{ ["--job-color" as string]: color }}>
-      <div className="jc__top">
-        <span className="jc__lane">{laneById(entry.lane).label}</span>
-        {concurrent && <span className="jc__concurrent">both careers</span>}
-      </div>
+      {showTrack && <span className="jc__track">{trackLabel(entry.track)}</span>}
 
       <Heading level={3}>{entry.role}</Heading>
       <p className="jc__org">{entry.org}</p>
 
       <div className="jc__meta">
         <span className="jc__date">{entry.dateLabel}</span>
-        <span
-          className={
-            entry.commitment === "part-time"
-              ? "jc__commitment jc__commitment--part-time"
-              : "jc__commitment"
-          }
-        >
-          {entry.commitment}
-        </span>
+        {showCommitment && <span className="jc__commitment">{entry.commitment}</span>}
       </div>
 
       <Text>{entry.summary}</Text>

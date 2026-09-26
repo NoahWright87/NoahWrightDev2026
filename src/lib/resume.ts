@@ -14,20 +14,20 @@
  * - `RESUME_SUMMARY` is the one piece of prose not taken from the profile.
  */
 
-export type LaneId = "service" | "civilian";
+/**
+ * Which parallel line of the timeline a job sits on. 1 is the leftmost.
+ *
+ * Deliberately a number rather than a name: a second track is just "another
+ * job running at the same time", whatever kind of job it is. The geometry
+ * currently draws two tracks; the labelling works for any number.
+ */
+export type TrackId = number;
 
-export interface ResumeLane {
-  id: LaneId;
-  /** Full name used in headings and legends. */
-  label: string;
-  /** Compact name for chips and tight rails. */
-  shortLabel: string;
-  /** Design-system color token this lane is drawn in. */
-  color: "primary" | "secondary";
-  /** Decimal year the lane begins. */
-  start: number;
-  /** Decimal year the lane ends, or `null` while ongoing. */
-  end: number | null;
+/** The track a job runs on unless it is concurrent with another. */
+export const PRIMARY_TRACK: TrackId = 1;
+
+export function trackLabel(track: TrackId): string {
+  return `Track ${track}`;
 }
 
 export type EntryKind = "role" | "promotion";
@@ -35,7 +35,7 @@ export type Commitment = "full-time" | "part-time";
 
 export interface ResumeEntry {
   id: string;
-  lane: LaneId;
+  track: TrackId;
   role: string;
   org: string;
   /** Decimal year — 2016.42 is roughly June 2016. Used for geometry. */
@@ -50,13 +50,19 @@ export interface ResumeEntry {
   summary: string;
   highlights: string[];
   skills: string[];
+  /**
+   * Jobs sharing a color group share a hue. Defaults to `org`; set it where one
+   * employer appears under more than one name, so the timeline does not read
+   * that as a move to a different company.
+   */
+  colorGroup?: string;
 }
 
 export type MarkerKind = "award" | "cert" | "education";
 
 export interface ResumeMarker {
   id: string;
-  lane: LaneId;
+  track: TrackId;
   /** Decimal year the marker sits at. */
   date: number;
   dateLabel: string;
@@ -64,25 +70,6 @@ export interface ResumeMarker {
   detail: string;
   kind: MarkerKind;
 }
-
-export const RESUME_LANES: ResumeLane[] = [
-  {
-    id: "service",
-    label: "U.S. Air Force",
-    shortLabel: "USAF",
-    color: "secondary",
-    start: 2011.333,
-    end: 2022.333,
-  },
-  {
-    id: "civilian",
-    label: "Civilian Engineering",
-    shortLabel: "Civilian",
-    color: "primary",
-    start: 2008.5,
-    end: null,
-  },
-];
 
 /**
  * March 2020 — leaving active duty, joining the Reserve and starting at CGI all
@@ -98,7 +85,7 @@ export const TIMELINE_END = 2026.75;
 export const RESUME_ENTRIES: ResumeEntry[] = [
   {
     id: "art-clem",
-    lane: "civilian",
+    track: 2,
     role: "Computer Programmer",
     org: "Art Clem Enterprises",
     start: 2008.5,
@@ -118,7 +105,7 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
   },
   {
     id: "usaf-trainee",
-    lane: "service",
+    track: 1,
     role: "Trainee",
     org: "United States Air Force",
     start: 2011.333,
@@ -130,10 +117,11 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     summary: "",
     highlights: [],
     skills: [],
+    colorGroup: "U.S. Air Force",
   },
   {
     id: "usaf-team-lead",
-    lane: "service",
+    track: 1,
     role: "Software Development Team Lead",
     org: "United States Air Force",
     start: 2011.917,
@@ -150,10 +138,11 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
       "Earned multiple Airman of the Quarter awards, an Air Force Achievement Medal, and was selected for a prestigious Developmental Special Duty",
     ],
     skills: ["Microsoft SQL Server", "ASP.NET"],
+    colorGroup: "U.S. Air Force",
   },
   {
     id: "usaf-instructor",
-    lane: "service",
+    track: 1,
     role: "Enlisted Professional Military Education Instructor",
     org: "United States Air Force",
     start: 2016.167,
@@ -171,10 +160,11 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
       "Awarded the Air Force Commendation Medal for contributions that improved both our school and the wider organization",
     ],
     skills: ["Teaching", "Learning Management Systems"],
+    colorGroup: "U.S. Air Force",
   },
   {
     id: "usaf-reserve",
-    lane: "service",
+    track: 1,
     role: "Non-Commissioned Officer in Charge",
     org: "US Air Force Reserve",
     start: 2020.167,
@@ -190,10 +180,11 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
       "Mentored three direct reports. Wrote performance reviews, and reported issues to leadership.",
     ],
     skills: ["Visual Basic for Applications (VBA)", "Microsoft PowerPoint"],
+    colorGroup: "U.S. Air Force",
   },
   {
     id: "cgi",
-    lane: "civilian",
+    track: 2,
     role: "Senior .NET Developer",
     org: "CGI",
     start: 2020.167,
@@ -213,7 +204,7 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
   },
   {
     id: "sovereign",
-    lane: "civilian",
+    track: 2,
     role: "Senior Software Developer",
     org: "Sovereign Sportsman Solutions",
     start: 2021.333,
@@ -232,7 +223,7 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
   },
   {
     id: "google",
-    lane: "civilian",
+    track: 2,
     role: "Software Engineer",
     org: "Google",
     start: 2022.167,
@@ -251,7 +242,7 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
   },
   {
     id: "signify-senior",
-    lane: "civilian",
+    track: 2,
     role: "Senior Software Engineer",
     org: "Signify Health",
     start: 2023.167,
@@ -269,7 +260,7 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
   },
   {
     id: "signify-manager",
-    lane: "civilian",
+    track: 2,
     role: "Software Engineering Manager",
     org: "Signify Health",
     start: 2024.583,
@@ -295,7 +286,7 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
 export const RESUME_MARKERS: ResumeMarker[] = [
   {
     id: "ccaf-programming",
-    lane: "service",
+    track: 1,
     // LinkedIn gives the year only; placed mid-year for positioning.
     date: 2015.5,
     dateLabel: "2015",
@@ -305,7 +296,7 @@ export const RESUME_MARKERS: ResumeMarker[] = [
   },
   {
     id: "ccaf-instructional-tech",
-    lane: "service",
+    track: 1,
     date: 2017.5,
     dateLabel: "2017",
     label: "A.S. Educational/Instructional Technology",
@@ -314,7 +305,7 @@ export const RESUME_MARKERS: ResumeMarker[] = [
   },
   {
     id: "trident-bs",
-    lane: "service",
+    track: 1,
     date: 2019.5,
     dateLabel: "2019",
     label: "B.S. Computer Science",
@@ -323,7 +314,7 @@ export const RESUME_MARKERS: ResumeMarker[] = [
   },
   {
     id: "afcm",
-    lane: "service",
+    track: 1,
     date: 2020.0,
     dateLabel: "2020",
     label: "Air Force Commendation Medal",
@@ -369,50 +360,51 @@ export const RESUME_SUMMARY =
 /** Entries sorted oldest-first, the reading order every variant uses. */
 export const ENTRIES_CHRONOLOGICAL = [...RESUME_ENTRIES].sort((a, b) => a.start - b.start);
 
-export function laneById(id: LaneId): ResumeLane {
-  const lane = RESUME_LANES.find((l) => l.id === id);
-  if (!lane) throw new Error(`Unknown lane: ${id}`);
-  return lane;
-}
-
 /* ------------------------------------------------------------------ */
 /* Per-job colors                                                      */
 /* ------------------------------------------------------------------ */
 
-/** Civilian employers, oldest first — each gets its own hue. */
-export const CIVILIAN_EMPLOYERS: string[] = ENTRIES_CHRONOLOGICAL.filter(
-  (entry) => entry.lane === "civilian"
-).reduce<string[]>((acc, entry) => (acc.includes(entry.org) ? acc : [...acc, entry.org]), []);
+/** What a job is colored by: its employer, or an explicit shared group. */
+function colorGroupOf(entry: ResumeEntry): string {
+  return entry.colorGroup ?? entry.org;
+}
+
+/** Color groups, oldest first — each gets its own hue. */
+export const COLOR_GROUPS: string[] = ENTRIES_CHRONOLOGICAL.reduce<string[]>(
+  (acc, entry) => {
+    const group = colorGroupOf(entry);
+    return acc.includes(group) ? acc : [...acc, group];
+  },
+  []
+);
 
 /**
- * Color for a single job.
+ * Color for a single job: a hue per color group, a shade per role within it.
+ * That is what makes a promotion (same hue, different shade) read differently
+ * from a move to a new company (a different hue entirely).
  *
- * Service work is always the one Air Force blue — it is all the same employer,
- * so there is nothing for a second hue to distinguish. Civilian jobs take a hue
- * per employer and a shade per role within it, which is what makes a promotion
- * (same hue, different shade) read differently from a move to a new company
- * (a different hue entirely).
- *
- * Values live in `job-colors.css` so each has a light and a dark variant.
+ * Values live in `job-colors.css` so each has a light and a dark variant. Only
+ * groups that need a given shade have to define it — the fallback chain drops
+ * back to the group's base color rather than to the theme primary, so an extra
+ * role never shows up as an unrelated hue.
  */
 export function jobColorVar(entry: ResumeEntry): string {
-  if (entry.lane === "service") return "var(--job-usaf)";
-  const employer = Math.max(0, CIVILIAN_EMPLOYERS.indexOf(entry.org));
-  const rolesHere = ENTRIES_CHRONOLOGICAL.filter(
-    (e) => e.lane === "civilian" && e.org === entry.org
-  );
+  const group = colorGroupOf(entry);
+  const groupIndex = Math.max(0, COLOR_GROUPS.indexOf(group));
+  const rolesHere = ENTRIES_CHRONOLOGICAL.filter((e) => colorGroupOf(e) === group);
   const role = Math.max(0, rolesHere.findIndex((e) => e.id === entry.id));
-  /* Clamped to the palette defined in job-colors.css. A sixth employer or a
-     fourth role at one employer would reuse the last color rather than fall
-     back to the theme primary — widen the palette if that happens. */
-  return `var(--job-e${Math.min(employer, 4)}-${Math.min(role, 2)}, var(--primary))`;
+  /* Clamped to the palette defined in job-colors.css; widen it rather than let
+     two groups share a hue. */
+  const g = Math.min(groupIndex, 5);
+  const shade = Math.min(role, 3);
+  return `var(--job-e${g}-${shade}, var(--job-e${g}-0, var(--primary)))`;
 }
 
 /** The job a marker falls inside, so it can borrow that job's color. */
 export function markerEntry(marker: ResumeMarker): ResumeEntry | undefined {
   return ENTRIES_CHRONOLOGICAL.find(
     (entry) =>
-      entry.lane === marker.lane &&
+      entry.track === marker.track &&
       marker.date >= entry.start &&
       marker.date < entryEnd(entry)
   );
@@ -431,6 +423,6 @@ export function entryEnd(entry: ResumeEntry): number {
 /** Markers that fall inside an entry's date range. */
 export function markersWithin(entry: ResumeEntry): ResumeMarker[] {
   return RESUME_MARKERS.filter(
-    (m) => m.lane === entry.lane && m.date >= entry.start && m.date < entryEnd(entry)
+    (m) => m.track === entry.track && m.date >= entry.start && m.date < entryEnd(entry)
   );
 }

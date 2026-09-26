@@ -6,7 +6,7 @@
  * and the scroll-progress math.
  */
 
-import type { LaneId, ResumeEntry } from "@/lib/resume";
+import type { ResumeEntry } from "@/lib/resume";
 
 /* ------------------------------------------------------------------ */
 /* Pacing                                                             */
@@ -22,15 +22,9 @@ export const PACING_VH = 100;
 /* Rail geometry                                                       */
 /* ------------------------------------------------------------------ */
 
-export const LANE_ORDER: LaneId[] = ["service", "civilian"];
-
-export function laneIndex(id: LaneId): number {
-  return LANE_ORDER.indexOf(id);
-}
-
-/** Lane centers sit proportionally inside the rail, so any rail width works. */
-export function laneX(railWidth: number, index: number): number {
-  return railWidth * (0.3 + index * 0.4);
+/** Track centers sit proportionally inside the rail, so any rail width works. */
+export function trackX(railWidth: number, track: number): number {
+  return railWidth * (0.3 + (track - 1) * 0.4);
 }
 
 /**
@@ -74,8 +68,8 @@ export function makeYearToY(
 /** A curve bending the civilian lane back into the service lane. */
 export function mergeCurve(opts: { railWidth: number; fromY: number; toY: number }): string {
   const { railWidth, fromY, toY } = opts;
-  const serviceX = laneX(railWidth, 0);
-  const civilianX = laneX(railWidth, 1);
+  const serviceX = trackX(railWidth, 1);
+  const civilianX = trackX(railWidth, 2);
   const span = Math.max(12, toY - fromY);
   return (
     `C ${civilianX} ${fromY + span * 0.6}, ${serviceX} ${toY - span * 0.6}, ` +
@@ -121,8 +115,8 @@ export function buildRailPaths(opts: {
   serviceEndY: number;
 }): RailPaths {
   const { railWidth, topY, bottomY, branchToY, serviceEndY } = opts;
-  const serviceX = laneX(railWidth, 0);
-  const civilianX = laneX(railWidth, 1);
+  const serviceX = trackX(railWidth, 1);
+  const civilianX = trackX(railWidth, 2);
 
   /* Never reach back past the start of the lane being branched from. */
   const span = Math.max(12, Math.min(BRANCH_SPAN, branchToY - topY));

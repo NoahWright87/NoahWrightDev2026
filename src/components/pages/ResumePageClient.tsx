@@ -49,7 +49,7 @@ export default function ResumePageClient() {
                 <li key={marker.id} className="resume__marker">
                   <span
                     className="resume__marker-dot"
-                    style={{ background: entry ? jobColorVar(entry) : "var(--job-usaf)" }}
+                    style={{ background: entry ? jobColorVar(entry) : "var(--primary)" }}
                     aria-hidden="true"
                   />
                   <div>
