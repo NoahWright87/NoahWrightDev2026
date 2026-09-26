@@ -1,0 +1,130 @@
+/* One job on the timeline stage. `--job-color` is set by the caller from the
+   employer palette in job-colors.css. */
+
+.jc {
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  padding: 20px 22px;
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  border-left: 4px solid var(--job-color);
+  background: color-mix(in srgb, var(--job-color) 6%, transparent);
+}
+
+.jc h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  line-height: 1.22;
+}
+
+.jc__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.jc__lane {
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--job-color);
+}
+
+.jc__concurrent {
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--job-usaf) 28%, transparent) 0 6px,
+    color-mix(in srgb, var(--job-color) 28%, transparent) 6px 12px
+  );
+}
+
+.jc__org {
+  margin: 0;
+  font-weight: 600;
+  opacity: 0.82;
+  font-size: 1rem;
+}
+
+.jc__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.jc__date {
+  font-size: 0.86rem;
+  opacity: 0.75;
+  font-variant-numeric: tabular-nums;
+}
+
+.jc__commitment {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+.jc__commitment--part-time {
+  border-style: dashed;
+}
+
+.jc__highlights {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.jc__markers {
+  margin: 0;
+  padding: 9px 12px;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--job-color) 13%, transparent);
+  font-size: 0.85rem;
+}
+
+.jc__markers span {
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+}
+
+.jc__skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+@media (max-width: 900px) {
+  .jc {
+    padding: 15px 16px;
+    gap: 7px;
+  }
+
+  .jc h3 {
+    font-size: 1.1rem;
+  }
+
+  .jc__org {
+    font-size: 0.92rem;
+  }
+}

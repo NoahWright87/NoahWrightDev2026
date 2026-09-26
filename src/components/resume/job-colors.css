@@ -1,0 +1,96 @@
+/* Per-job colors.
+ *
+ * One hue per employer, one shade per role within that employer, so a promotion
+ * reads as a shade change and a move to a new company reads as a hue change.
+ * Air Force service is a single flat blue — it is all one employer.
+ *
+ * Hues are ordered so that employers adjacent in time land far apart on the
+ * wheel, since those are the pairs a reader compares. They also stay clear of
+ * the service blue, which runs alongside the civilian lane through the overlap.
+ *
+ * Every value needs a light and a dark variant: these sit on a pale lavender
+ * page in light mode and a near-black one in dark, and a hue tuned for one is
+ * unreadable on the other.
+ */
+
+:root {
+  /* Air Force blue */
+  --job-usaf: #2f5c9e;
+
+  /* Employer 0 — green */
+  --job-e0-0: #2c6e35;
+  --job-e0-1: #3f8f49;
+  --job-e0-2: #52a85d;
+
+  /* Employer 1 — rust */
+  --job-e1-0: #a8442a;
+  --job-e1-1: #c25a3c;
+  --job-e1-2: #d67051;
+
+  /* Employer 2 — sea green */
+  --job-e2-0: #1a7a63;
+  --job-e2-1: #269680;
+  --job-e2-2: #33af97;
+
+  /* Employer 3 — ochre */
+  --job-e3-0: #8a6a15;
+  --job-e3-1: #a78420;
+  --job-e3-2: #c29c31;
+
+  /* Employer 4 — plum */
+  --job-e4-0: #7a3470;
+  --job-e4-1: #95498a;
+  --job-e4-2: #ac5fa1;
+}
+
+/* The blocking script in the root layout always stamps data-theme, but guard
+   with a media query too in case it is ever blocked or throws. */
+:root[data-theme="dark"] {
+  --job-usaf: #7fa9e8;
+
+  --job-e0-0: #5cb860;
+  --job-e0-1: #77cd7b;
+  --job-e0-2: #95de98;
+
+  --job-e1-0: #e0755a;
+  --job-e1-1: #ec8d74;
+  --job-e1-2: #f5a68f;
+
+  --job-e2-0: #4fc2a3;
+  --job-e2-1: #6ed5b9;
+  --job-e2-2: #8ee5cd;
+
+  --job-e3-0: #d4b45c;
+  --job-e3-1: #e2c67a;
+  --job-e3-2: #edd699;
+
+  --job-e4-0: #c77ebc;
+  --job-e4-1: #d795cd;
+  --job-e4-2: #e4addc;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --job-usaf: #7fa9e8;
+
+    --job-e0-0: #5cb860;
+    --job-e0-1: #77cd7b;
+    --job-e0-2: #95de98;
+
+    --job-e1-0: #e0755a;
+    --job-e1-1: #ec8d74;
+    --job-e1-2: #f5a68f;
+
+    --job-e2-0: #4fc2a3;
+    --job-e2-1: #6ed5b9;
+    --job-e2-2: #8ee5cd;
+
+    --job-e3-0: #d4b45c;
+    --job-e3-1: #e2c67a;
+    --job-e3-2: #edd699;
+
+    --job-e4-0: #c77ebc;
+    --job-e4-1: #d795cd;
+    --job-e4-2: #e4addc;
+  }
+}

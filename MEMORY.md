@@ -16,17 +16,26 @@ Use this file to keep short, durable notes that help future chat sessions resume
 ## Current Decisions
 
 - Resume flow is phased:
-  - Phase 1: `/resume` page exists as placeholder and is the current resume CTA destination.
-  - Phase 2: downloadable PDF can be added later.
-- Netlify is the deployment platform; `netlify.toml` is configured for Next.js plugin usage.
-- Clarity integration is implemented in code and controlled by `NEXT_PUBLIC_CLARITY_ID`.
-- Portfolio site direction is design-system-first:
-  - The site is both Noah's engineer "business card" and primary showcase for `@noahwright/design`.
-  - New UI/interaction "juice" should come from shared design-system capabilities where possible.
-  - When major interaction/polish primitives are missing, open issues in the `design` repository and add them there instead of implementing one-off local CSS/JS behavior.
-  - In progress: home page hero (rotating title, photo carousel, styled background/border) and the quick-nav-links-as-cards treatment were built as reusable `design` primitives (`Hero`, `TextCarousel`, `useTypewriter`/`usePrefersReducedMotion` atoms, `Carousel` `showControls`/`decorative` props; `Card`/`CardGrid` already existed) rather than one-off local code, per the rule above.
-  - Release flow while `design` changes are unreleased: open a PR in `design` (triggers an ephemeral pre-release publish under an `pr-<N>` npm dist-tag, commented on that PR), pin this site's `@noahwright/design` dependency to that exact pre-release version in a PR here so Netlify builds a real deploy preview against it, then once the `design` PR is reviewed and merged (publishing the real version to npm), bump this site's dependency to that real version before merging this site's PR.
-  - `design` PR #20 (Hero organism, TextCarousel, typewriter rework, mobile menu fix) merged and published the real `1.2.0` to npm; this site is re-pinned to `1.2.0` (no longer the `1.2.0-pr20.c0077c0` preview).
+  - Phase 1 (done): `/resume` is the web resume and the resume CTA destination.
+  - Phase 2 (outstanding): the PDF itself still needs to be produced and committed.
+- Resume is a **branching timeline** at `/resume`, not a flat job list: Noah had a dual career (USAF active duty, then USAF Reserve part-time alongside a full-time civilian job). The reference was the *look* of a git branch graph, not literal git semantics — that framing was explicitly rejected.
+  - The design is **settled**. Eight prototypes (`/resume1`–`/resume8`) were compared over two rounds and then deleted; the winner is now the real page. Do not reopen the comparison.
+  - Code lives in `src/components/resume/` (`ResumeTimeline`, `JobCard`, `scrollRail`, and their CSS). Content is `src/lib/resume.ts`.
+  - Content in `src/lib/resume.ts` is **real**, transcribed verbatim from Noah's LinkedIn profile (Sep 2026). Four things carried over as-is and still want his pass, all noted in that file's header: `usaf-trainee` has no summary or highlights (cut off in the source); `signify-manager` still holds his "*More to come*" placeholder bullet; `signify-senior` (to Sep 2025) overlaps `signify-manager` (from Aug 2024) because LinkedIn has it that way; and LinkedIn truncates skill tags, so `skills` holds only the visible ones. `RESUME_SUMMARY` is the one piece of prose not from the profile.
+  - The "Download PDF" button points at `SITE.resumePdfUrl` (`/noah-wright-resume-2026.pdf`). **That file is not in the repo yet** — see `public/RESUME_PLACEHOLDER.md`. The button 404s until it is added.
+  - How it behaves: the tree pins to the left for the whole section, a marker tracks scroll position and the lanes fill in behind it, and one job at a time fades in beside it. The tree is drawn to scale, so vertical distance is elapsed time and a date rides the marker. Pacing is one viewport of scroll per job.
+  - Concurrent jobs are handled by **stacking with tabs**: the stop's own job is on top (so the civilian role wins through the overlap) and anything running alongside sits behind as a tab. This works because reserve service is dated slightly *before* the first civilian job, so the reserve stop finds nothing running yet and stands alone while each civilian stop picks it up as a tab.
+  - Jobs are **colored by employer**: one flat blue for all Air Force service, then a hue per civilian employer with a shade per role within it — so a promotion reads as a shade change and a new company as a hue change. Values live in `job-colors.css` with light and dark variants; the rail is drawn in per-job segments to carry it. The palette covers five employers and three roles each, and `jobColorVar` clamps to that — a sixth employer silently reuses the fifth's hue, so widen the palette rather than letting two companies share a color.
+  - The real career is **not a single fork**: civilian work (2008–2011) came first, merged into service when he enlisted, then forked again in 2020 into Reserve plus civilian. So rail segments span each job's own start and end rather than running node to node — otherwise a lane would draw straight through years when he held no job on it. A civilian job ending exactly when service begins draws a merge curve back into the service lane, mirroring the fork.
+  - Four behaviours that are easy to regress:
+    - Crossfading *text* needs staggered ramps, not a true cross-dissolve — two cards at 50% opacity superimposed is unreadable mush. `scrollRail.ts` fades the outgoing card out before the incoming one rises.
+    - The scroll marker and its date label must have **no CSS transition**. They are readouts of scroll position; a transition makes them chase every frame, lagging during a scroll and gliding to catch up after it stops.
+    - The marker interpolates across a stop's *whole* slice (`fade.local`), not just the crossfade band. Tying it to the band parks it on a node for most of the slice and then sprints — the same "waits then jumps" bug from a different cause.
+    - Jump targets land the marker exactly *on* a job's dot; the card is readable there because the crossfade finishes slightly earlier in the previous slice (`SETTLE` in `scrollRail.ts`). Dot tap targets are sized from the measured gap between lanes, since two jobs starting weeks apart sit only pixels apart on a to-scale rail. On a phone that gap is small, so the tab strip rather than the dots is the practical way to reach a concurrent job.
+
+## Layout Gotchas
+
+- `globals.css` uses `overflow-x: clip` (not `hidden`) on `html, body`. Both stop horizontal overflow, but `hidden` makes the element a scroll container — it also forces `overflow-y` to `auto` — which silently breaks `position: sticky` for every descendant on the page. This was found when a pinned pane refused to pin despite a computed `position: sticky`. Do not change it back to `hidden`; verified with no horizontal overflow on any route at 1280px and 390px.
 
 ## Portrait Assets
 

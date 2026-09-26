@@ -1,0 +1,351 @@
+/* The pinned, to-scale resume timeline. */
+
+.rt {
+  --rt-top: 76px;
+  /* Wide enough for two lanes plus the year ticks down the left edge. */
+  --rt-rail-w: 152px;
+  position: relative;
+}
+
+/* Without JS, or under reduced motion, this is a plain stacked list. */
+.rt__sticky {
+  display: grid;
+  grid-template-columns: var(--rt-rail-w) minmax(0, 1fr);
+  gap: 18px;
+}
+
+.rt--enhanced .rt__sticky {
+  position: sticky;
+  top: var(--rt-top);
+  height: calc(100svh - var(--rt-top) - 18px);
+  align-items: stretch;
+}
+
+/* ---- rail ---- */
+
+.rt__rail {
+  position: relative;
+  width: var(--rt-rail-w);
+}
+
+.rt--enhanced .rt__rail {
+  height: 100%;
+}
+
+.rt__svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+}
+
+.rt__line {
+  fill: none;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+.rt__line--dim {
+  opacity: 0.22;
+}
+
+.rt__cap {
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0.35;
+}
+
+.rt__overlap {
+  fill: color-mix(in srgb, var(--foreground) 7%, transparent);
+}
+
+.rt__node {
+  transition: r 200ms cubic-bezier(0.4, 0, 0.2, 1), opacity 200ms ease;
+}
+
+.rt__node--active {
+  filter: drop-shadow(0 0 7px color-mix(in srgb, var(--primary) 65%, transparent));
+}
+
+/* No transition. The marker is a readout of scroll position, so it has to
+   track it exactly — a transition makes it chase every frame, lagging behind
+   during a scroll and then gliding to catch up once the scroll stops. */
+.rt__marker {
+  transition: none;
+}
+
+.rt__tick-line {
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.08;
+}
+
+.rt__tick-label {
+  font-size: 9px;
+  fill: currentColor;
+  opacity: 0.4;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Date label riding the marker — same rule: no transition. */
+.rt__readout {
+  position: absolute;
+  left: 0;
+  transform: translateY(-50%);
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: var(--foreground);
+  color: var(--background);
+  font-size: 0.66rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: none;
+  z-index: 5;
+}
+
+.rt__marker-line {
+  stroke: var(--foreground);
+  stroke-width: 1;
+  opacity: 0.2;
+  stroke-dasharray: 2 4;
+}
+
+.rt__marker-chevron {
+  fill: none;
+  stroke: var(--foreground);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Invisible jump targets sitting over each rail node. */
+.rt__jump {
+  position: absolute;
+  /* Width is set inline from the measured lane spacing. */
+  height: 34px;
+  transform: translateY(-50%);
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.rt__jump:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+  border-radius: 6px;
+}
+
+.rt__jump-label {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  /* Pushed clear of the rail regardless of which lane the button sits in, so a
+     service-lane label never lands on top of the civilian line. */
+  margin-left: var(--label-shift, 6px);
+  padding: 4px 9px;
+  border-radius: 8px;
+  background: var(--foreground);
+  color: var(--background);
+  font-size: 0.72rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+  z-index: 6;
+}
+
+.rt__jump:hover .rt__jump-label,
+.rt__jump:focus-visible .rt__jump-label {
+  opacity: 1;
+}
+
+/* ---- stage ---- */
+
+.rt__stage {
+  position: relative;
+  min-width: 0;
+}
+
+.rt--enhanced .rt__stage {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.rt__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex: none;
+  padding-bottom: 8px;
+}
+
+.rt__counter {
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.rt__stops {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 26px;
+}
+
+.rt--enhanced .rt__stops {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: block;
+}
+
+.rt--enhanced .rt__stop {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  /* Opacity is set inline from scroll position; no transition, or it would
+     lag behind the scroll it is meant to track. */
+}
+
+.rt--enhanced .rt__stop--gone {
+  visibility: hidden;
+}
+
+.rt__stop {
+  display: flex;
+  gap: 16px;
+}
+
+/* ---- stacked stop: one card on top, concurrent jobs behind it as tabs ---- */
+
+.rt__stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-height: 0;
+}
+
+.rt--enhanced .rt__stop--stacked > * {
+  overflow: visible;
+}
+
+.rt__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: none;
+}
+
+.rt__tab {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 5px 12px;
+  border: 1px solid color-mix(in srgb, var(--lane-color) 40%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 140ms ease, background 140ms ease;
+}
+
+.rt__tab:hover {
+  opacity: 1;
+  background: color-mix(in srgb, var(--lane-color) 12%, transparent);
+}
+
+.rt__tab:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.rt__tab--on {
+  opacity: 1;
+  background: color-mix(in srgb, var(--lane-color) 18%, transparent);
+  border-color: var(--lane-color);
+}
+
+.rt__tab-org {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lane-color);
+}
+
+.rt__tab-role {
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 24ch;
+}
+
+.rt__stack-card {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+}
+
+.rt__stack-card > * {
+  width: 100%;
+}
+
+/* ---- narrow screens: thin rail, effect intact ---- */
+
+@media (max-width: 900px) {
+  .rt {
+    --rt-rail-w: 46px;
+  }
+
+  .rt__sticky {
+    gap: 10px;
+  }
+
+  .rt__jump-label,
+  .rt__tick-label {
+    display: none;
+  }
+
+  .rt__readout {
+    font-size: 0.6rem;
+    padding: 2px 5px;
+  }
+
+}
+
+@media (max-width: 560px) {
+  .rt {
+    --rt-top: 62px;
+  }
+
+  .rt__toolbar {
+    justify-content: space-between;
+  }
+}
+
+/* Reduced motion never reaches `rt--enhanced`, so the fallback list needs no
+   special casing here — but the cards should still not animate. */
+@media (prefers-reduced-motion: reduce) {
+  .rt__node,
+  .rt__marker,
+  .rt__jump-label {
+    transition: none;
+  }
+}
