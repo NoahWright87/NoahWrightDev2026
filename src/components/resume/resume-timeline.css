@@ -176,23 +176,6 @@
   flex-direction: column;
 }
 
-.rt__toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  flex: none;
-  padding-bottom: 8px;
-}
-
-.rt__counter {
-  font-size: 0.72rem;
-  font-variant-numeric: tabular-nums;
-  opacity: 0.6;
-  letter-spacing: 0.06em;
-  white-space: nowrap;
-}
-
 .rt__stops {
   margin: 0;
   padding: 0;
@@ -335,9 +318,6 @@
     --rt-top: 62px;
   }
 
-  .rt__toolbar {
-    justify-content: space-between;
-  }
 }
 
 /* Reduced motion never reaches `rt--enhanced`, so the fallback list needs no

@@ -143,8 +143,8 @@ export default function ResumeTimeline() {
   const [fade, setFade] = React.useState(() => stopFade(0, stops.length));
 
   /* Once the incoming card is the more visible of the two, it is the one the
-     reader is looking at — so the counter, the lit dot and the tab strip should
-     all follow it rather than the card on its way out. */
+     reader is looking at — so the lit dot and the tab strip should follow it
+     rather than the card on its way out. */
   const activeIndex =
     fade.next !== null && fade.nextOpacity > fade.activeOpacity ? fade.next : fade.active;
   const active = stops[Math.min(activeIndex, stops.length - 1)];
@@ -298,8 +298,7 @@ export default function ResumeTimeline() {
       railWidth: width,
       topY: serviceNodes.length ? serviceNodes[0].y : yearToY(TIMELINE_START),
       bottomY: yearToY(TIMELINE_END),
-      forkY: yearToY(FORK_YEAR),
-      civilianFirstY: forkNode ? forkNode.y : yearToY(FORK_YEAR) + 60,
+      branchToY: forkNode ? forkNode.y : yearToY(FORK_YEAR),
       serviceEndY: yearToY(MERGE_YEAR),
     });
 
@@ -319,8 +318,9 @@ export default function ResumeTimeline() {
     const segmentFor = (node: (typeof nodes)[number]) => {
       const endY = yearToY(entryEnd(node.entry));
       if (node.entry.id === forkNode?.entry.id) {
-        /* Carries the fork curve in with it, so the branch is already the
-           color of the job it leads to. */
+        /* Carries the fork curve in with it, so the branch is already the color
+           of the job it leads to. The curve lands on this node, so the run of
+           the job continues straight down from there. */
         return `${paths.branchCurve} L ${paths.civilianX} ${endY}`;
       }
       if (node.entry.id === mergeNode?.entry.id) {
@@ -580,14 +580,6 @@ export default function ResumeTimeline() {
             </div>
 
             <div className="rt__stage">
-              {enhanced && (
-                <div className="rt__toolbar">
-                  <span className="rt__counter">
-                    {Math.min(activeIndex + 1, stops.length)} / {stops.length}
-                  </span>
-                </div>
-              )}
-
               <ol className="rt__stops">
                 {stops.map((stop, index) => {
                   const opacity =

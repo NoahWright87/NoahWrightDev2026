@@ -92,38 +92,46 @@ export interface RailPaths {
   branch: string;
   /** Just the fork curve, for callers drawing the lane in colored segments. */
   branchCurve: string;
-  /** Where the fork curve lands on the civilian lane. */
-  branchCurveEndY: number;
-  forkY: number;
+  /** Where on the service lane the branch leaves — above the node it leads to. */
+  branchFromY: number;
   serviceEndY: number;
   overlapTop: number;
   overlapBottom: number;
 }
 
+/** How far above its first node the branch leaves the service lane. */
+const BRANCH_SPAN = 42;
+
 /**
- * Build the two lane paths. The branch resolves within a fixed distance rather
- * than stretching across the whole gap, so the split always reads as a fork.
+ * Build the two lane paths.
+ *
+ * The branch leaves the service lane *above* the first node of the new lane and
+ * arrives at that node from the top, the way a branch reads in a commit graph.
+ * Curving away at the node's own height instead would leave the dot sitting
+ * over a line that starts below it, so the new lane looks like it appears from
+ * nowhere. The divergence point being slightly earlier than the fork date is
+ * the usual convention — the dot still sits exactly on its date.
  */
 export function buildRailPaths(opts: {
   railWidth: number;
   topY: number;
   bottomY: number;
-  forkY: number;
-  civilianFirstY: number;
+  /** The first node on the branched lane. The curve lands here. */
+  branchToY: number;
   serviceEndY: number;
 }): RailPaths {
-  const { railWidth, topY, bottomY, forkY, civilianFirstY, serviceEndY } = opts;
+  const { railWidth, topY, bottomY, branchToY, serviceEndY } = opts;
   const serviceX = laneX(railWidth, 0);
   const civilianX = laneX(railWidth, 1);
 
-  const gap = Math.max(20, civilianFirstY - forkY);
-  const curve = Math.min(gap, 88);
-  const curveEnd = forkY + curve;
+  /* Never reach back past the start of the lane being branched from. */
+  const span = Math.max(12, Math.min(BRANCH_SPAN, branchToY - topY));
+  const branchFromY = branchToY - span;
 
   const branchCurve =
-    `M ${serviceX} ${forkY} ` +
-    `C ${serviceX} ${forkY + curve * 0.6}, ${civilianX} ${curveEnd - curve * 0.6}, ` +
-    `${civilianX} ${curveEnd}`;
+    `M ${serviceX} ${branchFromY} ` +
+    `C ${serviceX} ${branchFromY + span * 0.45}, ${civilianX} ${branchToY - span * 0.55}, ` +
+    `${civilianX} ${branchToY}`;
 
   return {
     serviceX,
@@ -131,10 +139,9 @@ export function buildRailPaths(opts: {
     service: `M ${serviceX} ${topY} L ${serviceX} ${serviceEndY}`,
     branch: `${branchCurve} L ${civilianX} ${bottomY}`,
     branchCurve,
-    branchCurveEndY: curveEnd,
-    forkY,
+    branchFromY,
     serviceEndY,
-    overlapTop: forkY,
+    overlapTop: branchToY,
     overlapBottom: serviceEndY,
   };
 }
