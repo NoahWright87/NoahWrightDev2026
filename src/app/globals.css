@@ -101,6 +101,7 @@ a {
 }
 
 .home-hero-photo-link {
+  position: relative;
   display: block;
   border-radius: 20px;
   transition: transform 150ms ease;
@@ -109,6 +110,27 @@ a {
 .home-hero-photo-link:hover,
 .home-hero-photo-link:focus-visible {
   transform: scale(1.03);
+}
+
+.home-hero-photo-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--foreground);
+  color: var(--background);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 150ms ease;
+  pointer-events: none;
+}
+
+.home-hero-photo-link:hover .home-hero-photo-hint,
+.home-hero-photo-link:focus-visible .home-hero-photo-hint {
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {

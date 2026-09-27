@@ -53,6 +53,7 @@ Use this file to keep short, durable notes that help future chat sessions resume
 
 - The dark theme block from `buildThemeCss` must use `:root[data-theme="dark"]`. The design system's own dark defaults use that selector, so a bare `[data-theme="dark"]` loses on specificity and dark mode silently shows the design system's navy/blue instead of the site palette.
 - `globals.css` sets `.nw-card-grid { width: 100% }` as a workaround for NoahWright87/design#21 (the grid's rows size to ~500px inside a vertical `Container`). Remove it once the design system ships the fix.
+- Easter eggs live in `src/components/EasterEggs.tsx` (mounted by `SiteShell`): a console greeting, and the Konami code rains portraits for 6s (reduced motion keeps only the toast). The hero photo also shows a "psst… N more of me" hover hint pointing at /portraits.
 - The 404 (`src/app/not-found.tsx`) is a Doors 97 blue screen; any key except Tab/modifiers goes home. Its fixed blue/grey colors are deliberate, not missed theme tokens.
 
 - The header uses `Header` **unslotted** (children, not `left`/`center`/`right`). Its slots are `position: relative`, which would anchor `MobileNav`'s phone dropdown to the slot and make it hamburger-wide. `MobileNav` renders the links inline at ≥769px and as a CSS-only dropdown below that.

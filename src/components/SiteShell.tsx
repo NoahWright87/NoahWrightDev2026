@@ -14,6 +14,7 @@ import {
   toggleThemeMode,
   initThemeMode,
 } from "@noahwright/design";
+import EasterEggs from "@/components/EasterEggs";
 import EmailIcon from "@/components/icons/EmailIcon";
 import GitHubIcon from "@/components/icons/GitHubIcon";
 import LinkedInIcon from "@/components/icons/LinkedInIcon";
@@ -96,6 +97,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
           {children}
         </Container>
       </Container>
+      <EasterEggs />
     </Layout>
   );
 }

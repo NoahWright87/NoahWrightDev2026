@@ -1,0 +1,47 @@
+/* Konami code: a short rain of portraits (see EasterEggs.tsx). */
+.portrait-rain {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.portrait-rain__drop {
+  position: absolute;
+  top: 0;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transform: translateY(-150px);
+  animation-name: portrait-rain-fall;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes portrait-rain-fall {
+  to {
+    transform: translateY(110vh) rotate(var(--spin, 360deg));
+  }
+}
+
+.portrait-rain__toast {
+  position: absolute;
+  z-index: 1;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--background);
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Reduced motion: skip the rain, keep the toast so the code still "works". */
+@media (prefers-reduced-motion: reduce) {
+  .portrait-rain__drop {
+    display: none;
+  }
+}
