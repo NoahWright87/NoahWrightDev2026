@@ -48,6 +48,7 @@ Clear statement of when this TODO file can be deleted.
 |---|---|---|
 | theme-and-brand.todo.md | 1 | Active |
 | home-page.todo.md | 4 | Active |
+| hero-taglines.todo.md | 4 | Parked (revisit with Noah) |
 | projects-page.todo.md | 4 | Active |
 | about-page.todo.md | 4 | Active |
 | contact-page.todo.md | 4 | Active |

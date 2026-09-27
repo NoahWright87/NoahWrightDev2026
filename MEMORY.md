@@ -19,7 +19,7 @@ Use this file to keep short, durable notes that help future chat sessions resume
 - **Whimsy = voice + easter eggs.** Pages stay clean and professional; personality lives in copy and discoverable surprises (Doors 97 blue-screen 404, Konami code, console greeting). Don't turn the site itself into a toy.
 - **Palette is plum + burnt orange in both light and dark** (`src/lib/theme.ts`).
 - **Lean on `@noahwright/design`** so Noah's sites look alike. When something belongs in the design system, file an issue in `NoahWright87/design` and keep only a small, commented local workaround here that names the issue.
-- **Hero taglines** are to be reworked *with* Noah (more professional; more shared words between lines so the typewriter diff looks better). Don't rewrite them unilaterally.
+- **Hero taglines** are to be reworked *with* Noah; don't rewrite them unilaterally. The session is parked mid-draft: the findings, the rules and the latest draft are in `TODOs/hero-taglines.todo.md`.
 - **Writing section: maybe later.** Don't build it, but don't design it out.
 - The work plan is five batches: (1) bug fixes, (2) business-card essentials (inline desktop nav with Resume, hero rewrite and second CTA, footer contact links, GitHub on Contact, og:image), (3) real project screenshots, resume PDF and current role, (4) whimsy pack, (5) tagline session.
 
