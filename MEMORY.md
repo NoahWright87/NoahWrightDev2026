@@ -56,7 +56,7 @@ Use this file to keep short, durable notes that help future chat sessions resume
 - Easter eggs live in `src/components/EasterEggs.tsx` (mounted by `SiteShell`): a console greeting, and the Konami code rains portraits for 6s (reduced motion keeps only the toast). The hero photo also shows a "psst… N more of me" hover hint pointing at /portraits.
 - The 404 (`src/app/not-found.tsx`) is a Doors 97 blue screen; any key except Tab/modifiers goes home. Its fixed blue/grey colors are deliberate, not missed theme tokens.
 
-- The header uses `Header` **unslotted** (children, not `left`/`center`/`right`). Its slots are `position: relative`, which would anchor `MobileNav`'s phone dropdown to the slot and make it hamburger-wide. `MobileNav` renders the links inline at ≥769px and as a CSS-only dropdown below that.
+- The header uses `Header` **unslotted** (children, not `left`/`center`/`right`). Its slots are `position: relative`, which would anchor `MobileNav`'s phone dropdown to the slot and make it hamburger-wide. `MobileNav` renders the links inline at ≥769px and as a CSS-only dropdown below that. Tracked upstream as NoahWright87/design#23; the missing default font is NoahWright87/design#22.
 
 ## Project Screenshots
 

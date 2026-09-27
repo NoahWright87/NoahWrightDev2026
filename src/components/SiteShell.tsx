@@ -39,7 +39,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
       header={
         // Unslotted on purpose: Header's slots are `position: relative`, which
         // would anchor MobileNav's phone dropdown to the slot (hamburger-wide)
-        // instead of the full header width.
+        // instead of the full header width. See NoahWright87/design#23.
         <Header>
           <Link href="/">
             <strong>{SITE.name}</strong>
