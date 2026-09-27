@@ -57,6 +57,7 @@ Clear statement of when this TODO file can be deleted.
 | seo-and-metadata.todo.md | 5 | Active |
 | netlify-deploy.todo.md | 5 | Active |
 | qa-and-accessibility.todo.md | 6 | Active |
+| visual-tests-ci.todo.md | 6 | Parked (low priority, issue #18) |
 
 ## Route-local TODO files
 
