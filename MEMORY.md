@@ -13,6 +13,16 @@ Use this file to keep short, durable notes that help future chat sessions resume
 - Deferred work and sequencing decisions
 - Important environment/deploy assumptions
 
+## Site Direction (Sep 2026 review with Noah)
+
+- **Audience is balanced**: fast credibility for recruiters/hiring managers, with projects and personality one click away. The site is his online business card, portfolio, and side-project showcase.
+- **Whimsy = voice + easter eggs.** Pages stay clean and professional; personality lives in copy and discoverable surprises (Doors 97 blue-screen 404, Konami code, console greeting). Don't turn the site itself into a toy.
+- **Palette is plum + burnt orange in both light and dark** (`src/lib/theme.ts`).
+- **Lean on `@noahwright/design`** so Noah's sites look alike. When something belongs in the design system, file an issue in `NoahWright87/design` and keep only a small, commented local workaround here that names the issue.
+- **Hero taglines** are to be reworked *with* Noah (more professional; more shared words between lines so the typewriter diff looks better). Don't rewrite them unilaterally.
+- **Writing section: maybe later.** Don't build it, but don't design it out.
+- The work plan is five batches: (1) bug fixes, (2) business-card essentials (inline desktop nav with Resume, hero rewrite and second CTA, footer contact links, GitHub on Contact, og:image), (3) real project screenshots, resume PDF and current role, (4) whimsy pack, (5) tagline session.
+
 ## Current Decisions
 
 - Resume flow is phased:
@@ -40,6 +50,10 @@ Use this file to keep short, durable notes that help future chat sessions resume
 ## Layout Gotchas
 
 - `globals.css` uses `overflow-x: clip` (not `hidden`) on `html, body`. Both stop horizontal overflow, but `hidden` makes the element a scroll container — it also forces `overflow-y` to `auto` — which silently breaks `position: sticky` for every descendant on the page. This was found when a pinned pane refused to pin despite a computed `position: sticky`. Do not change it back to `hidden`; verified with no horizontal overflow on any route at 1280px and 390px.
+
+- The dark theme block from `buildThemeCss` must use `:root[data-theme="dark"]`. The design system's own dark defaults use that selector, so a bare `[data-theme="dark"]` loses on specificity and dark mode silently shows the design system's navy/blue instead of the site palette.
+- `globals.css` sets `.nw-card-grid { width: 100% }` as a workaround for NoahWright87/design#21 (the grid's rows size to ~500px inside a vertical `Container`). Remove it once the design system ships the fix.
+- The 404 (`src/app/not-found.tsx`) is a Doors 97 blue screen; any key except Tab/modifiers goes home. Its fixed blue/grey colors are deliberate, not missed theme tokens.
 
 ## Portrait Assets
 

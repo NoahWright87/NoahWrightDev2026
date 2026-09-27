@@ -54,6 +54,14 @@ a {
   }
 }
 
+/* Workaround for NoahWright87/design#21: inside a vertical Container, CardGrid's
+   rows are sized against a narrower column than the grid ends up with, so the
+   home page's one-line cards rendered ~500px tall. An explicit width fixes it.
+   Delete this once the fix ships in @noahwright/design. */
+.nw-card-grid {
+  width: 100%;
+}
+
 /* Home hero: rotating title, static description, and portrait carousel now come from
    @noahwright/design's Hero/TextCarousel/Carousel. Only the carousel frame's own
    border look, and the link wrapping it through to /portraits, are specific to this

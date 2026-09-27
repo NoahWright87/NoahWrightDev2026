@@ -8,14 +8,16 @@ export default function AboutPageClient() {
   return (
     <SiteShell>
       <Container padding="lg">
-        <Container direction="vertical" itemSpacing="md">
+        {/* Cap the line length for comfortable reading; full width ran ~130 characters. */}
+        <Container direction="vertical" itemSpacing="md" fullWidth={false} width="min(100%, 72ch)">
           <Heading level={1}>About</Heading>
 
           <Container direction="vertical" itemSpacing="xs">
             <Heading level={2}>Who I Am</Heading>
             <Text>
               I got into programming through playful curiosity—amazed by how math could make video games, I wanted to learn code to build my own. That spark led me to discover something deeper: code can be a tool for both fun and for eliminating soul-crushing work from people&rsquo;s jobs. That&rsquo;s still what drives me today: getting useful tools into people&rsquo;s hands so they can be happier and more productive.
-
+            </Text>
+            <Text>
               My ten years in the United States Air Force taught me how to function in highly regulated environments. It was bureaucracy and red tape with a side of morning PT and the occasional shooting range trip. That structure was both constraining and freeing—you had to jump through hoops, but once you learned the system, everything became predictable. The military&rsquo;s emphasis on training, consistent enforcement, and bias toward action shaped how I think about organizations: a high-functioning team continually prunes what&rsquo;s no longer useful, just like managing technical debt.
             </Text>
           </Container>

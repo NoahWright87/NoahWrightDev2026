@@ -1,0 +1,46 @@
+/* 404 page: a late-90s blue screen. The blue, grey and monospace are the joke,
+   so these colors are intentionally fixed rather than theme tokens. */
+.bsod {
+  max-width: 44rem;
+  margin: 0 auto var(--spacing-lg, 1.5rem);
+  padding: 2rem 1.5rem;
+  border-radius: 8px;
+  background: #0000aa;
+  color: #fff;
+  font-family: "Lucida Console", "Courier New", ui-monospace, monospace;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.bsod p {
+  margin: 0 0 1rem;
+}
+
+.bsod__badge {
+  display: table;
+  margin: 0 auto 1.5rem;
+  padding: 0 0.5rem;
+  background: #aaa;
+  color: #0000aa;
+  font-weight: bold;
+}
+
+.bsod__prompt {
+  text-align: center;
+}
+
+.bsod__cursor {
+  animation: bsod-blink 1s steps(1) infinite;
+}
+
+@keyframes bsod-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bsod__cursor {
+    animation: none;
+  }
+}
