@@ -191,11 +191,16 @@
   display: block;
 }
 
+/* `stretch`, not `center`: a card taller than the pinned pane must be clipped
+   by the pane so `.rt__stack-card` can scroll it. Centering instead lets the
+   card grow past the pane in both directions, which on a phone slides the tab
+   strip up behind the site header and drops the last lines off the bottom —
+   content with no way to reach it. */
 .rt--enhanced .rt__stop {
   position: absolute;
   inset: 0;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 16px;
   /* Opacity is set inline from scroll position; no transition, or it would
      lag behind the scroll it is meant to track. */
@@ -218,6 +223,10 @@
   gap: 8px;
   width: 100%;
   min-height: 0;
+  /* The stack fills the pane, but its contents centre inside it, so a card
+     short enough to fit keeps its tab strip directly above it instead of the
+     strip riding at the top of the pane with a gap below. */
+  justify-content: center;
 }
 
 .rt--enhanced .rt__stop--stacked > * {
@@ -273,11 +282,24 @@
 }
 
 .rt__stack-card {
-  flex: 1 1 auto;
+  /* Shrink but never grow: the box is the card's own height while it fits, so
+     the stack can centre it as a unit with its tabs; past that it gives way to
+     the pane and scrolls. */
+  flex: 0 1 auto;
   min-height: 0;
+  /* Only scrolls when the card is taller than the pane, which on a phone a few
+     of them are. Overscroll chains, so a swipe that reaches the end of a card
+     carries on scrolling the timeline rather than dead-ending. */
   overflow-y: auto;
+  scrollbar-width: thin;
   display: flex;
+  /* `safe` matters: plain `center` on an item taller than its box pushes the
+     top out the way scrolling cannot reach, so the card's heading is cut off
+     and unrecoverable. `safe center` centers a card that fits and falls back
+     to the top for one that does not. The plain value stays first for browsers
+     that would throw out the whole declaration. */
   align-items: center;
+  align-items: safe center;
 }
 
 .rt__stack-card > * {
