@@ -21,6 +21,9 @@ export const metadata: Metadata = {
     url: "https://noahwright.dev",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+  },
   robots: {
     index: true,
     follow: true,

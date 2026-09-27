@@ -26,7 +26,7 @@ Ensure every page has correct, unique metadata and the site is discoverable by s
 - [x] Verify each page returns a unique `<title>` in view-source
 - [x] Verify each page returns a unique `<meta name="description">` in view-source
 - [x] Check OG tags are present in view-source on home page
-- [ ] (Optional) Add `og:image` if a headshot or brand image is available
+- [x] Add `og:image`: `src/app/opengraph-image.tsx` renders a 1200×630 card (portrait, name, palette) at build time
 
 ## Verification
 - `https://noahwright.dev/sitemap.xml` returns valid XML with 5 routes after deploy

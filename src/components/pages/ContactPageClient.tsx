@@ -4,6 +4,7 @@ import { Container, Heading, Text, Button } from "@noahwright/design";
 import SiteShell from "@/components/SiteShell";
 import EmailIcon from "@/components/icons/EmailIcon";
 import LinkedInIcon from "@/components/icons/LinkedInIcon";
+import GitHubIcon from "@/components/icons/GitHubIcon";
 import { SITE } from "@/lib/site";
 
 export default function ContactPageClient() {
@@ -24,6 +25,11 @@ export default function ContactPageClient() {
             <a href={SITE.linkedIn} target="_blank" rel="noreferrer">
               <Button variant="outline" icon={<LinkedInIcon size={18} />}>
                 Connect on LinkedIn
+              </Button>
+            </a>
+            <a href={SITE.github} target="_blank" rel="noreferrer">
+              <Button variant="outline" icon={<GitHubIcon size={18} />}>
+                See my GitHub
               </Button>
             </a>
           </Container>

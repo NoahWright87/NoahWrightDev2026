@@ -83,11 +83,16 @@ export default function HomePageClient() {
         }
         description={<Text>{SITE.description}</Text>}
         actions={
-          <Link href="/projects">
-            <Button variant="solid" color="primary">
-              My Projects
-            </Button>
-          </Link>
+          <>
+            <Link href="/projects">
+              <Button variant="solid" color="primary">
+                My Projects
+              </Button>
+            </Link>
+            <Link href={SITE.resumeUrl}>
+              <Button variant="outline">Resume</Button>
+            </Link>
+          </>
         }
         media={
           // A plain anchor (rather than the design system's `Link`, which doesn't

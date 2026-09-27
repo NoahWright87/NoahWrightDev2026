@@ -62,6 +62,35 @@ a {
   width: 100%;
 }
 
+/* Site header: name on the left, nav pushed right beside the theme toggle. */
+.site-nav {
+  margin-left: auto;
+}
+
+/* Mark the current page in the nav. */
+.site-nav a[aria-current="page"] {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Footer contact icons: every page doubles as a business card. */
+.site-footer__links {
+  display: flex;
+  gap: var(--spacing-md, 1rem);
+}
+
+.site-footer__links a {
+  display: inline-flex;
+  padding: 6px;
+  border-radius: 8px;
+  transition: color 150ms ease;
+}
+
+.site-footer__links a:hover,
+.site-footer__links a:focus-visible {
+  color: var(--primary);
+}
+
 /* Home hero: rotating title, static description, and portrait carousel now come from
    @noahwright/design's Hero/TextCarousel/Carousel. Only the carousel frame's own
    border look, and the link wrapping it through to /portraits, are specific to this

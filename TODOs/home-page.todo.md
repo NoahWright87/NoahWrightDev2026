@@ -29,7 +29,7 @@ Replace all `[PLACEHOLDER]` content on the home page with real, final copy and c
 - [x] Test LinkedIn button — now lives on the Contact page rather than the hero; opens correct profile in new tab
 - [x] Check home page renders well at 375px, 768px, 1280px
 - [x] Hero title rotates through several taglines with a typewriter animation (via `design`'s `TextCarousel`)
-- [x] Hero CTA is a single "My Projects" button routing to `/projects`
+- [x] Hero CTAs: "My Projects" (primary) plus "Resume" (outline); resume is also in the header nav now
 - [x] Rotating photo carousel beside the hero text now uses real portraits (`public/images/noah/`, ten AI-generated style variations plus the original) with per-image alt text
 - [x] Hero has a distinguishing background tint and gradient bottom border (via `design`'s `Hero` `background`/`bottomBorder` props)
 - [x] Quick-nav links to /projects, /about, /resume, /contact are now a card group (via `design`'s `Card`/`CardGrid`)
