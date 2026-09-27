@@ -1,0 +1,106 @@
+/* Per-job colors.
+ *
+ * One hue per color group — normally an employer, but a group can span several
+ * org names where one employer appears under more than one (see `colorGroup` in
+ * `src/lib/resume.ts`). One shade per role within the group, so a promotion
+ * reads as a shade change and a move to a new company as a hue change.
+ *
+ * Groups are numbered in the order they first appear in the career. Hues are
+ * chosen so groups adjacent in time land far apart on the wheel, since those
+ * are the pairs a reader compares.
+ *
+ * Every value needs a light and a dark variant: these sit on a pale lavender
+ * page in light mode and a near-black one in dark, and a hue tuned for one is
+ * unreadable on the other.
+ */
+
+:root {
+  /* 0 — green */
+  --job-e0-0: #2c6e35;
+  --job-e0-1: #3f8f49;
+  --job-e0-2: #52a85d;
+
+  /* 1 — blue */
+  --job-e1-0: #2f5c9e;
+  --job-e1-1: #3f72bb;
+  --job-e1-2: #4a7fc4;
+  --job-e1-3: #5b94dc;
+
+  /* 2 — rust */
+  --job-e2-0: #a8442a;
+  --job-e2-1: #c25a3c;
+  --job-e2-2: #d67051;
+
+  /* 3 — sea green */
+  --job-e3-0: #1a7a63;
+  --job-e3-1: #269680;
+  --job-e3-2: #33af97;
+
+  /* 4 — ochre */
+  --job-e4-0: #8a6a15;
+  --job-e4-1: #a78420;
+  --job-e4-2: #c29c31;
+
+  /* 5 — plum */
+  --job-e5-0: #7a3470;
+  --job-e5-1: #95498a;
+  --job-e5-2: #ac5fa1;
+}
+
+/* The blocking script in the root layout always stamps data-theme, but guard
+   with a media query too in case it is ever blocked or throws. */
+:root[data-theme="dark"] {
+  --job-e0-0: #5cb860;
+  --job-e0-1: #77cd7b;
+  --job-e0-2: #95de98;
+
+  --job-e1-0: #7fa9e8;
+  --job-e1-1: #9abef0;
+  --job-e1-2: #a7c8f3;
+  --job-e1-3: #bbd6f8;
+
+  --job-e2-0: #e0755a;
+  --job-e2-1: #ec8d74;
+  --job-e2-2: #f5a68f;
+
+  --job-e3-0: #4fc2a3;
+  --job-e3-1: #6ed5b9;
+  --job-e3-2: #8ee5cd;
+
+  --job-e4-0: #d4b45c;
+  --job-e4-1: #e2c67a;
+  --job-e4-2: #edd699;
+
+  --job-e5-0: #c77ebc;
+  --job-e5-1: #d795cd;
+  --job-e5-2: #e4addc;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --job-e0-0: #5cb860;
+    --job-e0-1: #77cd7b;
+    --job-e0-2: #95de98;
+
+    --job-e1-0: #7fa9e8;
+    --job-e1-1: #9abef0;
+    --job-e1-2: #a7c8f3;
+  --job-e1-3: #bbd6f8;
+
+    --job-e2-0: #e0755a;
+    --job-e2-1: #ec8d74;
+    --job-e2-2: #f5a68f;
+
+    --job-e3-0: #4fc2a3;
+    --job-e3-1: #6ed5b9;
+    --job-e3-2: #8ee5cd;
+
+    --job-e4-0: #d4b45c;
+    --job-e4-1: #e2c67a;
+    --job-e4-2: #edd699;
+
+    --job-e5-0: #c77ebc;
+    --job-e5-1: #d795cd;
+    --job-e5-2: #e4addc;
+  }
+}

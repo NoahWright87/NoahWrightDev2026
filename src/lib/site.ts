@@ -12,6 +12,12 @@ export const SITE = {
   email: "noah@noahwright.dev",
   linkedIn: "https://www.linkedin.com/in/noah-wright-dev/",
   resumeUrl: "/resume",
+  /**
+   * Downloadable resume. The file itself is not in the repo yet — drop it at
+   * `public/noah-wright-resume-2026.pdf` (see `public/RESUME_PLACEHOLDER.md`).
+   * `netlify.toml` already forces `Content-Disposition: attachment` for `/*.pdf`.
+   */
+  resumePdfUrl: "/noah-wright-resume-2026.pdf",
   /** URL of the previous site iteration — update when archive.noahwright.dev is live */
   previousSiteUrl: "https://noahwright.dev",
 } as const;

@@ -1,0 +1,60 @@
+/* Resume page — everything outside the timeline itself. */
+
+.resume__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+}
+
+.resume__head h1 {
+  margin: 0;
+}
+
+.resume__download {
+  text-decoration: none;
+  flex: none;
+}
+
+.resume__markers {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.resume__marker {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.resume__marker-dot {
+  width: 10px;
+  height: 10px;
+  margin-top: 7px;
+  border-radius: 3px;
+  transform: rotate(45deg);
+  flex: none;
+}
+
+.resume__marker-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.resume__marker-date {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+}
+
+.resume__skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}

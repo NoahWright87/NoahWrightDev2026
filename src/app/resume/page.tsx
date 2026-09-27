@@ -4,7 +4,7 @@ import ResumePageClient from "@/components/pages/ResumePageClient";
 export const metadata: Metadata = {
   title: "Resume",
   description:
-    "Placeholder resume page for Noah Wright. A full web resume and downloadable PDF will be added in a follow-up release.",
+    "Noah Wright's resume, presented as a branching timeline of a dual career in the U.S. Air Force and civilian software engineering.",
 };
 
 export default function ResumePage() {
