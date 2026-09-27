@@ -233,8 +233,7 @@
 
 .rt__tab {
   display: flex;
-  align-items: baseline;
-  gap: 7px;
+  align-items: center;
   padding: 5px 12px;
   border: 1px solid color-mix(in srgb, var(--lane-color) 40%, transparent);
   border-radius: 999px;
@@ -262,20 +261,15 @@
   border-color: var(--lane-color);
 }
 
-.rt__tab-track {
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--lane-color);
-}
-
+/* The role name is all a tab carries, so it gets the room to say itself in
+   full where there is any — the longest here is 34 characters. It still
+   truncates rather than wraps, so the strip stays one row deep. */
 .rt__tab-role {
   font-size: 0.8rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 24ch;
+  max-width: 36ch;
 }
 
 .rt__stack-card {

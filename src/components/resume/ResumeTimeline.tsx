@@ -27,7 +27,6 @@ import {
   PRIMARY_TRACK,
   entryEnd,
   jobColorVar,
-  trackLabel,
   yearToFraction,
   type ResumeEntry,
 } from "@/lib/resume";
@@ -106,27 +105,26 @@ function StackedStop({
           {[...stop.entries]
             .sort((a, b) => a.track - b.track)
             .map((entry) => {
-            const on = entry.id === shown.id;
-            return (
-              <button
-                key={entry.id}
-                type="button"
-                role="tab"
-                aria-selected={on}
-                tabIndex={isActiveStop ? 0 : -1}
-                className={on ? "rt__tab rt__tab--on" : "rt__tab"}
-                style={{ ["--lane-color" as string]: colorOf(entry) }}
-                onClick={() => onPick(entry.id)}
-              >
-                <span className="rt__tab-track">{trackLabel(entry.track)}</span>
-                <span className="rt__tab-role">{entry.role}</span>
-              </button>
+              const on = entry.id === shown.id;
+              return (
+                <button
+                  key={entry.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={on}
+                  tabIndex={isActiveStop ? 0 : -1}
+                  className={on ? "rt__tab rt__tab--on" : "rt__tab"}
+                  style={{ ["--lane-color" as string]: colorOf(entry) }}
+                  onClick={() => onPick(entry.id)}
+                >
+                  <span className="rt__tab-role">{entry.role}</span>
+                </button>
               );
             })}
         </div>
       )}
       <div className="rt__stack-card">
-        <JobCard entry={shown} color={colorOf(shown)} showTrack={stacked} />
+        <JobCard entry={shown} color={colorOf(shown)} />
       </div>
     </div>
   );

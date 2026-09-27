@@ -1,23 +1,11 @@
 "use client";
 
 import { Heading, Text, Pill } from "@noahwright/design";
-import { markersWithin, trackLabel, type ResumeEntry } from "@/lib/resume";
+import { markersWithin, type ResumeEntry } from "@/lib/resume";
 import "./job-card.css";
 
 /** One job, as shown on the timeline stage. */
-export function JobCard({
-  entry,
-  color,
-  showTrack = false,
-}: {
-  entry: ResumeEntry;
-  color: string;
-  /**
-   * Name the track this job runs on. Only worth saying while another job is
-   * running alongside it — otherwise there is only one line to be on.
-   */
-  showTrack?: boolean;
-}) {
+export function JobCard({ entry, color }: { entry: ResumeEntry; color: string }) {
   const markers = markersWithin(entry);
   /* Full-time is the default and says nothing; part-time is the exception and
      is the whole reason a job can share a stretch of the timeline. */
@@ -25,8 +13,6 @@ export function JobCard({
 
   return (
     <article className="jc" style={{ ["--job-color" as string]: color }}>
-      {showTrack && <span className="jc__track">{trackLabel(entry.track)}</span>}
-
       <Heading level={3}>{entry.role}</Heading>
       <p className="jc__org">{entry.org}</p>
 

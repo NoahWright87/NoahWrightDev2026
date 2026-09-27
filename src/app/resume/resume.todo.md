@@ -31,6 +31,10 @@ the PDF, not design.
       `netlify.toml` already forces `Content-Disposition: attachment` for `/*.pdf`.
 - [ ] Test the download across desktop Chrome, desktop Safari or Firefox, and
       mobile Chrome once the file exists.
+- [ ] **Consider shortening the long cards.** Four entries overflow a 390px
+      phone and now scroll inside the pinned pane. That is honest but it costs
+      the "one job, one screen" reading the design is built around; trimming the
+      summaries and bullets would be the better fix if the content allows it.
 - [ ] Consider adding `/resume` to the Playwright visual suite
       (`tests/visual.spec.ts`) — it is not covered there. Note the timeline is
       scroll-driven, so a full-page screenshot will not capture it meaningfully;
@@ -46,6 +50,10 @@ the PDF, not design.
 - Mobile keeps the pinned effect on a thin rail rather than falling back to a
   plain list.
 - One viewport of scroll per job (chosen after trying faster and slower).
+- The track a job runs on is never named on screen. The rail and the colors
+  already carry it; a "Track 2" label was tried and removed.
+- A card taller than the pinned pane scrolls inside it rather than growing past
+  it. Four of the ten do at 390px, by 47–471px.
 - The scroll marker, the line fill behind it, and the date label all track scroll
   position exactly — no easing, no settling after the scroll stops.
 

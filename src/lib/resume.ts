@@ -18,17 +18,15 @@
  * Which parallel line of the timeline a job sits on. 1 is the leftmost.
  *
  * Deliberately a number rather than a name: a second track is just "another
- * job running at the same time", whatever kind of job it is. The geometry
- * currently draws two tracks; the labelling works for any number.
+ * job running at the same time", whatever kind of job it is. It is never shown
+ * to the reader — the rail's two lines and the per-job colors already say which
+ * is which. The geometry currently draws two tracks; the model allows any
+ * number.
  */
 export type TrackId = number;
 
 /** The track a job runs on unless it is concurrent with another. */
 export const PRIMARY_TRACK: TrackId = 1;
-
-export function trackLabel(track: TrackId): string {
-  return `Track ${track}`;
-}
 
 export type EntryKind = "role" | "promotion";
 export type Commitment = "full-time" | "part-time";
