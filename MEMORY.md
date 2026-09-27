@@ -55,6 +55,12 @@ Use this file to keep short, durable notes that help future chat sessions resume
 - `globals.css` sets `.nw-card-grid { width: 100% }` as a workaround for NoahWright87/design#21 (the grid's rows size to ~500px inside a vertical `Container`). Remove it once the design system ships the fix.
 - The 404 (`src/app/not-found.tsx`) is a Doors 97 blue screen; any key except Tab/modifiers goes home. Its fixed blue/grey colors are deliberate, not missed theme tokens.
 
+- The header uses `Header` **unslotted** (children, not `left`/`center`/`right`). Its slots are `position: relative`, which would anchor `MobileNav`'s phone dropdown to the slot and make it hamburger-wide. `MobileNav` renders the links inline at ≥769px and as a CSS-only dropdown below that.
+
+## Project Screenshots
+
+- `public/images/projects/{id}/{1..3}.webp` are real captures made by running each project locally (the live sites were blocked by the build environment's network policy). Provenance and how to replace them are in that folder's README; per-image alt text lives in `src/lib/projects.ts`.
+
 ## Portrait Assets
 
 - The original photograph and ten generated portrait styles live in `public/images/noah/`; that directory's README records provenance, filenames and art direction.

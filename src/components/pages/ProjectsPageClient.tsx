@@ -35,11 +35,11 @@ export default function ProjectsPageClient() {
               ) : undefined}
               image={
                 <Carousel
-                  items={project.images.map((src, i) => (
+                  items={project.images.map((image) => (
                     <Image
-                      key={i}
-                      src={src}
-                      alt={`${project.name} screenshot ${i + 1}`}
+                      key={image.src}
+                      src={image.src}
+                      alt={image.alt}
                       aspectRatio="16/9"
                     />
                   ))}
