@@ -13,7 +13,7 @@ Finish the site's visual identity. Palette (plum + burnt orange), logo, and head
 - NoahWright87/design PR #25 merged and published
 
 ## Tasks
-- [ ] Replace `1.2.0-pr25.8fb81f5` in `package.json` with the stable version and reinstall
+- [ ] Replace `1.2.0-pr25.c1eb87c` in `package.json` with the stable version and reinstall
 - [ ] Re-check headings, home cards and the phone menu after the switch
 
 ## Verification

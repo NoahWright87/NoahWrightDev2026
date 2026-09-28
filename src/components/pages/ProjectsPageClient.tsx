@@ -22,6 +22,7 @@ export default function ProjectsPageClient() {
         <Container direction="vertical" itemSpacing="md">
           {projects.map((project, index) => (
             <Card
+              titleAs="h2"
               key={project.id}
               title={project.name}
               subtitle={project.tags.length > 0 ? (

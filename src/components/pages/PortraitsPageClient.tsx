@@ -70,6 +70,7 @@ export default function PortraitsPageClient() {
         <CardGrid minCardWidth="260px">
           {portraits.map((portrait) => (
             <Card
+              titleAs="h2"
               key={portrait.id}
               title={portrait.style}
               image={

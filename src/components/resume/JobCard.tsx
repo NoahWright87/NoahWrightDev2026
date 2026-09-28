@@ -13,7 +13,7 @@ export function JobCard({ entry, color }: { entry: ResumeEntry; color: string })
 
   return (
     <article className="jc" style={{ ["--job-color" as string]: color }}>
-      <Heading level={3}>{entry.role}</Heading>
+      <Heading level={2}>{entry.role}</Heading>
       <p className="jc__org">{entry.org}</p>
 
       <div className="jc__meta">

@@ -22,6 +22,7 @@ export default function HistoryPageClient() {
         <Container direction="vertical" itemSpacing="md">
           {siteVersions.map((version) => (
             <Card
+              titleAs="h2"
               key={version.id}
               title={`${version.years} · ${version.name}`}
               subtitle={
