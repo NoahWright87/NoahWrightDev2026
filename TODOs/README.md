@@ -46,18 +46,8 @@ Clear statement of when this TODO file can be deleted.
 
 | File | Phase | Status |
 |---|---|---|
-| theme-and-brand.todo.md | 1 | Active |
-| home-page.todo.md | 4 | Active |
+| theme-and-brand.todo.md | 1 | Active (fonts, logo) |
 | hero-taglines.todo.md | 4 | Parked (revisit with Noah) |
-| projects-page.todo.md | 4 | Active |
-| about-page.todo.md | 4 | Active |
-| contact-page.todo.md | 4 | Active |
-| history-page.todo.md | 4 | Active |
-| resume-cta-flow.todo.md | 4 | Active |
-| analytics-clarity.todo.md | 5 | Active |
-| seo-and-metadata.todo.md | 5 | Active |
-| netlify-deploy.todo.md | 5 | Active |
-| qa-and-accessibility.todo.md | 6 | Active |
 | visual-tests-ci.todo.md | 6 | Parked (low priority, issue #18) |
 
 ## Route-local TODO files

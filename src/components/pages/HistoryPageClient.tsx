@@ -1,49 +1,57 @@
 "use client";
 
-import { Container, Heading, Text, Link } from "@noahwright/design";
+import { Container, Heading, Text, Link, Pill, Button, Card, CardFooter } from "@noahwright/design";
+import GitHubIcon from "@/components/icons/GitHubIcon";
 import SiteShell from "@/components/SiteShell";
-import { SITE } from "@/lib/site";
+import { siteVersions } from "@/lib/siteHistory";
 
 export default function HistoryPageClient() {
+  const attempts = siteVersions.filter((v) => !v.shipped).length;
+
   return (
     <SiteShell>
       <Container padding="xl">
         <Container direction="vertical" itemSpacing="lg">
           <Heading level={1}>Site History</Heading>
           <Text>
-            This site is one of several iterations of my personal developer site.
-            Below is a brief record of where it has been.
+            Every version of this site, including the {attempts} rebuilds that never made it
+            to launch. Rewriting my own website is apparently a hobby.
           </Text>
         </Container>
       </Container>
 
       <Container padding="lg">
-        <Container direction="vertical" itemSpacing="lg">
-          <Container direction="vertical" itemSpacing="sm">
-            <Heading level={2}>2026 — This Site</Heading>
-            <Text>
-              A complete reset. Built with Next.js, the{" "}
-              <Link href="https://github.com/NoahWright87/design" isExternal>
-                @noahwright/design
-              </Link>{" "}
-              system, and deployed on Netlify. Personal business-card focus.
-            </Text>
-          </Container>
-
-          <Container direction="vertical" itemSpacing="sm">
-            <Heading level={2}>Previous Iteration — NoahWright.dev</Heading>
-            <Text>
-              The prior site was a Jekyll-based blog and portfolio using the Minimal Mistakes theme,
-              hosted on GitHub Pages. It featured 26 posts written between 2021 and 2022 covering
-              career advice, engineering topics, and learning in public.
-            </Text>
-            <Text>
-              <Link href={SITE.previousSiteUrl} isExternal>
-                View previous site
-              </Link>
-              {" "}(will move to archive.noahwright.dev in the future)
-            </Text>
-          </Container>
+        <Container direction="vertical" itemSpacing="md">
+          {siteVersions.map((version) => (
+            <Card
+              key={version.id}
+              title={`${version.years} · ${version.name}`}
+              subtitle={
+                <Container direction="horizontal" itemSpacing="xs" padding="none" noGutters>
+                  {!version.shipped ? <Pill size="small">Never launched</Pill> : null}
+                  {version.stack.map((tech) => (
+                    <Pill key={tech} size="small">{tech}</Pill>
+                  ))}
+                </Container>
+              }
+              footer={
+                <CardFooter align="end">
+                  <Container direction="horizontal" itemSpacing="sm" padding="none" noGutters>
+                    <Link href={version.repoUrl} isExternal>
+                      <Button variant="ghost" icon={<GitHubIcon size={18} />}>GitHub</Button>
+                    </Link>
+                    {version.liveUrl ? (
+                      <Link href={version.liveUrl} isExternal>
+                        <Button variant="solid">Visit</Button>
+                      </Link>
+                    ) : null}
+                  </Container>
+                </CardFooter>
+              }
+            >
+              <Text>{version.summary}</Text>
+            </Card>
+          ))}
         </Container>
       </Container>
     </SiteShell>

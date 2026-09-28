@@ -1,35 +1,26 @@
 # Theme and Brand
 
 ## Goal
-Establish the visual identity of the new site by configuring real brand colors and typography in `src/lib/theme.ts`, replacing all design-system defaults with Noah Wright–specific values.
+Finish the site's visual identity. The palette is settled: plum + burnt orange in both light and dark (`src/lib/theme.ts`). Typography is what's left.
 
 ## Scope In
-- Choose and commit final color palette (primary, secondary, foreground, background, confirm, danger)
-- Light and dark mode token values
-- Optional: typography overrides (font family via CSS variable if design system supports it)
-- Update `src/lib/theme.ts` with final token values
-- Any additional micro-style tweaks added as minimal global CSS rules only
+- Font strategy: keep the system stack, or pick a signature heading font
+- A site logo (header + favicon) once Noah provides the SVG
 
 ## Scope Out
-- Component-level visual polish (that belongs in individual page TODOs)
-- Custom font loading with next/font (evaluate during this phase, implement only if needed)
+- Changing the palette
 
 ## Dependencies
-- design-system-integration.todo.md
+- NoahWright87/design#22: a font-family token in the design system, so every one of Noah's sites shares the choice
 
 ## Tasks
-- [ ] Decide final light-mode color palette — primary, secondary, background, foreground
-- [ ] Decide dark-mode color palette (or defer dark mode entirely)
-- [ ] Populate `src/lib/theme.ts` with final values
-- [ ] Visual check: home page looks intentional in both light and dark system preference
-- [ ] Decide on font strategy (system stack vs. custom font)
-- [ ] If custom font: load via `next/font` and inject family token into theme
-- [x] Remove any remaining scaffold CSS classes from `page.module.css` (or delete the file)
+- [ ] Decide the font strategy (system stack vs. a signature heading font)
+- [ ] If custom: set it through the design system's token (design#22), loaded via `next/font`, and drop the local `font-family` rule in `globals.css`
+- [ ] Add the logo to the header (mobile) and use it as the favicon
 
 ## Verification
-- Theme tokens appear in DevTools `:root` with correct values
-- No scaffold placeholder colors remain in the rendered site
-- Home page looks intentional at 375px, 768px, and 1280px viewport widths
+- Headings render in the chosen font in light and dark mode at 390px and 1280px
+- The favicon shows in the browser tab, and the logo shows in the phone header
 
 ## Done When
-Visual identity is set, `src/lib/theme.ts` contains real values, and all placeholder-style defaults are gone.
+Typography and logo are settled and live.

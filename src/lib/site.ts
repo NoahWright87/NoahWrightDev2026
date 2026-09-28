@@ -19,8 +19,6 @@ export const SITE = {
    * `netlify.toml` already forces `Content-Disposition: attachment` for `/*.pdf`.
    */
   resumePdfUrl: "/noah-wright-resume-2026.pdf",
-  /** URL of the previous site iteration — update when archive.noahwright.dev is live */
-  previousSiteUrl: "https://noahwright.dev",
 } as const;
 
 export const NAV_ITEMS = [

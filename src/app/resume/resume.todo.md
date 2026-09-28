@@ -11,7 +11,6 @@ content is in, transcribed from LinkedIn — what remains is content cleanup and
 the PDF, not design.
 
 ## Outstanding
-- [x] **Real content is in**, transcribed from LinkedIn (Sep 2026).
 - [ ] **Fill in `usaf-trainee`** — no summary or highlights; it was cut off in
       the source screenshots and nothing was invented to fill it.
 - [ ] **Remove the "*More to come*" bullet** from `signify-manager`, or finish
@@ -35,10 +34,6 @@ the PDF, not design.
       phone and now scroll inside the pinned pane. That is honest but it costs
       the "one job, one screen" reading the design is built around; trimming the
       summaries and bullets would be the better fix if the content allows it.
-- [ ] Consider adding `/resume` to the Playwright visual suite
-      (`tests/visual.spec.ts`) — it is not covered there. Note the timeline is
-      scroll-driven, so a full-page screenshot will not capture it meaningfully;
-      it needs a scroll-and-sample approach.
 
 ## Settled (do not revisit without a reason)
 - One job on screen at a time; a concurrent job sits behind it as a tab, with the

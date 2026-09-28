@@ -58,6 +58,10 @@ Use this file to keep short, durable notes that help future chat sessions resume
 
 - The header uses `Header` **unslotted** (children, not `left`/`center`/`right`). Its slots are `position: relative`, which would anchor `MobileNav`'s phone dropdown to the slot and make it hamburger-wide. `MobileNav` renders the links inline at ≥769px and as a CSS-only dropdown below that. Tracked upstream as NoahWright87/design#23; the missing default font is NoahWright87/design#22.
 
+## Site History
+
+- `/history` renders `src/lib/siteHistory.ts`: every version of the site, found from Noah's repos (Jekyll 2021–2023, now at 2023.noahwright.dev; unlaunched React 2023–24, Next 2025 and "Redux" 2026 attempts; this site). Two private 2021 repos (`NoahWright87.github.io`, `NoahWrightBlog_old`) are deliberately left off.
+
 ## Project Screenshots
 
 - `public/images/projects/{id}/{1..3}.webp` are real captures made by running each project locally (the live sites were blocked by the build environment's network policy). Provenance and how to replace them are in that folder's README; per-image alt text lives in `src/lib/projects.ts`.
