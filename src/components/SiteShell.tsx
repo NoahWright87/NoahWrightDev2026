@@ -38,40 +38,42 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
   return (
     <Layout
       header={
-        // Unslotted on purpose: Header's slots are `position: relative`, which
-        // would anchor MobileNav's phone dropdown to the slot (hamburger-wide)
-        // instead of the full header width. See NoahWright87/design#23.
-        <Header shadow={false}>
-          <Link href="/" className="site-home-link">
-            {/* Phones show the logo; wider screens show the name. The name stays
-                in the accessible text either way (see .site-name in globals.css). */}
-            <Logo className="site-logo" />
-            <strong className="site-name">{SITE.name}</strong>
-          </Link>
-          <div className="site-nav">
-            {/* Inline links on desktop, a hamburger dropdown on phones. */}
-            <MobileNav label="Site menu">
-              {NAV_ITEMS.map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  aria-current={pathname === item.href ? "page" : undefined}
-                >
-                  {item.label}
-                </a>
-              ))}
-            </MobileNav>
-          </div>
-          <ToggleIcon
-            preset="moon-sun"
-            isToggled={isDark}
-            onChange={() => {
-              const next = toggleThemeMode();
-              setIsDark(next === "dark");
-            }}
-            label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-          />
-        </Header>
+        <Header
+          shadow={false}
+          left={
+            <Link href="/" className="site-home-link">
+              {/* Phones show the logo; wider screens show the name. The name stays
+                  in the accessible text either way (see .site-name in globals.css). */}
+              <Logo className="site-logo" />
+              <strong className="site-name">{SITE.name}</strong>
+            </Link>
+          }
+          right={
+            <>
+              {/* Inline links on desktop, a hamburger dropdown on phones. */}
+              <MobileNav label="Site menu">
+                {NAV_ITEMS.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    aria-current={pathname === item.href ? "page" : undefined}
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </MobileNav>
+              <ToggleIcon
+                preset="moon-sun"
+                isToggled={isDark}
+                onChange={() => {
+                  const next = toggleThemeMode();
+                  setIsDark(next === "dark");
+                }}
+                label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+              />
+            </>
+          }
+        />
       }
       footer={
         <Footer

@@ -52,11 +52,12 @@ Use this file to keep short, durable notes that help future chat sessions resume
 - `globals.css` uses `overflow-x: clip` (not `hidden`) on `html, body`. Both stop horizontal overflow, but `hidden` makes the element a scroll container — it also forces `overflow-y` to `auto` — which silently breaks `position: sticky` for every descendant on the page. This was found when a pinned pane refused to pin despite a computed `position: sticky`. Do not change it back to `hidden`; verified with no horizontal overflow on any route at 1280px and 390px.
 
 - The dark theme block from `buildThemeCss` must use `:root[data-theme="dark"]`. The design system's own dark defaults use that selector, so a bare `[data-theme="dark"]` loses on specificity and dark mode silently shows the design system's navy/blue instead of the site palette.
-- `globals.css` sets `.nw-card-grid { width: 100% }` as a workaround for NoahWright87/design#21 (the grid's rows size to ~500px inside a vertical `Container`). Remove it once the design system ships the fix.
 - Easter eggs live in `src/components/EasterEggs.tsx` (mounted by `SiteShell`): a console greeting, and the Konami code rains portraits for 6s (reduced motion keeps only the toast). The hero photo also shows a "psst… N more of me" hover hint pointing at /portraits.
 - The 404 (`src/app/not-found.tsx`) is a Doors 97 blue screen; any key except Tab/modifiers goes home. Its fixed blue/grey colors are deliberate, not missed theme tokens.
 
-- The header uses `Header` **unslotted** (children, not `left`/`center`/`right`). Its slots are `position: relative`, which would anchor `MobileNav`'s phone dropdown to the slot and make it hamburger-wide. `MobileNav` renders the links inline at ≥769px and as a CSS-only dropdown below that. Tracked upstream as NoahWright87/design#23; the missing default font is NoahWright87/design#22.
+- The header uses `Header`'s `left`/`right` slots (logo/name left; `MobileNav` + theme toggle right). Since design PR #25, slots without a tooltip aren't `position: relative`, so the phone dropdown spans the full header, and `aria-current="page"` links are styled by the design system.
+- **Temporarily pinned to a design-system prerelease** (`@noahwright/design@1.2.0-pr25.8fb81f5`, exact) to test NoahWright87/design PR #25 (#21 CardGrid height, #22 font tokens + Wright Sans headings, #23 MobileNav). The local workarounds for those three were removed. Switch to the stable release once #25 ships, and don't downgrade to 1.2.0 without restoring them.
+- Headings use the design system's Wright Sans via `--font-family-heading`; body text uses its system stack. Don't set `font-family` on `body` locally.
 
 ## Site History
 

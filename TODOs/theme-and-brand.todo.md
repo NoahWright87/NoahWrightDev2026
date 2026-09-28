@@ -1,23 +1,23 @@
 # Theme and Brand
 
 ## Goal
-Finish the site's visual identity. The palette is settled: plum + burnt orange in both light and dark (`src/lib/theme.ts`). The logo is in (header on phones, favicon, iOS icon). Typography is what's left.
+Finish the site's visual identity. Palette (plum + burnt orange), logo, and heading font (the design system's Wright Sans) are all in. What's left is moving off the design-system prerelease.
 
 ## Scope In
-- Font strategy: keep the system stack, or pick a signature heading font
+- Switching from the `@noahwright/design` PR #25 prerelease to its stable release
 
 ## Scope Out
-- Changing the palette
+- Changing the palette or fonts
 
 ## Dependencies
-- NoahWright87/design#22: a font-family token in the design system, so every one of Noah's sites shares the choice
+- NoahWright87/design PR #25 merged and published
 
 ## Tasks
-- [ ] Decide the font strategy (system stack vs. a signature heading font)
-- [ ] If custom: set it through the design system's token (design#22), loaded via `next/font`, and drop the local `font-family` rule in `globals.css`
+- [ ] Replace `1.2.0-pr25.8fb81f5` in `package.json` with the stable version and reinstall
+- [ ] Re-check headings, home cards and the phone menu after the switch
 
 ## Verification
-- Headings render in the chosen font in light and dark mode at 390px and 1280px
+- `npm run build` passes and the site looks unchanged from the prerelease
 
 ## Done When
-Typography is settled and live.
+The site depends on a stable `@noahwright/design` release.

@@ -31,9 +31,6 @@ body {
   padding: 0;
   color: var(--foreground);
   background: var(--background);
-  /* Until the design system has a font token (NoahWright87/design#22). */
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif;
 }
 
 a {
@@ -53,14 +50,6 @@ a {
   .nw-container--gutter-shadow-lg {
     box-shadow: none !important;
   }
-}
-
-/* Workaround for NoahWright87/design#21: inside a vertical Container, CardGrid's
-   rows are sized against a narrower column than the grid ends up with, so the
-   home page's one-line cards rendered ~500px tall. An explicit width fixes it.
-   Delete this once the fix ships in @noahwright/design. */
-.nw-card-grid {
-  width: 100%;
 }
 
 /* Site header: logo (phones) or name (wider screens) on the left, nav pushed
@@ -89,17 +78,6 @@ a {
     clip-path: inset(50%);
     white-space: nowrap;
   }
-}
-
-/* Site header: name on the left, nav pushed right beside the theme toggle. */
-.site-nav {
-  margin-left: auto;
-}
-
-/* Mark the current page in the nav (NoahWright87/design#23 would make this built-in). */
-.site-nav a[aria-current="page"] {
-  color: var(--primary);
-  font-weight: 600;
 }
 
 /* Orange rules marking where the header ends and the footer begins, replacing
