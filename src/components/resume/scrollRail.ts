@@ -1,9 +1,6 @@
 /**
- * TEMPORARY — shared machinery for the pinned-rail prototypes (`/resume6`–`/resume8`).
- *
- * All three pin a branch-style tree to the left and reveal one job at a time as
- * you scroll. This module holds the parts they agree on: pacing, rail geometry,
- * and the scroll-progress math.
+ * Machinery for the resume timeline: pacing, rail geometry, and the
+ * scroll-progress math.
  */
 
 import type { ResumeEntry } from "@/lib/resume";
@@ -65,12 +62,16 @@ export function makeYearToY(
   };
 }
 
-/** A curve bending the civilian lane back into the service lane. */
+/**
+ * A curve bending the civilian lane into the service lane. Works in either
+ * direction; newest-first it rises from `fromY` up to `toY`.
+ */
 export function mergeCurve(opts: { railWidth: number; fromY: number; toY: number }): string {
   const { railWidth, fromY, toY } = opts;
   const serviceX = trackX(railWidth, 1);
   const civilianX = trackX(railWidth, 2);
-  const span = Math.max(12, toY - fromY);
+  const delta = toY - fromY;
+  const span = Math.sign(delta || -1) * Math.max(12, Math.abs(delta));
   return (
     `C ${civilianX} ${fromY + span * 0.6}, ${serviceX} ${toY - span * 0.6}, ` +
     `${serviceX} ${toY}`
@@ -80,63 +81,59 @@ export function mergeCurve(opts: { railWidth: number; fromY: number; toY: number
 export interface RailPaths {
   serviceX: number;
   civilianX: number;
-  /** Whole-lane path. Callers drawing per-job segments use `branchCurve` instead. */
-  service: string;
-  /** Fork curve plus the whole civilian lane, as one path. */
-  branch: string;
   /** Just the fork curve, for callers drawing the lane in colored segments. */
   branchCurve: string;
-  /** Where on the service lane the branch leaves — above the node it leads to. */
+  /** Where on the service lane the branch leaves — below the node it leads to. */
   branchFromY: number;
   serviceEndY: number;
   overlapTop: number;
   overlapBottom: number;
 }
 
-/** How far above its first node the branch leaves the service lane. */
+/** How far below its first node the branch leaves the service lane. */
 const BRANCH_SPAN = 42;
 
 /**
- * Build the two lane paths.
+ * Build the fork between the two lanes.
  *
- * The branch leaves the service lane *above* the first node of the new lane and
- * arrives at that node from the top, the way a branch reads in a commit graph.
- * Curving away at the node's own height instead would leave the dot sitting
- * over a line that starts below it, so the new lane looks like it appears from
- * nowhere. The divergence point being slightly earlier than the fork date is
- * the usual convention — the dot still sits exactly on its date.
+ * The rail runs newest-first, so time goes *up* the page, the way
+ * `git log --graph` reads. The branch leaves the service lane *below* the first
+ * node of the new lane — slightly earlier in time — and arrives at that node
+ * from underneath. Curving away at the node's own height instead would leave the
+ * dot sitting over a line that starts beside it, so the new lane looks like it
+ * appears from nowhere. The divergence point being slightly earlier than the
+ * fork date is the usual convention — the dot still sits exactly on its date.
  */
 export function buildRailPaths(opts: {
   railWidth: number;
-  topY: number;
-  bottomY: number;
+  /** Where the service lane begins — its oldest point, so the lowest. */
+  serviceStartY: number;
   /** The first node on the branched lane. The curve lands here. */
   branchToY: number;
+  /** Where the service lane ends — its newest point, so above the fork. */
   serviceEndY: number;
 }): RailPaths {
-  const { railWidth, topY, bottomY, branchToY, serviceEndY } = opts;
+  const { railWidth, serviceStartY, branchToY, serviceEndY } = opts;
   const serviceX = trackX(railWidth, 1);
   const civilianX = trackX(railWidth, 2);
 
   /* Never reach back past the start of the lane being branched from. */
-  const span = Math.max(12, Math.min(BRANCH_SPAN, branchToY - topY));
-  const branchFromY = branchToY - span;
+  const span = Math.max(12, Math.min(BRANCH_SPAN, serviceStartY - branchToY));
+  const branchFromY = branchToY + span;
 
   const branchCurve =
     `M ${serviceX} ${branchFromY} ` +
-    `C ${serviceX} ${branchFromY + span * 0.45}, ${civilianX} ${branchToY - span * 0.55}, ` +
+    `C ${serviceX} ${branchFromY - span * 0.45}, ${civilianX} ${branchToY + span * 0.55}, ` +
     `${civilianX} ${branchToY}`;
 
   return {
     serviceX,
     civilianX,
-    service: `M ${serviceX} ${topY} L ${serviceX} ${serviceEndY}`,
-    branch: `${branchCurve} L ${civilianX} ${bottomY}`,
     branchCurve,
     branchFromY,
     serviceEndY,
-    overlapTop: branchToY,
-    overlapBottom: serviceEndY,
+    overlapTop: serviceEndY,
+    overlapBottom: branchToY,
   };
 }
 

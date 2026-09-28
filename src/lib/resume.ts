@@ -1,17 +1,16 @@
 /**
- * Resume content — transcribed from Noah's LinkedIn profile (Sep 2026).
+ * Resume content — originally transcribed from Noah's LinkedIn profile (Sep
+ * 2026), then tightened into short scope lines and impact-first bullets. Every
+ * number is his; none were added in the rewrite.
  *
- * Summaries and highlights are his own words, copied verbatim rather than
- * rewritten. A few things carried over as-is and want a human pass:
+ * Still wanting a human pass:
  *
  * - `usaf-trainee` has no summary or highlights; that entry was cut off in the
  *   source and nothing has been invented to fill it.
- * - `signify-manager` still carries his "*More to come*" placeholder bullet.
- * - `signify-senior` runs to Sep 2025 while `signify-manager` starts Aug 2024,
- *   so the two overlap by a year on LinkedIn. Transcribed as given.
- * - LinkedIn truncates skill tags ("+7 skills"), so `skills` holds only the
- *   ones actually visible.
- * - `RESUME_SUMMARY` is the one piece of prose not taken from the profile.
+ * - `signify-enablement` (the current role) has only two bullets. The team's
+ *   wins since Aug 2025, with numbers, belong there.
+ * - LinkedIn had `signify-senior` running to Sep 2025, overlapping the manager
+ *   role by a year. It now ends at the Aug 2024 promotion.
  */
 
 /**
@@ -92,12 +91,12 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     commitment: "full-time",
     kind: "role",
     summary:
-      "Hired as a temp worker, I programmed myself out of a job and became the de facto head of IT for this small company. I spent my time there automating tasks, allowing us to scale our volume of sales without a proportional increase in headcount.",
+      "Hired as a temp; automated my own job away and became the de facto head of IT for a small retail business.",
     highlights: [
-      "Integrated with UPS/USPS APIs to automate carrier selection. Eliminated $30K/year of manual labor",
-      "Crafted web scrapers to gather product/vendor info and implemented barcode-scanner system to improve inventory accuracy",
-      "Maintained our retail website and social media accounts, producing weekly marketing videos",
-      "Automated the entire business, speeding processes and reducing errors with automated double-checks",
+      "Cut $30K/year of manual labor by integrating UPS/USPS APIs to pick carriers automatically",
+      "Scaled sales volume without adding headcount by automating order processing end to end, with built-in double-checks to catch errors",
+      "Improved inventory accuracy with a barcode-scanner system and web scrapers for product and vendor data",
+      "Ran the retail website and social media, producing a marketing video every week",
     ],
     skills: ["Visual Basic for Applications (VBA)", "SQL"],
   },
@@ -128,14 +127,15 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     commitment: "full-time",
     kind: "promotion",
     summary:
-      "My first USAF assignment, where I rose from individual contributor to tech lead with 3 direct reports. I managed the entire software development lifecycle from requirements gathering to final delivery -- all without a project manager, UX designer, or QA tester. We produced C# and ASP.NET modules for a DotNetNuke system that communicated with internal and external systems via a shared, on-premise service bus.",
+      "Rose from developer to tech lead of 3, owning the full lifecycle of C#/ASP.NET modules with no PM, designer or QA.",
     highlights: [
-      "Resolved 262 code security vulnerabilities, including SQL injection and remote execution risks",
-      "Refactored legacy code to introduce multithreaded processing, reducing 2-hour runtime to 1 minute",
-      "Earned Security+ certification and safeguarded PII of thousands of USAF students",
-      "Earned multiple Airman of the Quarter awards, an Air Force Achievement Medal, and was selected for a prestigious Developmental Special Duty",
+      "Fixed 262 security vulnerabilities, including SQL injection and remote code execution",
+      "Cut a 2-hour batch job to 1 minute by refactoring legacy code for multithreading",
+      "Protected the PII of thousands of students; earned Security+ certification",
+      "Led 3 direct reports, handling requirements through delivery on an on-prem service bus shared with internal and external systems",
+      "Recognized with multiple Airman of the Quarter awards and an Air Force Achievement Medal; selected for a competitive Developmental Special Duty",
     ],
-    skills: ["Microsoft SQL Server", "ASP.NET"],
+    skills: ["C#", "ASP.NET", "Microsoft SQL Server"],
     colorGroup: "U.S. Air Force",
   },
   {
@@ -149,15 +149,15 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     commitment: "full-time",
     kind: "promotion",
     summary:
-      "I was hand-selected by leadership for this special position which involves preparing Airmen to be supervisors. I taught at the Airman Leadership School, which is a 5-week course that is required to attain the rank of Staff Sergeant and be assigned direct reports. While not a software engineering position, I still brought my coding skills to bear on the workplace, automating tasks wherever possible.",
+      "Hand-picked to teach the 5-week Airman Leadership School that prepares Airmen for their first direct reports.",
     highlights: [
-      "Wrote JavaScript/Visual Basic scripts to automate administrative duties. Increased class size 30% without adding headcount",
-      "Integrated PayPal checkout, enabling 2K reservations worth >$52K. Drove paperless effort, eliminating 90% of printed material",
-      "Taught leadership and public speaking skills to hundreds of Airmen and managed graduation ceremonies with hundreds in attendance",
-      "We earned Team of the Quarter (Q2 2019) for pioneering a new curriculum and learning management system",
-      "Awarded the Air Force Commendation Medal for contributions that improved both our school and the wider organization",
+      "Grew class size 30% with no added headcount by scripting administrative work in JavaScript and VBA",
+      "Processed 2K reservations worth over $52K by integrating PayPal checkout",
+      "Eliminated 90% of printed material by leading a paperless effort",
+      "Taught leadership and public speaking to hundreds of Airmen; ran graduations with hundreds in attendance",
+      "Won Team of the Quarter (Q2 2019) for a new curriculum and learning management system; awarded the Air Force Commendation Medal",
     ],
-    skills: ["Teaching", "Learning Management Systems"],
+    skills: ["Teaching", "Public Speaking", "Learning Management Systems"],
     colorGroup: "U.S. Air Force",
   },
   {
@@ -171,13 +171,13 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     commitment: "part-time",
     kind: "role",
     summary:
-      "In 2020, I transitioned from active duty to the Reserves to settle down, be with family, and focus on programming. With my unique background, I was selected to teach the incoming personnel.",
+      "Part-time Reserve service alongside a civilian engineering career, training the unit's incoming cybersecurity Airmen.",
     highlights: [
-      "Taught Windows terminal, Python scripting, and public speaking fundamentals to unit's cybersecurity Airmen.",
-      "Trained unit on using Splunk to investigate threats. Created script to automate creation of queries.",
-      "Mentored three direct reports. Wrote performance reviews, and reported issues to leadership.",
+      "Led 3 direct reports: mentoring, performance reviews and escalation to leadership",
+      "Taught Windows terminal, Python scripting and public speaking to the unit's cybersecurity Airmen",
+      "Trained the unit on Splunk threat hunting and scripted the creation of its queries",
     ],
-    skills: ["Visual Basic for Applications (VBA)", "Microsoft PowerPoint"],
+    skills: ["Python", "Splunk"],
     colorGroup: "U.S. Air Force",
   },
   {
@@ -190,15 +190,14 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     dateLabel: "Mar 2020 — May 2021",
     commitment: "full-time",
     kind: "role",
-    summary:
-      "I exited active duty in the USAF and joined a scrum team at a local insurance company. Our focus was on a large refactoring effort, but we were also all learning the \"new normal\" of remote work due to COVID.",
+    summary: "Scrum team on a large refactoring effort for an insurance client, remote from the start of COVID.",
     highlights: [
-      "Refactored legacy service to implement DI & automated testing. Increased code coverage from 0% to 70% in one sprint",
-      "Used SonarQube to identify and correct 250+ tech debt issues. Mentored junior engineers on best practices",
-      "Maintained .NET microservices that communicated with internal and external REST APIs",
-      "As part of a scrum team, I demoed features, reviewed code, managed Jenkins build pipelines, and provided production support",
+      "Raised code coverage from 0% to 70% in one sprint by refactoring a legacy service for dependency injection and automated tests",
+      "Fixed 250+ tech-debt issues found by SonarQube; mentored junior engineers on best practices",
+      "Maintained .NET microservices integrating internal and external REST APIs",
+      "Ran Jenkins pipelines, reviewed code, demoed features and covered production support",
     ],
-    skills: ["ASP.NET", "Atlassian Suite"],
+    skills: ["ASP.NET", "Jenkins", "SonarQube", "Atlassian Suite"],
   },
   {
     id: "sovereign",
@@ -210,14 +209,13 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     dateLabel: "May 2021 — Mar 2022",
     commitment: "full-time",
     kind: "role",
-    summary:
-      "As part of a remote scrum team, I built websites for local and state governments to help their citizens apply for and manage various permits. We worked closely with our government partners to gather requirements and deliver full-stack .NET solutions.",
+    summary: "Built permit-management sites for state and local governments on a remote scrum team.",
     highlights: [
-      "Developed and maintained full-stack .NET applications using C#, Entity Framework, MVC, Vue.js, and MS SQL Server",
-      "Led full-stack development for new feature. Gathered requirements, designed DB schema, wrote CRUD pages",
-      "Customer-centric team involved much direct interaction with our clients, gathering requirements and discussing design",
+      "Led full-stack delivery of a new feature: requirements, database schema and CRUD pages",
+      "Built and maintained full-stack apps in C#, Entity Framework, MVC, Vue.js and SQL Server",
+      "Gathered requirements and reviewed designs directly with government clients",
     ],
-    skills: ["Microsoft Azure", "ASP.NET MVC"],
+    skills: ["ASP.NET MVC", "Vue.js", "Microsoft Azure"],
   },
   {
     id: "google",
@@ -230,13 +228,13 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     commitment: "full-time",
     kind: "role",
     summary:
-      "I was invited to apply to Google after completing the Google Foobar challenge. While there, I worked on the Payments Platform, which provided tools for internal teams to make and receive payments.",
+      "Invited to apply after solving Google's Foobar challenge; worked on the Payments Platform used by internal teams to send and receive money.",
     highlights: [
-      "Maintained TypeScript and closure template front ends, applying accessibility best practices.",
-      "Implemented secure proxy for gRPC calls. Wrote Java code for backend microservices.",
-      "Led documentation and code health effort. Improved onboarding/on-call docs and fixed flaky tests.",
+      "Built a secure proxy for gRPC calls and Java backend microservices",
+      "Maintained TypeScript and Closure Templates front ends to accessibility best practices",
+      "Led the team's documentation and code-health push: rewrote onboarding and on-call docs and fixed flaky tests",
     ],
-    skills: ["Linux", "Java"],
+    skills: ["Java", "TypeScript", "gRPC", "Linux"],
   },
   {
     id: "signify-senior",
@@ -244,40 +242,56 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     role: "Senior Software Engineer",
     org: "Signify Health",
     start: 2023.167,
-    end: 2025.667,
-    dateLabel: "Mar 2023 — Sep 2025",
+    end: 2024.583,
+    dateLabel: "Mar 2023 — Aug 2024",
     commitment: "full-time",
     kind: "role",
     summary:
-      "I joined Signify Health as a senior software engineer and worked on the Scheduling and Optimization systems at the company. We're a healthcare company that sends medical providers to our member's homes to give health assessments. My team works on scheduling those members and optimizing the routes the providers take.",
+      "Scheduling and route optimization for a healthcare company that sends clinicians to members' homes.",
     highlights: [
-      "Utilized open source OR Tools to optimize routes. Eliminated $30K/month on similar products and reduced drive times by 10%",
-      "Championed flag-driven development, establishing processes and reusable packages to make flag use easier",
+      "Saved $30K/month and cut clinician drive times 10% by replacing a paid product with open-source OR-Tools route optimization",
+      "Championed flag-driven development, building the processes and reusable packages that made feature flags easy to adopt",
     ],
-    skills: [],
+    skills: ["Google OR-Tools", "Feature Flags"],
   },
   {
     id: "signify-manager",
     track: 2,
-    role: "Software Engineering Manager",
+    role: "Software Engineering Manager, Scheduling & Optimization",
     org: "Signify Health",
     start: 2024.583,
+    end: 2025.583,
+    dateLabel: "Aug 2024 — Aug 2025",
+    commitment: "full-time",
+    kind: "promotion",
+    summary: "Promoted to manage the Scheduling and Optimization teams, with up to 9 direct reports.",
+    highlights: [
+      "Cut average latency of the scheduling app 90% through backend efficiency work",
+      "Hosted weekly Tech Talks for 100+ engineers, recruiting the speakers",
+      "Shipped new visit types, safety-based restrictions and better integration with scheduling partners",
+      "Helped overhaul engineering interviews, writing new questions and scoring rubrics",
+      "Raised team velocity with better documentation and delivery processes",
+    ],
+    skills: ["Engineering Management", "Hiring"],
+  },
+  {
+    id: "signify-enablement",
+    track: 2,
+    role: "Software Engineering Manager, Engineering Enablement",
+    org: "Signify Health",
+    start: 2025.583,
     end: null,
-    dateLabel: "Aug 2024 — Present",
+    dateLabel: "Aug 2025 — Present",
     commitment: "full-time",
     kind: "promotion",
     summary:
-      "I was promoted to manager after contributing strongly to my first team at Signify Health. I have since managed a few teams there, with my largest including 9 direct reports. I initially continued in the Scheduling domain, am now managing the Engineering Enablement Team.",
+      "Founding manager of the Engineering Enablement team, raising code quality and developer productivity across engineering.",
+    // TODO(Noah): add the team's wins since Aug 2025, with numbers.
     highlights: [
-      "Engineering Enablement: Standardized SonarQube implementation, enforcing scans on all PRs and mandating stricter quality gates",
-      "Engineering Enablement: *More to come*",
-      "Scheduling and Optimization: Drastically improved efficiency of backend code, reducing average latency of scheduling app by 90%",
-      "Scheduling and Optimization: Implemented new visit types, safety-based restrictions, and improved integration with scheduling partners",
-      "Scheduling and Optimization: Contributed to overhaul of interviewing process, developing new questions and rubrics for engineer candidates",
-      "Scheduling and Optimization: Led Tech Talk sessions, finding participants and sharing information with 100+ software engineers weekly",
-      "Scheduling and Optimization: Improved team documentation and implemented processes to accelerate team velocity",
+      "Stood up the Engineering Enablement team from scratch as its first manager",
+      "Standardized SonarQube across engineering: scans enforced on every PR, with stricter quality gates",
     ],
-    skills: ["Software Management", "Engineering Management"],
+    skills: ["Engineering Management", "Developer Experience", "SonarQube"],
   },
 ];
 
@@ -325,38 +339,49 @@ export const RESUME_MARKERS: ResumeMarker[] = [
 export const RESUME_SKILL_GROUPS: { category: string; skills: string[] }[] = [
   {
     category: "Leadership",
-    skills: ["Engineering Management", "Software Management", "Teaching", "Learning Management Systems"],
+    skills: [
+      "Engineering Management",
+      "Developer Experience",
+      "Hiring",
+      "Teaching",
+      "Public Speaking",
+    ],
   },
   {
     category: "Engineering",
     skills: [
-      "Java",
+      "C#",
       "ASP.NET",
-      "ASP.NET MVC",
-      "Microsoft SQL Server",
+      "Java",
+      "TypeScript",
+      "Vue.js",
+      "Python",
       "SQL",
-      "Visual Basic for Applications (VBA)",
+      "Microsoft SQL Server",
+      "gRPC",
+      "Google OR-Tools",
+      "Feature Flags",
     ],
   },
   {
     category: "Platform & Tools",
-    skills: ["Linux", "Microsoft Azure", "Atlassian Suite", "Microsoft PowerPoint"],
+    skills: ["SonarQube", "Jenkins", "Microsoft Azure", "Splunk", "Linux", "Atlassian Suite"],
   },
 ];
 
-/**
- * The one piece of prose here not taken from the profile — assembled from the
- * dates above. Worth replacing with Noah's own words.
- */
+/** The one line of prose at the top of the page. Worth Noah's own pass. */
 export const RESUME_SUMMARY =
-  "Software engineering manager at Signify Health, currently leading the Engineering Enablement team. Nearly nine years of active-duty U.S. Air Force service, then two more in the Reserve alongside a civilian engineering career.";
+  "Founding manager of the Engineering Enablement team at Signify Health since August 2025, after leading its Scheduling & Optimization teams. Before that: software engineer at Google, and nine years of active-duty U.S. Air Force service, then two in the Reserve.";
 
 /* ------------------------------------------------------------------ */
 /* Helpers shared across the prototypes                                */
 /* ------------------------------------------------------------------ */
 
-/** Entries sorted oldest-first, the reading order every variant uses. */
+/** Entries sorted oldest-first. Colors and concurrency are worked out on this. */
 export const ENTRIES_CHRONOLOGICAL = [...RESUME_ENTRIES].sort((a, b) => a.start - b.start);
+
+/** Entries sorted newest-first — the order the page reads in. */
+export const ENTRIES_NEWEST_FIRST = [...ENTRIES_CHRONOLOGICAL].reverse();
 
 /* ------------------------------------------------------------------ */
 /* Per-job colors                                                      */
@@ -408,9 +433,12 @@ export function markerEntry(marker: ResumeMarker): ResumeEntry | undefined {
   );
 }
 
-/** Decimal year -> 0..1 position across the whole timeline. */
+/**
+ * Decimal year -> 0..1 position down the timeline. Newest-first, so today is 0
+ * and the start of the career is 1.
+ */
 export function yearToFraction(year: number): number {
-  return (year - TIMELINE_START) / (TIMELINE_END - TIMELINE_START);
+  return (TIMELINE_END - year) / (TIMELINE_END - TIMELINE_START);
 }
 
 /** An entry's end year, treating an open-ended role as running to today. */

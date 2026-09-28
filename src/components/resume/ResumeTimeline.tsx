@@ -7,6 +7,9 @@
  * a time fades in beside it, driven by scroll position. A chevron glides down
  * the tree, the lanes fill in behind it, and a date rides alongside.
  *
+ * It reads newest-first: the current role is at the top and scrolling down goes
+ * back in time, the way `git log --graph` does.
+ *
  * The tree is drawn to scale: vertical distance is elapsed time, so the line
  * fills at the rate the years actually passed and the rail doubles as a date
  * axis. Jobs are colored by employer, so a promotion reads as a shade change
@@ -20,6 +23,7 @@ import { usePrefersReducedMotion } from "@noahwright/design";
 import { JobCard } from "./JobCard";
 import {
   ENTRIES_CHRONOLOGICAL,
+  ENTRIES_NEWEST_FIRST,
   FORK_YEAR,
   MERGE_YEAR,
   TIMELINE_END,
@@ -44,9 +48,11 @@ import "./resume-timeline.css";
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function formatYear(year: number): string {
-  const whole = Math.floor(year);
-  const month = Math.min(11, Math.max(0, Math.floor((year - whole) * 12)));
-  return `${MONTHS[month]} ${whole}`;
+  /* Decimal years are stored to three places (2025.583 for August), which
+     lands a hair under the month boundary. Nudge before flooring, or a dot
+     reads as the month before its own date. */
+  const months = Math.floor(year * 12 + 0.05);
+  return `${MONTHS[((months % 12) + 12) % 12]} ${Math.floor(months / 12)}`;
 }
 
 interface Stop {
@@ -66,12 +72,12 @@ function concurrentAtStart(entry: ResumeEntry): ResumeEntry[] {
 }
 
 /*
- * One stop per job. Reserve service is dated just before the first civilian
+ * One stop per job, newest first. Reserve service is dated just before the first civilian
  * role, so the reserve stop finds nothing running yet and stands alone, while
  * each civilian stop picks the reserve posting up as a tab. That is what puts
  * the civilian card on top through the overlap without hiding the service one.
  */
-const STOPS: Stop[] = ENTRIES_CHRONOLOGICAL.map((entry) => ({
+const STOPS: Stop[] = ENTRIES_NEWEST_FIRST.map((entry) => ({
   id: entry.id,
   entries: [entry, ...concurrentAtStart(entry)],
 }));
@@ -278,9 +284,9 @@ export default function ResumeTimeline() {
 
     const yearToY = (y: number) => padTop + yearToFraction(y) * usable;
 
-    /** Read a rail position back as a date. */
+    /** Read a rail position back as a date. Newest is at the top. */
     const yearAtY = (y: number) =>
-      TIMELINE_START + ((y - padTop) / usable) * (TIMELINE_END - TIMELINE_START);
+      TIMELINE_END - ((y - padTop) / usable) * (TIMELINE_END - TIMELINE_START);
 
     const primaryNodes = nodes.filter((n) => n.entry.track === PRIMARY_TRACK);
     const branchNodes = nodes.filter((n) => n.entry.track !== PRIMARY_TRACK);
@@ -299,8 +305,7 @@ export default function ResumeTimeline() {
 
     const paths = buildRailPaths({
       railWidth: width,
-      topY: primaryNodes.length ? primaryNodes[0].y : yearToY(TIMELINE_START),
-      bottomY: yearToY(TIMELINE_END),
+      serviceStartY: primaryNodes.length ? primaryNodes[0].y : yearToY(TIMELINE_START),
       branchToY: forkNode ? forkNode.y : yearToY(FORK_YEAR),
       serviceEndY: yearToY(MERGE_YEAR),
     });
@@ -315,7 +320,7 @@ export default function ResumeTimeline() {
      * no civilian job and a short gap between leaving active duty and joining
      * the Reserve, and a segment that ran node-to-node would silently paper
      * over both. Per-job segments also let each civilian job carry its own
-     * color — same hue as the one above means a promotion at the same
+     * color — same hue as the one beside it means a promotion at the same
      * employer, a new hue means a new company.
      */
     const segmentFor = (node: (typeof nodes)[number]) => {
@@ -323,16 +328,16 @@ export default function ResumeTimeline() {
       if (node.entry.id === forkNode?.entry.id) {
         /* Carries the fork curve in with it, so the branch is already the color
            of the job it leads to. The curve lands on this node, so the run of
-           the job continues straight down from there. */
+           the job continues straight up from there. */
         return `${paths.branchCurve} L ${paths.civilianX} ${endY}`;
       }
       if (node.entry.id === mergeNode?.entry.id) {
-        /* Bends into the service lane, so leaving this job to enlist reads as
+        /* Rises into the service lane, so leaving this job to enlist reads as
            one line becoming the other. */
-        const bend = Math.min(30, Math.max(12, endY - node.y));
+        const bend = Math.min(30, Math.max(12, node.y - endY));
         return (
-          `M ${paths.civilianX} ${node.y} L ${paths.civilianX} ${endY - bend} ` +
-          mergeCurve({ railWidth: width, fromY: endY - bend, toY: endY })
+          `M ${paths.civilianX} ${node.y} L ${paths.civilianX} ${endY + bend} ` +
+          mergeCurve({ railWidth: width, fromY: endY + bend, toY: endY })
         );
       }
       return `M ${node.x} ${node.y} L ${node.x} ${endY}`;
