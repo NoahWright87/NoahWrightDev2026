@@ -15,6 +15,7 @@ import {
   initThemeMode,
 } from "@noahwright/design";
 import EasterEggs from "@/components/EasterEggs";
+import Logo from "@/components/Logo";
 import EmailIcon from "@/components/icons/EmailIcon";
 import GitHubIcon from "@/components/icons/GitHubIcon";
 import LinkedInIcon from "@/components/icons/LinkedInIcon";
@@ -41,8 +42,11 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
         // would anchor MobileNav's phone dropdown to the slot (hamburger-wide)
         // instead of the full header width. See NoahWright87/design#23.
         <Header>
-          <Link href="/">
-            <strong>{SITE.name}</strong>
+          <Link href="/" className="site-home-link">
+            {/* Phones show the logo; wider screens show the name. The name stays
+                in the accessible text either way (see .site-name in globals.css). */}
+            <Logo className="site-logo" />
+            <strong className="site-name">{SITE.name}</strong>
           </Link>
           <div className="site-nav">
             {/* Inline links on desktop, a hamburger dropdown on phones. */}

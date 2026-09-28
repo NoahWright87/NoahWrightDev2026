@@ -6,16 +6,14 @@ import SiteShell from "@/components/SiteShell";
 import { siteVersions } from "@/lib/siteHistory";
 
 export default function HistoryPageClient() {
-  const attempts = siteVersions.filter((v) => !v.shipped).length;
-
   return (
     <SiteShell>
       <Container padding="xl">
         <Container direction="vertical" itemSpacing="lg">
           <Heading level={1}>Site History</Heading>
           <Text>
-            Every version of this site, including the {attempts} rebuilds that never made it
-            to launch. Rewriting my own website is apparently a hobby.
+            Every version of this site that made it into the world. The old blog is still
+            online, if you want to see how things have changed.
           </Text>
         </Container>
       </Container>
@@ -28,7 +26,6 @@ export default function HistoryPageClient() {
               title={`${version.years} · ${version.name}`}
               subtitle={
                 <Container direction="horizontal" itemSpacing="xs" padding="none" noGutters>
-                  {!version.shipped ? <Pill size="small">Never launched</Pill> : null}
                   {version.stack.map((tech) => (
                     <Pill key={tech} size="small">{tech}</Pill>
                   ))}

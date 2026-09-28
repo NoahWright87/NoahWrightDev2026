@@ -60,7 +60,12 @@ Use this file to keep short, durable notes that help future chat sessions resume
 
 ## Site History
 
-- `/history` renders `src/lib/siteHistory.ts`: every version of the site, found from Noah's repos (Jekyll 2021–2023, now at 2023.noahwright.dev; unlaunched React 2023–24, Next 2025 and "Redux" 2026 attempts; this site). Two private 2021 repos (`NoahWright87.github.io`, `NoahWrightBlog_old`) are deliberately left off.
+- `/history` renders `src/lib/siteHistory.ts`: only versions that **launched** (this site; the 2021–2023 Jekyll blog, now at 2023.noahwright.dev, repo NoahWright87/NoahWrightDev). Noah explicitly doesn't want the never-launched rebuilds (NoahWrightDev-React, -Next, -Redux) listed.
+
+## Logo
+
+- Noah's avatar logo (silhouette, collar, tie, glasses) lives as path data in `src/lib/logo.ts`, with its embedded C2PA metadata stripped. It is painted from the theme, not fixed colors: silhouette = secondary, collar = secondary mixed 55% with background, tie = primary, glasses = background. `components/Logo.tsx` + `logo.css` do this with live CSS variables; `app/icon.tsx` (SVG favicon, with a `prefers-color-scheme` swap) and `app/apple-icon.tsx` (180px PNG on the light background) compute the same colors from `theme.ts`.
+- The header shows the logo on phones (≤768px, the MobileNav breakpoint) and the name on wider screens; the name stays in the link's accessible text on phones. The old `favicon.ico` was the create-next-app default and was deleted.
 
 ## Project Screenshots
 
