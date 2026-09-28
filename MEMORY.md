@@ -56,7 +56,7 @@ Use this file to keep short, durable notes that help future chat sessions resume
 - The 404 (`src/app/not-found.tsx`) is a Doors 97 blue screen; any key except Tab/modifiers goes home. Its fixed blue/grey colors are deliberate, not missed theme tokens.
 
 - The header uses `Header`'s `left`/`right` slots (logo/name left; `MobileNav` + theme toggle right). Since design PR #25, slots without a tooltip aren't `position: relative`, so the phone dropdown spans the full header, and `aria-current="page"` links are styled by the design system.
-- **Temporarily pinned to a design-system prerelease** (`@noahwright/design@1.2.0-pr25.c1eb87c`, exact) to test NoahWright87/design PR #25 (#21 CardGrid height, #22 font tokens + Wright Sans headings, #23 MobileNav). The local workarounds for those three were removed. Switch to the stable release once #25 ships, and don't downgrade to 1.2.0 without restoring them.
+- Depends on `@noahwright/design` **1.3.0** (exact pin), which shipped the fixes for design#21 (CardGrid height), #22 (font tokens + Wright Sans headings) and #23 (MobileNav). The site's local workarounds for those were removed, so don't downgrade below 1.3.0. Card titles render as `h3` by default; pages whose cards sit directly under the `h1` (Projects, History, Portraits) pass `titleAs="h2"` so heading levels aren't skipped.
 - Headings use the design system's Wright Sans via `--font-family-heading`; body text uses its system stack. Don't set `font-family` on `body` locally.
 
 ## Site History

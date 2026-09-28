@@ -46,7 +46,6 @@ Clear statement of when this TODO file can be deleted.
 
 | File | Phase | Status |
 |---|---|---|
-| theme-and-brand.todo.md | 1 | Active (move off design prerelease) |
 | hero-taglines.todo.md | 4 | Parked (revisit with Noah) |
 | visual-tests-ci.todo.md | 6 | Parked (low priority, issue #18) |
 
