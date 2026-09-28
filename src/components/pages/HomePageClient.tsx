@@ -83,11 +83,16 @@ export default function HomePageClient() {
         }
         description={<Text>{SITE.description}</Text>}
         actions={
-          <Link href="/projects">
-            <Button variant="solid" color="primary">
-              My Projects
-            </Button>
-          </Link>
+          <>
+            <Link href="/projects">
+              <Button variant="solid" color="primary">
+                My Projects
+              </Button>
+            </Link>
+            <Link href={SITE.resumeUrl}>
+              <Button variant="outline">Resume</Button>
+            </Link>
+          </>
         }
         media={
           // A plain anchor (rather than the design system's `Link`, which doesn't
@@ -103,6 +108,10 @@ export default function HomePageClient() {
               decorative
               className="home-hero-photo-carousel"
             />
+            {/* Hover hint; decorative, since the link's aria-label already says where it goes. */}
+            <span className="home-hero-photo-hint" aria-hidden="true">
+              psst… {portraits.length - 1} more of me
+            </span>
           </a>
         }
       />

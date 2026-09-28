@@ -31,8 +31,6 @@ body {
   padding: 0;
   color: var(--foreground);
   background: var(--background);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif;
 }
 
 a {
@@ -54,6 +52,64 @@ a {
   }
 }
 
+/* Site header: logo (phones) or name (wider screens) on the left, nav pushed
+   right beside the theme toggle. Same 768px breakpoint as MobileNav. */
+.site-logo {
+  display: none;
+  width: 36px;
+  height: 36px;
+}
+
+@media (max-width: 768px) {
+  .site-home-link {
+    text-decoration: none;
+  }
+
+  .site-logo {
+    display: block;
+  }
+
+  /* Visually hidden, still read out as the link's name. */
+  .site-name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* Orange rules marking where the header ends and the footer begins, replacing
+   their faint default shadows. Header/Footer have no border option yet
+   (NoahWright87/design#29). */
+.nw-header {
+  border-bottom: 2px solid var(--primary);
+}
+
+.nw-footer {
+  box-shadow: none;
+  border-top: 2px solid var(--primary);
+}
+
+/* Footer contact icons: every page doubles as a business card. */
+.site-footer__links {
+  display: flex;
+  gap: var(--spacing-md, 1rem);
+}
+
+.site-footer__links a {
+  display: inline-flex;
+  padding: 6px;
+  border-radius: 8px;
+  transition: color 150ms ease;
+}
+
+.site-footer__links a:hover,
+.site-footer__links a:focus-visible {
+  color: var(--primary);
+}
+
 /* Home hero: rotating title, static description, and portrait carousel now come from
    @noahwright/design's Hero/TextCarousel/Carousel. Only the carousel frame's own
    border look, and the link wrapping it through to /portraits, are specific to this
@@ -64,6 +120,7 @@ a {
 }
 
 .home-hero-photo-link {
+  position: relative;
   display: block;
   border-radius: 20px;
   transition: transform 150ms ease;
@@ -72,6 +129,27 @@ a {
 .home-hero-photo-link:hover,
 .home-hero-photo-link:focus-visible {
   transform: scale(1.03);
+}
+
+.home-hero-photo-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--foreground);
+  color: var(--background);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 150ms ease;
+  pointer-events: none;
+}
+
+.home-hero-photo-link:hover .home-hero-photo-hint,
+.home-hero-photo-link:focus-visible .home-hero-photo-hint {
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {

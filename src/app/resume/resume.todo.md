@@ -11,7 +11,6 @@ content is in, transcribed from LinkedIn — what remains is content cleanup and
 the PDF, not design.
 
 ## Outstanding
-- [x] **Real content is in**, transcribed from LinkedIn (Sep 2026).
 - [ ] **Fill in `usaf-trainee`** — no summary or highlights; it was cut off in
       the source screenshots and nothing was invented to fill it.
 - [ ] **Remove the "*More to come*" bullet** from `signify-manager`, or finish
@@ -35,10 +34,27 @@ the PDF, not design.
       phone and now scroll inside the pinned pane. That is honest but it costs
       the "one job, one screen" reading the design is built around; trimming the
       summaries and bullets would be the better fix if the content allows it.
-- [ ] Consider adding `/resume` to the Playwright visual suite
-      (`tests/visual.spec.ts`) — it is not covered there. Note the timeline is
-      scroll-driven, so a full-page screenshot will not capture it meaningfully;
-      it needs a scroll-and-sample approach.
+
+## Deferred: newest job first
+
+Noah would like the most recent position first. It isn't a list reversal: the
+rail is drawn to scale with time running *down*, and several pieces assume it:
+
+- `yearToFraction` maps older years to smaller y; flip it (`END - year`).
+- `STOPS` is built from `ENTRIES_CHRONOLOGICAL`; reverse it.
+- `buildRailPaths`: the branch leaves the service lane *above* its first node
+  (`branchToY - span`) and is clamped against `topY`. Newest-first, it leaves
+  *below* and is clamped against `bottomY`. This matches `git log --graph`,
+  which is newest-first anyway.
+- `mergeCurve` and the merge segment bend *down* into service (`endY - bend`);
+  reverse both.
+- The "passed" fill is a rect from y=0 to the marker, and dots count as passed
+  when `y <= markerY`. Both still mean "already scrolled past", so they should
+  hold. Check them anyway.
+
+Then re-verify every behavior listed under "Settled" and in `MEMORY.md` at
+390px and 1280px: marker/date with no easing, jump targets landing on dots,
+tabs for concurrent jobs, clipped cards scrolling inside the pane.
 
 ## Settled (do not revisit without a reason)
 - One job on screen at a time; a concurrent job sits behind it as a tab, with the

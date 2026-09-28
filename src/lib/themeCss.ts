@@ -12,5 +12,8 @@ function buildBlock(selector: string, theme: Theme): string {
 }
 
 export function buildThemeCss(theme: Theme, darkTheme?: Theme): string {
-  return buildBlock(":root", theme) + (darkTheme ? buildBlock('[data-theme="dark"]', darkTheme) : "");
+  // The dark selector must be at least as specific as @noahwright/design's own
+  // `:root[data-theme="dark"]` defaults. A bare `[data-theme="dark"]` loses to
+  // it, and the site silently falls back to the design system's dark palette.
+  return buildBlock(":root", theme) + (darkTheme ? buildBlock(':root[data-theme="dark"]', darkTheme) : "");
 }

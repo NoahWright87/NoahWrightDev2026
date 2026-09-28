@@ -12,7 +12,7 @@
   background: color-mix(in srgb, var(--job-color) 6%, transparent);
 }
 
-.jc h3 {
+.jc h2 {
   margin: 0;
   font-size: 1.3rem;
   line-height: 1.22;
@@ -87,7 +87,7 @@
     gap: 7px;
   }
 
-  .jc h3 {
+  .jc h2 {
     font-size: 1.1rem;
   }
 
