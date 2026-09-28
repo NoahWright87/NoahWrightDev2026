@@ -12,6 +12,9 @@
     "test:visual:ui": "playwright test --ui"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-common-types": "^7.3.1",
+    "@fortawesome/free-brands-svg-icons": "^7.3.1",
+    "@fortawesome/free-regular-svg-icons": "^7.3.1",
     "@noahwright/design": "1.2.0",
     "next": "^15.3.1",
     "react": "^19.0.0",

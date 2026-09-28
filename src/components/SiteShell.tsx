@@ -41,7 +41,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
         // Unslotted on purpose: Header's slots are `position: relative`, which
         // would anchor MobileNav's phone dropdown to the slot (hamburger-wide)
         // instead of the full header width. See NoahWright87/design#23.
-        <Header>
+        <Header shadow={false}>
           <Link href="/" className="site-home-link">
             {/* Phones show the logo; wider screens show the name. The name stays
                 in the accessible text either way (see .site-name in globals.css). */}
@@ -75,7 +75,10 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
       }
       footer={
         <Footer
-          center={
+          left={
+            <Text tone="muted">© {new Date().getFullYear()} {SITE.name}</Text>
+          }
+          right={
             <div className="site-footer__links">
               {CONTACT_LINKS.map((link) => (
                 <a
@@ -89,9 +92,6 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
                 </a>
               ))}
             </div>
-          }
-          bottom={
-            <Text tone="muted">© {new Date().getFullYear()} {SITE.name}</Text>
           }
         />
       }

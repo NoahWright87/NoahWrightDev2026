@@ -102,6 +102,18 @@ a {
   font-weight: 600;
 }
 
+/* Orange rules marking where the header ends and the footer begins, replacing
+   their faint default shadows. Header/Footer have no border option yet
+   (NoahWright87/design#29). */
+.nw-header {
+  border-bottom: 2px solid var(--primary);
+}
+
+.nw-footer {
+  box-shadow: none;
+  border-top: 2px solid var(--primary);
+}
+
 /* Footer contact icons: every page doubles as a business card. */
 .site-footer__links {
   display: flex;

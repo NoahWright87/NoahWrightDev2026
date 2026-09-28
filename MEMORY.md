@@ -62,6 +62,10 @@ Use this file to keep short, durable notes that help future chat sessions resume
 
 - `/history` renders `src/lib/siteHistory.ts`: only versions that **launched** (this site; the 2021–2023 Jekyll blog, now at 2023.noahwright.dev, repo NoahWright87/NoahWrightDev). Noah explicitly doesn't want the never-launched rebuilds (NoahWrightDev-React, -Next, -Redux) listed.
 
+## Icons
+
+- Email, LinkedIn and GitHub icons are Font Awesome's free icons (the LinkedIn and GitHub marks are the official brand marks), rendered as plain inline SVG by `components/icons/FaIcon.tsx`, without Font Awesome's React runtime or its global CSS. The earlier hand-drawn ones were replaced because the LinkedIn one read as "im".
+
 ## Logo
 
 - Noah's avatar logo (silhouette, collar, tie, glasses) lives as path data in `src/lib/logo.ts`, with its embedded C2PA metadata stripped. It is painted from the theme, not fixed colors: silhouette = secondary, collar = secondary mixed 55% with background, tie = primary, glasses = background. `components/Logo.tsx` + `logo.css` do this with live CSS variables; `app/icon.tsx` (SVG favicon, with a `prefers-color-scheme` swap) and `app/apple-icon.tsx` (180px PNG on the light background) compute the same colors from `theme.ts`.
