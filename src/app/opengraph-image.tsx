@@ -6,6 +6,9 @@ import { darkTheme } from "@/lib/theme";
 // Link-preview card for LinkedIn, Slack, etc. Rendered once at build time.
 // Uses the original JPEG portrait: the OG renderer can't decode WebP.
 
+// Reads the portrait from disk, so it must run on Node.js, not the Edge runtime.
+export const runtime = "nodejs";
+
 export const alt = "Noah Wright: engineering leader, builder of useful software, Air Force veteran";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";

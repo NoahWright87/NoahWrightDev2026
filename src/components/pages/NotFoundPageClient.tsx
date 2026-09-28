@@ -7,8 +7,9 @@ import SiteShell from "@/components/SiteShell";
 import "./not-found-page.css";
 
 // A nod to Doors 97 (see /projects): the 404 is a late-90s blue screen.
-// "Press any key" really does go home; Tab and modifier keys are left alone so
-// keyboard users can still reach the links below.
+// "Press any key" really does go home. Tab, modifier keys, and any key pressed
+// while a link or control has focus are left alone, so keyboard users can still
+// reach and activate the links below.
 const IGNORED_KEYS = new Set(["Tab", "Shift", "Control", "Alt", "Meta", "CapsLock", "Escape"]);
 
 export default function NotFoundPageClient() {
@@ -17,6 +18,8 @@ export default function NotFoundPageClient() {
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (IGNORED_KEYS.has(event.key) || event.metaKey || event.ctrlKey || event.altKey) return;
+      const target = event.target as HTMLElement | null;
+      if (target?.closest("a, button, input, textarea, select, [contenteditable]")) return;
       router.push("/");
     }
     window.addEventListener("keydown", onKeyDown);

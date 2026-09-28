@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Header,
@@ -52,14 +53,16 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
             <>
               {/* Inline links on desktop, a hamburger dropdown on phones. */}
               <MobileNav label="Site menu">
+                {/* Client-side navigation; MobileNav closes its phone dropdown on
+                    click (closeOnNavigate, design PR #25). */}
                 {NAV_ITEMS.map((item) => (
-                  <a
+                  <NextLink
                     key={item.href}
                     href={item.href}
                     aria-current={pathname === item.href ? "page" : undefined}
                   >
                     {item.label}
-                  </a>
+                  </NextLink>
                 ))}
               </MobileNav>
               <ToggleIcon
