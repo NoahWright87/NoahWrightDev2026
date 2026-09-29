@@ -11,8 +11,17 @@ content is in, transcribed from LinkedIn — what remains is content cleanup and
 the PDF, not design.
 
 ## Outstanding
-- [ ] **Fill in `usaf-trainee`** — no summary or highlights; it was cut off in
-      the source screenshots and nothing was invented to fill it.
+- [ ] **Numbers from Noah.** Copy rule: strong verb first, a real number where
+      one exists, nothing invented. Still thin: `signify-senior` (two bullets),
+      `google` (no metrics), `signify-manager` (the old "velocity" bullet was
+      cut for having no number), `signify-enablement` (agent adoption or
+      throughput, and any DORA metric that moved).
+- [ ] **Confirm the Enablement dashboard tracks DORA metrics and velocity** —
+      worded that way at Noah's request for those keywords.
+- [ ] **Skill chips.** Noah plans to send a full pass; C# was added where the
+      role's own text names it.
+- [ ] **Air Force Achievement Medal** as a marker like the Commendation Medal —
+      needs the year it was awarded.
 - [ ] **Review `RESUME_SUMMARY`**, the one line of prose at the top.
 - [ ] **Add the PDF.** The "Download PDF" button points at
       `SITE.resumePdfUrl` (`/noah-wright-resume-2026.pdf`); the file is not in
@@ -21,8 +30,13 @@ the PDF, not design.
       `netlify.toml` already forces `Content-Disposition: attachment` for `/*.pdf`.
 - [ ] Test the download across desktop Chrome, desktop Safari or Firefox, and
       mobile Chrome once the file exists.
-- [ ] Two cards (`usaf-instructor`, `usaf-team-lead`) still overflow a 390px
-      phone, by 130px and 100px, and scroll inside the pinned pane.
+- [ ] Recheck which cards overflow a 390px phone after each content pass.
+
+## Ideas (not started)
+- Show awards, degrees and certs on the rail itself, and as a tab beside the
+  job card like a concurrent role. Markers already carry a track and date, and
+  each card already lists the ones inside its dates.
+- An interactive view of Noah's ribbon rack.
 
 ## Settled (do not revisit without a reason)
 - Newest job first. Time runs *up* the rail, like `git log --graph`: the

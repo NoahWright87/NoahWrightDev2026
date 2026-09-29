@@ -5,8 +5,8 @@
  *
  * Still wanting a human pass:
  *
- * - `usaf-trainee` has no summary or highlights; that entry was cut off in the
- *   source and nothing has been invented to fill it.
+ * - Several roles still want numbers Noah hasn't dug up yet; see
+ *   `src/app/resume/resume.todo.md`.
  * - LinkedIn had `signify-senior` running to Sep 2025, overlapping the manager
  *   role by a year. It now ends at the Aug 2024 promotion.
  */
@@ -96,7 +96,7 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
       "Improved inventory accuracy with a barcode-scanner system and web scrapers for product and vendor data",
       "Ran the retail website and social media, producing a marketing video every week",
     ],
-    skills: ["Visual Basic for Applications (VBA)", "SQL"],
+    skills: ["Visual Basic for Applications (VBA)", "SQL", "Web Scraping"],
   },
   {
     id: "usaf-trainee",
@@ -108,8 +108,8 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     dateLabel: "May 2011 — Dec 2011",
     commitment: "full-time",
     kind: "role",
-    // Cut off in the source screenshots — needs Noah's own words.
-    summary: "",
+    summary:
+      "Enlisted in the Air Force and completed Basic Military Training and technical school.",
     highlights: [],
     skills: [],
     colorGroup: "U.S. Air Force",
@@ -129,9 +129,8 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     highlights: [
       "Fixed 262 security vulnerabilities, including SQL injection and remote code execution",
       "Cut a 2-hour batch job to 1 minute by refactoring legacy code for multithreading",
-      "Protected the PII of thousands of students; earned Security+ certification",
-      "Led 3 direct reports, handling requirements through delivery on an on-prem service bus shared with internal and external systems",
-      "Recognized with multiple Airman of the Quarter awards and an Air Force Achievement Medal; selected for a competitive Developmental Special Duty",
+      "Safeguarded the PII of thousands of students; earned Security+ certification",
+      "Earned multiple Airman of the Quarter awards and an Air Force Achievement Medal",
     ],
     skills: ["C#", "ASP.NET", "Microsoft SQL Server"],
     colorGroup: "U.S. Air Force",
@@ -147,13 +146,12 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     commitment: "full-time",
     kind: "promotion",
     summary:
-      "Hand-picked to teach the 5-week Airman Leadership School that prepares Airmen for their first direct reports.",
+      "Hand-picked to teach Airman Leadership School, the 5-week course that prepares Airmen to supervise.",
     highlights: [
-      "Grew class size 30% with no added headcount by scripting administrative work in JavaScript and VBA",
-      "Processed 2K reservations worth over $52K by integrating PayPal checkout",
-      "Eliminated 90% of printed material by leading a paperless effort",
-      "Taught leadership and public speaking to hundreds of Airmen; ran graduations with hundreds in attendance",
-      "Won Team of the Quarter (Q2 2019) for a new curriculum and learning management system; awarded the Air Force Commendation Medal",
+      "Automated administrative work with JavaScript and VBA, growing class size 30% without adding staff",
+      "Integrated PayPal checkout for 2K reservations worth $52K+ and cut printed material 90%",
+      "Taught leadership and public speaking to hundreds of Airmen",
+      "Earned Team of the Quarter (Q2 2019) for a new curriculum and learning management system",
     ],
     skills: ["Teaching", "Public Speaking", "Learning Management Systems"],
     colorGroup: "U.S. Air Force",
@@ -171,7 +169,7 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     summary:
       "Part-time Reserve service alongside a civilian engineering career, training the unit's incoming cybersecurity Airmen.",
     highlights: [
-      "Led 3 direct reports: mentoring, performance reviews and escalation to leadership",
+      "Mentored 3 direct reports and wrote their performance reviews",
       "Taught Windows terminal, Python scripting and public speaking to the unit's cybersecurity Airmen",
       "Trained the unit on Splunk threat hunting and scripted the creation of its queries",
     ],
@@ -195,7 +193,7 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
       "Maintained .NET microservices integrating internal and external REST APIs",
       "Ran Jenkins pipelines, reviewed code, demoed features and covered production support",
     ],
-    skills: ["ASP.NET", "Jenkins", "SonarQube", "Atlassian Suite"],
+    skills: ["C#", "ASP.NET", "Jenkins", "SonarQube"],
   },
   {
     id: "sovereign",
@@ -213,7 +211,7 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
       "Built and maintained full-stack apps in C#, Entity Framework, MVC, Vue.js and SQL Server",
       "Gathered requirements and reviewed designs directly with government clients",
     ],
-    skills: ["ASP.NET MVC", "Vue.js", "Microsoft Azure"],
+    skills: ["C#", "ASP.NET MVC", "Vue.js", "Microsoft Azure"],
   },
   {
     id: "google",
@@ -226,11 +224,11 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     commitment: "full-time",
     kind: "role",
     summary:
-      "Invited to apply after solving Google's Foobar challenge; worked on the Payments Platform used by internal teams to send and receive money.",
+      "Full-stack engineer on the Payments Platform that lets Google's internal teams send and receive money. Joined by invitation after solving Google's Foobar challenge.",
     highlights: [
       "Built a secure proxy for gRPC calls and Java backend microservices",
-      "Maintained TypeScript and Closure Templates front ends to accessibility best practices",
-      "Led the team's documentation and code-health push: rewrote onboarding and on-call docs and fixed flaky tests",
+      "Improved accessibility of TypeScript and Closure Templates front ends",
+      "Led the team's code-health effort: improved onboarding and on-call docs and fixed flaky tests",
     ],
     skills: ["Java", "TypeScript", "gRPC", "Linux"],
   },
@@ -247,7 +245,7 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     summary:
       "Scheduling and route optimization for a healthcare company that sends clinicians to members' homes.",
     highlights: [
-      "Saved $30K/month and cut clinician drive times 10% by replacing a paid product with open-source OR-Tools route optimization",
+      "Saved $30K/month by replacing a paid routing product with open-source Google OR-Tools, cutting clinician drive times 10%",
       "Championed flag-driven development, building the processes and reusable packages that made feature flags easy to adopt",
     ],
     skills: ["Google OR-Tools", "Feature Flags"],
@@ -255,20 +253,19 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
   {
     id: "signify-manager",
     track: 2,
-    role: "Software Engineering Manager, Scheduling & Optimization",
+    role: "Software Engineering Manager, Scheduling",
     org: "Signify Health",
     start: 2024.583,
     end: 2025.583,
     dateLabel: "Aug 2024 — Aug 2025",
     commitment: "full-time",
     kind: "promotion",
-    summary: "Promoted to manage the Scheduling and Optimization teams, with up to 9 direct reports.",
+    summary:
+      "Promoted to manage the Scheduling team of 9 software engineers.",
     highlights: [
-      "Cut average latency of the scheduling app 90% through backend efficiency work",
-      "Hosted weekly Tech Talks for 100+ engineers, recruiting the speakers",
-      "Shipped new visit types, safety-based restrictions and better integration with scheduling partners",
-      "Helped overhaul engineering interviews, writing new questions and scoring rubrics",
-      "Raised team velocity with better documentation and delivery processes",
+      "Cut average latency of the scheduling app 90% by reworking inefficient backend code",
+      "Shipped new visit types and safety-based restrictions, and tightened integration with scheduling partners",
+      "Redesigned engineering interviews with new questions and scoring rubrics",
     ],
     skills: ["Engineering Management", "Hiring"],
   },
@@ -283,16 +280,14 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     commitment: "full-time",
     kind: "promotion",
     summary:
-      "Founded and lead a 5-person team that levels up Signify's 30+ engineering teams — setting standards, owning shared code, and using AI agents to scale a small team to a whole org.",
+      "Stood up and lead a 5-person team that raises the bar for Signify's 30+ engineering teams, using AI agents to scale a small team to a whole org.",
     highlights: [
-      "Built a fleet of AI coding agents (Claude Code on Kubernetes), now in 100+ repos, automating much of the SDLC: sizing and splitting issues, picking priorities, opening PRs, testing in preview deployments and answering reviews. Next: self-merge and self-healing",
-      "Built an engineering metrics platform that crawls Jira, GitHub and SonarQube into a history database; reviewed weekly with Engineering and Product leadership",
-      "Took over shared libraries that had been supported ad hoc: Kafka pub/sub, PHI-safe queue viewing, logging and feature flags",
-      "Standardized SonarQube with scans on every PR and stricter quality gates; rolling out org-wide GitHub Actions checks for vulnerabilities and code ownership with SRE and QE",
-      "Run the org's engineering cadence: weekly Tech Talks and Engineering Operating Reviews, monthly RCA reviews and EM Leads meetings; write Engineering Handbook guidelines",
-      "Act as the team's PM, and rotate a different Principal Engineer in each sprint to share an org-wide view in both directions",
+      "Launched AI coding agents, now in 100+ repos, that automate much of the SDLC, from refining issues to opening tested pull requests",
+      "Built an engineering metrics dashboard tracking DORA metrics and velocity over time, with data from Jira, GitHub and SonarQube",
+      "Raised the quality bar org-wide: SonarQube quality gates on every PR, plus vulnerability and code-ownership checks rolling out with SRE and QE",
+      "Own the shared libraries every team builds on, including Kafka pub/sub, logging and feature flags",
     ],
-    skills: ["Engineering Management", "AI Agents", "Claude Code", "Kubernetes", "Developer Experience"],
+    skills: ["Engineering Management", "AI Agents", "DORA Metrics", "Developer Productivity", "Kafka"],
   },
 ];
 
@@ -342,7 +337,8 @@ export const RESUME_SKILL_GROUPS: { category: string; skills: string[] }[] = [
     category: "Leadership",
     skills: [
       "Engineering Management",
-      "Developer Experience",
+      "Developer Productivity",
+      "DORA Metrics",
       "AI Agents",
       "Hiring",
       "Teaching",
@@ -368,13 +364,13 @@ export const RESUME_SKILL_GROUPS: { category: string; skills: string[] }[] = [
   },
   {
     category: "Platform & Tools",
-    skills: ["Claude Code", "Kubernetes", "GitHub Actions", "SonarQube", "Jenkins", "Microsoft Azure", "Splunk", "Linux", "Atlassian Suite"],
+    skills: ["GitHub Actions", "SonarQube", "Jenkins", "Microsoft Azure", "Splunk", "Linux", "Atlassian Suite"],
   },
 ];
 
 /** The one line of prose at the top of the page. Worth Noah's own pass. */
 export const RESUME_SUMMARY =
-  "Founding manager of the Engineering Enablement team at Signify Health since August 2025, using AI agents to let a 5-person team serve 30+ engineering teams. Previously led Signify's Scheduling & Optimization teams and engineered payments at Google, after nine years of active-duty U.S. Air Force service and two in the Reserve.";
+  "Leading Signify Health's Engineering Enablement team since August 2025, using AI agents to let a 5-person team serve 30+ engineering teams. Previously managed Signify's Scheduling team and engineered payments at Google, after nine years of active-duty U.S. Air Force service and two in the Reserve.";
 
 /* ------------------------------------------------------------------ */
 /* Helpers shared across the prototypes                                */
