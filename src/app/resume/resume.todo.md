@@ -11,15 +11,8 @@ content is in, transcribed from LinkedIn — what remains is content cleanup and
 the PDF, not design.
 
 ## Outstanding
-- [ ] **Engineering Enablement wins.** `signify-enablement` is the current role
-      and has only two bullets. It needs the team's results since Aug 2025,
-      with numbers.
 - [ ] **Fill in `usaf-trainee`** — no summary or highlights; it was cut off in
       the source screenshots and nothing was invented to fill it.
-- [ ] **Confirm the Signify dates.** LinkedIn had `signify-senior` running to
-      Sep 2025; it now ends at the Aug 2024 promotion, and the manager role is
-      split at Aug 2025 into Scheduling & Optimization and Engineering
-      Enablement.
 - [ ] **Review `RESUME_SUMMARY`**, the one line of prose at the top.
 - [ ] **Add the PDF.** The "Download PDF" button points at
       `SITE.resumePdfUrl` (`/noah-wright-resume-2026.pdf`); the file is not in

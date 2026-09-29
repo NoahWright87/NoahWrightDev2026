@@ -7,8 +7,6 @@
  *
  * - `usaf-trainee` has no summary or highlights; that entry was cut off in the
  *   source and nothing has been invented to fill it.
- * - `signify-enablement` (the current role) has only two bullets. The team's
- *   wins since Aug 2025, with numbers, belong there.
  * - LinkedIn had `signify-senior` running to Sep 2025, overlapping the manager
  *   role by a year. It now ends at the Aug 2024 promotion.
  */
@@ -285,13 +283,16 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     commitment: "full-time",
     kind: "promotion",
     summary:
-      "Founding manager of the Engineering Enablement team, raising code quality and developer productivity across engineering.",
-    // TODO(Noah): add the team's wins since Aug 2025, with numbers.
+      "Founded and lead a 5-person team that levels up Signify's 30+ engineering teams — setting standards, owning shared code, and using AI agents to scale a small team to a whole org.",
     highlights: [
-      "Stood up the Engineering Enablement team from scratch as its first manager",
-      "Standardized SonarQube across engineering: scans enforced on every PR, with stricter quality gates",
+      "Built a fleet of AI coding agents (Claude Code on Kubernetes), now in 100+ repos, automating much of the SDLC: sizing and splitting issues, picking priorities, opening PRs, testing in preview deployments and answering reviews. Next: self-merge and self-healing",
+      "Built an engineering metrics platform that crawls Jira, GitHub and SonarQube into a history database; reviewed weekly with Engineering and Product leadership",
+      "Took over shared libraries that had been supported ad hoc: Kafka pub/sub, PHI-safe queue viewing, logging and feature flags",
+      "Standardized SonarQube with scans on every PR and stricter quality gates; rolling out org-wide GitHub Actions checks for vulnerabilities and code ownership with SRE and QE",
+      "Run the org's engineering cadence: weekly Tech Talks and Engineering Operating Reviews, monthly RCA reviews and EM Leads meetings; write Engineering Handbook guidelines",
+      "Act as the team's PM, and rotate a different Principal Engineer in each sprint to share an org-wide view in both directions",
     ],
-    skills: ["Engineering Management", "Developer Experience", "SonarQube"],
+    skills: ["Engineering Management", "AI Agents", "Claude Code", "Kubernetes", "Developer Experience"],
   },
 ];
 
@@ -342,6 +343,7 @@ export const RESUME_SKILL_GROUPS: { category: string; skills: string[] }[] = [
     skills: [
       "Engineering Management",
       "Developer Experience",
+      "AI Agents",
       "Hiring",
       "Teaching",
       "Public Speaking",
@@ -359,19 +361,20 @@ export const RESUME_SKILL_GROUPS: { category: string; skills: string[] }[] = [
       "SQL",
       "Microsoft SQL Server",
       "gRPC",
+      "Kafka",
       "Google OR-Tools",
       "Feature Flags",
     ],
   },
   {
     category: "Platform & Tools",
-    skills: ["SonarQube", "Jenkins", "Microsoft Azure", "Splunk", "Linux", "Atlassian Suite"],
+    skills: ["Claude Code", "Kubernetes", "GitHub Actions", "SonarQube", "Jenkins", "Microsoft Azure", "Splunk", "Linux", "Atlassian Suite"],
   },
 ];
 
 /** The one line of prose at the top of the page. Worth Noah's own pass. */
 export const RESUME_SUMMARY =
-  "Founding manager of the Engineering Enablement team at Signify Health since August 2025, after leading its Scheduling & Optimization teams. Before that: software engineer at Google, and nine years of active-duty U.S. Air Force service, then two in the Reserve.";
+  "Founding manager of the Engineering Enablement team at Signify Health since August 2025, using AI agents to let a 5-person team serve 30+ engineering teams. Previously led Signify's Scheduling & Optimization teams and engineered payments at Google, after nine years of active-duty U.S. Air Force service and two in the Reserve.";
 
 /* ------------------------------------------------------------------ */
 /* Helpers shared across the prototypes                                */
