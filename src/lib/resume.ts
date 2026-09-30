@@ -109,10 +109,9 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     summary:
       "Enlisted, then rose from programmer to lead of 3 — owning the whole lifecycle with no PM, designer or QA.",
     highlights: [
-      "Hardened vital web apps: fixed 262 security risks (incl. SQL injection & RCE) and moved off deprecated APIs",
+      "Hardened a $1M system: fixed 262 security risks (incl. SQL injection & RCE) and moved it off end-of-support frameworks, saving $220K+",
       "Cut a 2-hour batch job to 1 minute with multithreading",
       "Safeguarded PII for thousands of students; earned Security+",
-      "Earned multiple Airman of the Quarter awards and an Air Force Achievement Medal",
     ],
     skills: ["C#", "ASP.NET", "Microsoft SQL Server"],
     colorGroup: "U.S. Air Force",
@@ -291,6 +290,15 @@ export const RESUME_MARKERS: ResumeMarker[] = [
     kind: "training",
   },
   {
+    id: "nco-of-the-quarter",
+    track: 1,
+    date: 2016.917,
+    dateLabel: "Dec 2016",
+    label: "NCO of the Quarter",
+    detail: "Quarterly award for noncommissioned officers.",
+    kind: "award",
+  },
+  {
     id: "afcm",
     track: 1,
     date: 2020.0,
@@ -327,6 +335,16 @@ export const RESUME_MARKERS: ResumeMarker[] = [
     kind: "training",
   },
   {
+    id: "afam",
+    track: 1,
+    date: 2016.083,
+    dateLabel: "Feb 2016",
+    label: "Air Force Achievement Medal",
+    detail:
+      "For hardening a $1M system at Headquarters, Air University: fixed hundreds of vulnerabilities and upgraded it off end-of-support frameworks, saving $220K+.",
+    kind: "award",
+  },
+  {
     id: "ccaf-cs-tech",
     track: 1,
     date: 2015.7,
@@ -343,6 +361,24 @@ export const RESUME_MARKERS: ResumeMarker[] = [
     label: "Airman Leadership School",
     detail: "The supervisor course I went on to teach.",
     kind: "training",
+  },
+  {
+    id: "airman-of-the-year",
+    track: 1,
+    date: 2015.0,
+    dateLabel: "Jan 2015",
+    label: "Airman of the Year",
+    detail: "Annual award, for the same work that earned the Achievement Medal.",
+    kind: "award",
+  },
+  {
+    id: "airman-of-the-quarter",
+    track: 1,
+    date: 2013.917,
+    dateLabel: "Dec 2013",
+    label: "Airman of the Quarter",
+    detail: "Quarterly award for junior enlisted Airmen.",
+    kind: "award",
   },
 ];
 

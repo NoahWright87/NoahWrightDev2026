@@ -303,7 +303,9 @@ export default function ResumeTimeline() {
         entry: markerEntry(marker),
         x: trackX(width, marker.track),
         y,
-        hitHeight: Math.max(6, Math.min(14, 2 * gap - 8)),
+        /* Never reaches the dot: at a few pixels' gap it shrinks to a sliver
+           rather than keeping a minimum size that would cover the dot. */
+        hitHeight: Math.min(14, Math.max(2 * gap - 8, gap)),
       };
     });
 

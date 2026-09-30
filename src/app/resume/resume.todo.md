@@ -16,8 +16,10 @@ the PDF, not design.
 - [ ] **Confirm the Enablement dashboard tracks DORA metrics and velocity** —
       worded that way at Noah's request for those keywords; the one-pager
       doesn't mention the dashboard.
-- [ ] **Air Force Achievement Medal and Security+** as rail milestones — each
-      needs a year.
+- [ ] **Security+** as a rail milestone — needs a year.
+- [ ] **Award PDFs.** Noah is digging up the Achievement and Commendation
+      Medal citations. Plan: pull a line or two of detail from each and add an
+      optional link on the marker to the full PDF (in `public/`).
 - [ ] **Review `RESUME_SUMMARY`**, the one line of prose at the top.
 - [ ] **Add the PDF.** The "Download PDF" button points at
       `SITE.resumePdfUrl` (`/noah-wright-resume-2026.pdf`); the file is not in
