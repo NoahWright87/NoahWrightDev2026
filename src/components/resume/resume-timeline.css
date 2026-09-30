@@ -132,6 +132,13 @@
   cursor: pointer;
 }
 
+/* Milestone diamonds get a small target of their own, above the job targets.
+   Height is set inline so it stops short of any nearby job dot. */
+.rt__jump--milestone {
+  width: 18px;
+  z-index: 1;
+}
+
 .rt__jump:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: -2px;

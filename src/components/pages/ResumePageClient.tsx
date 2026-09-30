@@ -41,7 +41,7 @@ export default function ResumePageClient() {
 
       <Container padding="lg">
         <Container direction="vertical" itemSpacing="md" padding="none">
-          <Heading level={2}>Education, Awards &amp; Certifications</Heading>
+          <Heading level={2}>Education, Training &amp; Awards</Heading>
           <ul className="resume__markers">
             {RESUME_MARKERS.map((marker) => {
               const entry = markerEntry(marker);

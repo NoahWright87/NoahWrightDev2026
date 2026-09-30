@@ -11,17 +11,13 @@ content is in, transcribed from LinkedIn — what remains is content cleanup and
 the PDF, not design.
 
 ## Outstanding
-- [ ] **Numbers from Noah.** Copy rule: strong verb first, a real number where
-      one exists, nothing invented. Still thin: `signify-senior` (two bullets),
-      `google` (no metrics), `signify-manager` (the old "velocity" bullet was
-      cut for having no number), `signify-enablement` (agent adoption or
-      throughput, and any DORA metric that moved).
+- [ ] **Numbers from Noah.** Still thin: `google` (no metrics) and
+      `signify-senior` (two bullets).
 - [ ] **Confirm the Enablement dashboard tracks DORA metrics and velocity** —
-      worded that way at Noah's request for those keywords.
-- [ ] **Skill chips.** Noah plans to send a full pass; C# was added where the
-      role's own text names it.
-- [ ] **Air Force Achievement Medal** as a marker like the Commendation Medal —
-      needs the year it was awarded.
+      worded that way at Noah's request for those keywords; the one-pager
+      doesn't mention the dashboard.
+- [ ] **Air Force Achievement Medal and Security+** as rail milestones — each
+      needs a year.
 - [ ] **Review `RESUME_SUMMARY`**, the one line of prose at the top.
 - [ ] **Add the PDF.** The "Download PDF" button points at
       `SITE.resumePdfUrl` (`/noah-wright-resume-2026.pdf`); the file is not in
@@ -33,9 +29,6 @@ the PDF, not design.
 - [ ] Recheck which cards overflow a 390px phone after each content pass.
 
 ## Ideas (not started)
-- Show awards, degrees and certs on the rail itself, and as a tab beside the
-  job card like a concurrent role. Markers already carry a track and date, and
-  each card already lists the ones inside its dates.
 - An interactive view of Noah's ribbon rack.
 
 ## Settled (do not revisit without a reason)

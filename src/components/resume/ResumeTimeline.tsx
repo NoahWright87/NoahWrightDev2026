@@ -29,8 +29,10 @@ import {
   TIMELINE_END,
   TIMELINE_START,
   PRIMARY_TRACK,
+  RESUME_MARKERS,
   entryEnd,
   jobColorVar,
+  markerEntry,
   yearToFraction,
   type ResumeEntry,
 } from "@/lib/resume";
@@ -284,6 +286,27 @@ export default function ResumeTimeline() {
 
     const yearToY = (y: number) => padTop + yearToFraction(y) * usable;
 
+    /* Awards, degrees and training sit on the lane of the job they fell in,
+       as diamonds so they never read as another job. */
+    const markers = RESUME_MARKERS.map((marker) => {
+      const y = yearToY(marker.date);
+      /* Distance to the nearest job dot on the same lane, so the diamond's tap
+         target can shrink rather than cover a dot a few pixels away. */
+      const gap = Math.min(
+        Infinity,
+        ...nodes
+          .filter((n) => n.entry.track === marker.track)
+          .map((n) => Math.abs(n.y - y))
+      );
+      return {
+        marker,
+        entry: markerEntry(marker),
+        x: trackX(width, marker.track),
+        y,
+        hitHeight: Math.max(6, Math.min(14, 2 * gap - 8)),
+      };
+    });
+
     /** Read a rail position back as a date. Newest is at the top. */
     const yearAtY = (y: number) =>
       TIMELINE_END - ((y - padTop) / usable) * (TIMELINE_END - TIMELINE_START);
@@ -357,6 +380,7 @@ export default function ResumeTimeline() {
 
     return {
       nodes,
+      markers,
       paths,
       branchSegments,
       primarySegments,
@@ -517,6 +541,24 @@ export default function ResumeTimeline() {
                     />
                   )}
 
+                  {geometry.markers.map(({ marker, entry, x, y }) => {
+                    const passed = y <= markerY;
+                    const color = entry ? colorOf(entry) : "var(--primary)";
+                    const r = 5;
+                    return (
+                      <path
+                        key={marker.id}
+                        d={`M ${x} ${y - r} L ${x + r} ${y} L ${x} ${y + r} L ${x - r} ${y} Z`}
+                        fill={passed ? color : "var(--background)"}
+                        stroke={color}
+                        strokeWidth={2}
+                        strokeLinejoin="round"
+                        className="rt__milestone"
+                        opacity={passed ? 1 : 0.7}
+                      />
+                    );
+                  })}
+
                   {geometry.nodes.map(({ entry, x, y }) => {
                     const isActive = selected.id === entry.id;
                     const inStop = activeEntryIds.has(entry.id);
@@ -562,6 +604,33 @@ export default function ResumeTimeline() {
                   {formatYear(markerYear)}
                 </span>
               )}
+
+              {/* Diamonds take you to the job they fell in. They sit above the job
+                  targets, with each target trimmed to stop short of the nearest
+                  job dot, so both stay reachable. */}
+              {enhanced &&
+                geometry &&
+                rail &&
+                geometry.markers.map(({ marker, entry, x, y, hitHeight }) =>
+                  entry ? (
+                    <button
+                      key={marker.id}
+                      type="button"
+                      className="rt__jump rt__jump--milestone"
+                      style={{
+                        top: y,
+                        left: x - 9,
+                        height: hitHeight,
+                        ["--label-shift" as string]: `${rail.width - x + 5}px`,
+                      }}
+                      onClick={() => goToEntry(entry.id)}
+                    >
+                      <span className="rt__jump-label">
+                        {marker.label} · {marker.dateLabel}
+                      </span>
+                    </button>
+                  ) : null
+                )}
 
               {/* One jump target per dot, so every job is reachable — including
                   a service posting that only ever appears as a concurrent tab. */}
