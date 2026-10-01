@@ -174,7 +174,7 @@ export interface StopFade {
  * deliberately: the handover is the only part of the scroll where the stage is
  * not showing a readable card, so it should pass quickly.
  */
-const FADE_BAND = 0.14;
+const FADE_BAND = 0.1;
 
 /**
  * The outgoing card clears before the incoming one is substantially there. A
@@ -187,11 +187,34 @@ const OUT_RAMP = 0.5;
 const IN_DELAY = 0.35;
 
 /**
- * Fraction of a slice the incoming card is already settled for before the
- * marker actually reaches its dot. Without it the card arrives at the exact
- * frame the marker lands, so tapping a dot catches the job still fading in.
+ * How far, as a fraction of a slice, card changes trail the marker. Each slice
+ * is one job's own stretch of time, so the handover belongs right at the
+ * boundary: this centres it there, the outgoing card fading just before the
+ * marker crosses into the next job and the incoming one settling just after.
+ * Running it much earlier shows a job's card while the date already reads the
+ * next job — up to a year early in a long one — and pairs milestones with the
+ * wrong job.
  */
-const SETTLE = 0.12;
+const CARD_LAG = FADE_BAND * 0.4;
+
+/**
+ * Where a jump lands within a stop's slice: just past the handover, so the
+ * card is fully in when the scroll stops.
+ */
+export const LAND_OFFSET = CARD_LAG + 0.02;
+
+/**
+ * Nudge a scroll target out of a card handover, so a jump never stops with
+ * two cards half-faded. Milestones near a job boundary need this: the point
+ * where the marker crosses them can fall inside the handover.
+ */
+export function settledRaw(raw: number): number {
+  const boundary = Math.round(raw);
+  const before = boundary - FADE_BAND + CARD_LAG - 0.02;
+  const after = boundary + LAND_OFFSET;
+  if (boundary === 0 || raw <= before || raw >= after) return raw;
+  return raw < boundary ? before : after;
+}
 
 function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value));
@@ -222,7 +245,7 @@ export function stopFade(progress: number, count: number): StopFade {
   const markerIndex = Math.min(Math.floor(raw), count - 1);
   const local = raw - markerIndex;
 
-  const shifted = Math.min(raw + SETTLE, count - 0.0001);
+  const shifted = Math.min(Math.max(0, raw - CARD_LAG), count - 0.0001);
   const active = Math.min(Math.floor(shifted), count - 1);
   const cardLocal = shifted - active;
 

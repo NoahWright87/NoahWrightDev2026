@@ -1,0 +1,84 @@
+/* A milestone on the timeline stage. `--job-color` is the job it happened
+   during, so the card reads as belonging to the job card above it. */
+
+.mc {
+  display: grid;
+  gap: 3px;
+  padding: 11px 14px;
+  border-radius: 12px;
+  border: 1px dashed color-mix(in srgb, var(--job-color) 55%, transparent);
+  background: color-mix(in srgb, var(--job-color) 9%, transparent);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.mc__head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+/* The diamond echoes the shape on the rail. */
+.mc__kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--job-color);
+}
+
+.mc__kind::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  background: var(--job-color);
+  transform: rotate(45deg);
+}
+
+.mc__date {
+  font-size: 0.78rem;
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+}
+
+.mc__title {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.mc__issuer,
+.mc__honors,
+.mc__detail {
+  margin: 0;
+}
+
+.mc__issuer {
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.mc__honors {
+  font-style: italic;
+}
+
+.mc__link {
+  justify-self: start;
+  margin-top: 2px;
+  font-weight: 600;
+  color: var(--job-color);
+}
+
+@media (max-width: 900px) {
+  .mc {
+    padding: 8px 11px;
+    font-size: 0.82rem;
+  }
+
+  .mc__title {
+    font-size: 0.92rem;
+  }
+}

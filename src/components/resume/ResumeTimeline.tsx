@@ -21,6 +21,7 @@
 import * as React from "react";
 import { usePrefersReducedMotion } from "@noahwright/design";
 import { JobCard } from "./JobCard";
+import { MilestoneCard } from "./MilestoneCard";
 import {
   ENTRIES_CHRONOLOGICAL,
   ENTRIES_NEWEST_FIRST,
@@ -31,13 +32,16 @@ import {
   PRIMARY_TRACK,
   RESUME_MARKERS,
   entryEnd,
+  type ResumeMarker,
   jobColorVar,
   markerEntry,
   yearToFraction,
   type ResumeEntry,
 } from "@/lib/resume";
 import {
+  LAND_OFFSET,
   PACING_VH,
+  settledRaw,
   buildRailPaths,
   trackX,
   mergeCurve,
@@ -59,59 +63,74 @@ function formatYear(year: number): string {
 
 interface Stop {
   id: string;
-  /** `entries[0]` is the stop's own job; the rest are concurrent, behind tabs. */
-  entries: ResumeEntry[];
+  /** The job this stop is about. Its card is on top unless a tab is picked. */
+  entry: ResumeEntry;
 }
 
-/** Other-lane jobs already running the day this one starts. */
-function concurrentAtStart(entry: ResumeEntry): ResumeEntry[] {
-  return ENTRIES_CHRONOLOGICAL.filter(
-    (other) =>
-      other.track !== entry.track &&
-      entry.start >= other.start &&
-      entry.start < entryEnd(other)
+/** One stop per job, newest first. */
+const STOPS: Stop[] = ENTRIES_NEWEST_FIRST.map((entry) => ({ id: entry.id, entry }));
+
+/**
+ * How close, in years, the scroll date has to be to a job or a milestone for
+ * it to show. Three months either side: a job you are about to reach appears
+ * as a tab a little early, and one you have just left lingers briefly, so the
+ * reader can click across without scrolling. The same window brings milestone
+ * cards in and out.
+ */
+const NEARBY_YEARS = 0.25;
+
+/**
+ * A milestone in a long job is crossed quickly — the marker covers a five-year
+ * job in one screen of scrolling — so three months alone can flash a card past.
+ * It also stays up while the scroll is within this fraction of a slice of the
+ * point where the marker crosses it.
+ */
+const MIN_DWELL = 0.1;
+
+/** Every job running within `NEARBY_YEARS` of a date. */
+function jobsAround(year: number): ResumeEntry[] {
+  return ENTRIES_NEWEST_FIRST.filter(
+    (e) => year >= e.start - NEARBY_YEARS && year <= entryEnd(e) + NEARBY_YEARS
   );
 }
 
-/*
- * One stop per job, newest first. Reserve service is dated just before the first civilian
- * role, so the reserve stop finds nothing running yet and stands alone, while
- * each civilian stop picks the reserve posting up as a tab. That is what puts
- * the civilian card on top through the overlap without hiding the service one.
- */
-const STOPS: Stop[] = ENTRIES_NEWEST_FIRST.map((entry) => ({
-  id: entry.id,
-  entries: [entry, ...concurrentAtStart(entry)],
-}));
+/** A stop's own job first, then anything else around at this date. */
+function entriesFor(stop: Stop, year: number | null): ResumeEntry[] {
+  if (year === null) return [stop.entry];
+  return [stop.entry, ...jobsAround(year).filter((e) => e.id !== stop.entry.id)];
+}
 
 /**
- * A stop whose job may be running alongside one on the other track. The stop's
- * own job is on top; anything concurrent sits behind it as a tab, so the second
- * career is visible and one click away without ever taking the stage uninvited.
+ * A stop's job, with anything else running around the same time as tabs —
+ * a concurrent posting, or the job just before or after — so it is one click
+ * away without ever taking the stage uninvited. `after` is rendered beneath the
+ * card; the plain fallback list uses it for milestones.
  */
 function StackedStop({
-  stop,
+  entries,
   shown,
   isActiveStop,
   colorOf,
   onPick,
+  after,
 }: {
-  stop: Stop;
+  entries: ResumeEntry[];
   shown: ResumeEntry;
   isActiveStop: boolean;
   colorOf: (entry: ResumeEntry) => string;
   onPick: (entryId: string) => void;
+  after?: React.ReactNode;
 }) {
-  const stacked = stop.entries.length > 1;
+  const stacked = entries.length > 1;
   return (
     <div className="rt__stack">
       {stacked && (
-        <div className="rt__tabs" role="tablist" aria-label="Concurrent roles">
-          {/* Ordered by track so the strip reads left to right the same way the
-              rail does. Which one is showing is carried by the selected state,
-              not by position. */}
-          {[...stop.entries]
-            .sort((a, b) => a.track - b.track)
+        <div className="rt__tabs" role="tablist" aria-label="Roles around this time">
+          {/* Ordered by track, then newest first, so the strip reads the way
+              the rail does. Which one is showing is carried by the selected
+              state, not by position. */}
+          {[...entries]
+            .sort((a, b) => a.track - b.track || b.start - a.start)
             .map((entry) => {
               const on = entry.id === shown.id;
               return (
@@ -134,8 +153,15 @@ function StackedStop({
       <div className="rt__stack-card">
         <JobCard entry={shown} color={colorOf(shown)} />
       </div>
+      {after}
     </div>
   );
+}
+
+/** Color a milestone by the job it happened during. */
+function milestoneColor(marker: ResumeMarker): string {
+  const entry = markerEntry(marker);
+  return entry ? jobColorVar(entry) : "var(--primary)";
 }
 
 export default function ResumeTimeline() {
@@ -161,16 +187,12 @@ export default function ResumeTimeline() {
   const active = stops[Math.min(activeIndex, stops.length - 1)];
 
   /**
-   * Which card is on top within a stop that stacks concurrent jobs. Null means
-   * the stop's own job — so the civilian role wins by default and the service
-   * one is a deliberate choice. Cleared whenever the active stop changes, so a
-   * pick never carries over to a different moment in the career.
+   * Which card is on top within a stop that stacks other jobs as tabs. Null
+   * means the stop's own job, so anything else is a deliberate choice. Cleared
+   * whenever the active stop changes, so a pick never carries over to a
+   * different moment in the career.
    */
   const [tabPick, setTabPick] = React.useState<{ stop: string; entry: string } | null>(null);
-  const selected =
-    tabPick && tabPick.stop === active.id
-      ? (active.entries.find((e) => e.id === tabPick.entry) ?? active.entries[0])
-      : active.entries[0];
 
   React.useEffect(() => {
     setTabPick((pick) => (pick && pick.stop !== active.id ? null : pick));
@@ -231,41 +253,32 @@ export default function ResumeTimeline() {
   }, [enhanced, stops.length, stickyHeight]);
 
   /**
-   * Land with the marker exactly on the stop's dot. The card is already fully
-   * opaque there because the handover finishes a little earlier in the previous
-   * slice — see `SETTLE` in `scrollRail.ts`.
+   * Scroll to a position on the stop scale: 2.5 is halfway through the third
+   * stop's slice, and a whole number is the top of that job's stretch of rail.
    */
-  const scrollToStop = React.useCallback(
-    (index: number) => {
+  const scrollToRaw = React.useCallback(
+    (raw: number) => {
       const section = sectionRef.current;
       if (!section || !enhanced) return;
       const travel = section.offsetHeight - stickyHeight;
       window.scrollTo({
-        top: section.offsetTop + (index / stops.length) * travel,
+        top: section.offsetTop + (raw / stops.length) * travel,
         behavior: "smooth",
       });
     },
     [enhanced, stickyHeight, stops.length]
   );
 
-  /**
-   * Tapping a dot goes to that job: scroll to the stop it leads, and bring it
-   * to the front there. When it is only ever a concurrent tab of the stop you
-   * are already on, switch tabs in place rather than scrolling away.
-   */
+  /** Tapping a job's dot goes to that job's stop, with its own card on top. */
   const goToEntry = React.useCallback(
     (entryId: string) => {
-      const owner = stops.findIndex((stop) => stop.entries[0].id === entryId);
-      if (owner === -1) {
-        if (active.entries.some((e) => e.id === entryId)) {
-          setTabPick({ stop: active.id, entry: entryId });
-        }
-        return;
-      }
+      const owner = stops.findIndex((stop) => stop.entry.id === entryId);
+      if (owner === -1) return;
       setTabPick(null);
-      scrollToStop(owner);
+      /* Just past the handover, so the card is fully in when it lands. */
+      scrollToRaw(owner + LAND_OFFSET);
     },
-    [active, scrollToStop, stops]
+    [scrollToRaw, stops]
   );
 
   /* ---- rail geometry ---- */
@@ -286,27 +299,62 @@ export default function ResumeTimeline() {
 
     const yearToY = (y: number) => padTop + yearToFraction(y) * usable;
 
-    /* Awards, degrees and training sit on the lane of the job they fell in,
-       as diamonds so they never read as another job. */
-    const markers = RESUME_MARKERS.map((marker) => {
-      const y = yearToY(marker.date);
-      /* Distance to the nearest job dot on the same lane, so the diamond's tap
-         target can shrink rather than cover a dot a few pixels away. */
-      const gap = Math.min(
-        Infinity,
-        ...nodes
-          .filter((n) => n.entry.track === marker.track)
-          .map((n) => Math.abs(n.y - y))
-      );
+    /*
+     * Awards, degrees, training and certs are short branches off the lane of
+     * the job they happened during: out, a node, and back in, like a feature
+     * branch. They branch toward the middle of the rail, clear of the year
+     * labels on the left. Milestones close together share one branch with a
+     * node for each, so a busy year reads as one branch with several commits
+     * rather than a zigzag.
+     */
+    const laneGap = Math.abs(trackX(width, 2) - trackX(width, 1));
+    const branchOffset = laneGap * 0.45;
+    const BEND = 10;
+    const milestones = RESUME_MARKERS.map((marker) => {
+      const laneX = trackX(width, marker.track);
       return {
         marker,
-        entry: markerEntry(marker),
-        x: trackX(width, marker.track),
-        y,
-        /* Never reaches the dot: at a few pixels' gap it shrinks to a sliver
-           rather than keeping a minimum size that would cover the dot. */
-        hitHeight: Math.min(14, Math.max(2 * gap - 8, gap)),
+        laneX,
+        x: laneX + (marker.track === PRIMARY_TRACK ? branchOffset : -branchOffset),
+        y: yearToY(marker.date),
       };
+    }).sort((a, b) => a.marker.track - b.marker.track || a.y - b.y);
+
+    const branches: { id: string; marker: ResumeMarker; d: string }[] = [];
+    let group: typeof milestones = [];
+    const closeGroup = () => {
+      if (!group.length) return;
+      const top = group[0].y;
+      const bottom = group[group.length - 1].y;
+      const { laneX, x } = group[0];
+      branches.push({
+        id: group[0].marker.id,
+        /* Colored by its oldest node: the job the branch leaves from. */
+        marker: group[group.length - 1].marker,
+        d:
+          `M ${laneX} ${bottom + BEND} ` +
+          `C ${laneX} ${bottom + BEND * 0.4}, ${x} ${bottom + BEND * 0.6}, ${x} ${bottom} ` +
+          `L ${x} ${top} ` +
+          `C ${x} ${top - BEND * 0.6}, ${laneX} ${top - BEND * 0.4}, ${laneX} ${top - BEND}`,
+      });
+      group = [];
+    };
+    for (const m of milestones) {
+      const last = group[group.length - 1];
+      if (last && (last.marker.track !== m.marker.track || m.y - last.y > 2 * BEND + 4)) {
+        closeGroup();
+      }
+      group.push(m);
+    }
+    closeGroup();
+
+    /* Tap targets for milestones on one branch are trimmed so neighbours a
+       few pixels apart don't cover each other. */
+    const milestoneTargets = milestones.map((m, i) => {
+      const gaps = [milestones[i - 1], milestones[i + 1]]
+        .filter((o) => o && o.x === m.x)
+        .map((o) => Math.abs(o!.y - m.y));
+      return { ...m, hitHeight: Math.max(4, Math.min(14, ...gaps)) };
     });
 
     /** Read a rail position back as a date. Newest is at the top. */
@@ -382,7 +430,8 @@ export default function ResumeTimeline() {
 
     return {
       nodes,
-      markers,
+      milestones: milestoneTargets,
+      branches,
       paths,
       branchSegments,
       primarySegments,
@@ -394,36 +443,72 @@ export default function ResumeTimeline() {
   }, [rail]);
 
   /**
-   * The marker travels from the active stop's node to the next one across that
-   * stop's *whole* slice, so it — and the date riding it — advance steadily the
-   * entire time you are scrolling. Tying it to the crossfade instead would park
-   * it on a node for most of the slice and then sprint between jobs.
+   * Where the marker is at each stop boundary. Each stop's slice of scrolling
+   * covers that job's own stretch of rail: from the newer job's dot (or today,
+   * for the first) down to this job's dot. So the date riding the marker is
+   * always inside the job whose card is showing, which is also what lets
+   * milestones pop up beside the right job.
+   */
+  const anchors = React.useMemo(() => {
+    if (!geometry) return null;
+    const nodeY = (entry: ResumeEntry) =>
+      geometry.nodes.find((n) => n.entry.id === entry.id)?.y ?? 0;
+    return [geometry.yearToY(TIMELINE_END), ...stops.map((stop) => nodeY(stop.entry))];
+  }, [geometry, stops]);
+
+  /**
+   * The marker moves across the stop's *whole* slice, so it — and the date
+   * riding it — advance steadily the entire time you are scrolling. Tying it to
+   * the crossfade instead would park it for most of the slice and then sprint.
    */
   const markerY = React.useMemo(() => {
-    if (!geometry) return 0;
-    const meanY = (stop: Stop) => {
-      /* A stacked stop's extra entries are concurrent jobs tucked behind it as
-         tabs, not co-occupants of the moment — so the marker aims at the stop's
-         own dot. Only a genuinely shared stop (the side-by-side variant) puts
-         the marker between two lanes. */
-      const anchors = stop.entries.slice(0, 1);
-      const ys = anchors
-        .map((e) => geometry.nodes.find((n) => n.entry.id === e.id)?.y)
-        .filter((y): y is number => y !== undefined);
-      return ys.length ? ys.reduce((a, b) => a + b, 0) / ys.length : 0;
-    };
-    const current = stops[Math.min(fade.markerIndex, stops.length - 1)];
-    const from = meanY(current);
-    const upcoming = stops[fade.markerIndex + 1];
-    /* Past the last node there is nothing to aim at, so run on to the end of
-       the rail — otherwise the line stops filling early. */
-    const to = upcoming ? meanY(upcoming) : geometry.bottomY;
+    if (!anchors) return 0;
+    const i = Math.min(fade.markerIndex, stops.length - 1);
+    const from = anchors[i];
+    const to = anchors[i + 1];
     return from + (to - from) * Math.min(1, Math.max(0, fade.local));
-  }, [geometry, fade.markerIndex, fade.local, stops]);
+  }, [anchors, fade.markerIndex, fade.local, stops.length]);
 
   const markerYear = geometry ? geometry.yearAtY(markerY) : null;
+  const scrollRaw = fade.markerIndex + fade.local;
 
-  const activeEntryIds = new Set(active.entries.map((e) => e.id));
+  const activeEntries = entriesFor(active, markerYear);
+  const selected =
+    tabPick && tabPick.stop === active.id
+      ? (activeEntries.find((e) => e.id === tabPick.entry) ?? active.entry)
+      : active.entry;
+  const activeEntryIds = new Set(activeEntries.map((e) => e.id));
+
+  /** Where on the stop scale the marker crosses each milestone. */
+  const milestoneRaw = React.useMemo(() => {
+    const out = new Map<string, number>();
+    if (!geometry || !anchors) return out;
+    for (const m of geometry.milestones) {
+      for (let i = 0; i < stops.length; i++) {
+        const a = anchors[i];
+        const b = anchors[i + 1];
+        if (b > a && m.y >= a && m.y <= b) {
+          out.set(m.marker.id, i + (m.y - a) / (b - a));
+          break;
+        }
+      }
+    }
+    return out;
+  }, [geometry, anchors, stops.length]);
+
+  /* Milestones near the scroll date, newest first so a card you have just
+     scrolled to arrives below the ones already up. */
+  const visibleMilestones =
+    enhanced && markerYear !== null
+      ? RESUME_MARKERS.filter((marker) => {
+          const raw = milestoneRaw.get(marker.id);
+          return (
+            Math.abs(markerYear - marker.date) <= NEARBY_YEARS ||
+            (raw !== undefined && Math.abs(scrollRaw - raw) <= MIN_DWELL)
+          );
+        })
+      : [];
+  const visibleMilestoneIds = new Set(visibleMilestones.map((m) => m.id));
 
   /* Dot targets are capped to the gap between the two lanes so a service dot
      and a civilian one that start weeks apart never cover each other. On a
@@ -519,6 +604,18 @@ export default function ResumeTimeline() {
                             stroke={colorOf(segment.entry)}
                           />
                         ))}
+                        {geometry.branches.map((branch) => (
+                          <path
+                            key={branch.id}
+                            className={
+                              lit
+                                ? "rt__line rt__line--milestone"
+                                : "rt__line rt__line--milestone rt__line--dim"
+                            }
+                            d={branch.d}
+                            stroke={milestoneColor(branch.marker)}
+                          />
+                        ))}
                       </>
                     );
                     return lit ? (
@@ -543,20 +640,21 @@ export default function ResumeTimeline() {
                     />
                   )}
 
-                  {geometry.markers.map(({ marker, entry, x, y }) => {
+                  {geometry.milestones.map(({ marker, x, y }) => {
+                    const on = visibleMilestoneIds.has(marker.id);
                     const passed = y <= markerY;
-                    const color = entry ? colorOf(entry) : "var(--primary)";
-                    const r = 5;
+                    const color = milestoneColor(marker);
+                    const r = on ? 6 : 4.5;
                     return (
                       <path
                         key={marker.id}
                         d={`M ${x} ${y - r} L ${x + r} ${y} L ${x} ${y + r} L ${x - r} ${y} Z`}
-                        fill={passed ? color : "var(--background)"}
+                        fill={on || passed ? color : "var(--background)"}
                         stroke={color}
                         strokeWidth={2}
                         strokeLinejoin="round"
-                        className="rt__milestone"
-                        opacity={passed ? 1 : 0.7}
+                        className="rt__milestone-node"
+                        opacity={on || passed ? 1 : 0.7}
                       />
                     );
                   })}
@@ -607,32 +705,36 @@ export default function ResumeTimeline() {
                 </span>
               )}
 
-              {/* Diamonds take you to the job they fell in. They sit above the job
-                  targets, with each target trimmed to stop short of the nearest
-                  job dot, so both stay reachable. */}
+              {/* Each diamond scrolls to where the marker crosses it, so its card
+                  comes up. They sit above the job targets; they are off the
+                  lane, so they never cover a job's dot. */}
               {enhanced &&
                 geometry &&
                 rail &&
-                geometry.markers.map(({ marker, entry, x, y, hitHeight }) =>
-                  entry ? (
+                geometry.milestones.map(({ marker, x, y, hitHeight }) => {
+                  const raw = milestoneRaw.get(marker.id);
+                  if (raw === undefined) return null;
+                  const w = Math.min(14, jumpWidth * 0.6);
+                  return (
                     <button
                       key={marker.id}
                       type="button"
                       className="rt__jump rt__jump--milestone"
                       style={{
                         top: y,
-                        left: x - 9,
+                        left: x - w / 2,
+                        width: w,
                         height: hitHeight,
-                        ["--label-shift" as string]: `${rail.width - x + 5}px`,
+                        ["--label-shift" as string]: `${rail.width - x - w / 2 + 14}px`,
                       }}
-                      onClick={() => goToEntry(entry.id)}
+                      onClick={() => scrollToRaw(settledRaw(raw))}
                     >
                       <span className="rt__jump-label">
                         {marker.label} · {marker.dateLabel}
                       </span>
                     </button>
-                  ) : null
-                )}
+                  );
+                })}
 
               {/* One jump target per dot, so every job is reachable — including
                   a service posting that only ever appears as a concurrent tab. */}
@@ -695,16 +797,42 @@ export default function ResumeTimeline() {
                       aria-hidden={enhanced && opacity < 0.5 ? true : undefined}
                     >
                       <StackedStop
-                        stop={stop}
-                        shown={stop.id === active.id ? selected : stop.entries[0]}
+                        entries={entriesFor(stop, enhanced ? markerYear : null)}
+                        shown={stop.id === active.id ? selected : stop.entry}
                         isActiveStop={stop.id === active.id}
                         colorOf={colorOf}
                         onPick={(entryId) => setTabPick({ stop: stop.id, entry: entryId })}
+                        after={
+                          /* The plain list has no pinned pane, so milestones
+                             follow the job they happened during instead. */
+                          enhanced ? null : (
+                            <div className="rt__milestones">
+                              {RESUME_MARKERS.filter(
+                                (m) => markerEntry(m)?.id === stop.entry.id
+                              ).map((m) => (
+                                <MilestoneCard key={m.id} marker={m} color={milestoneColor(m)} />
+                              ))}
+                            </div>
+                          )
+                        }
                       />
                     </li>
                   );
                 })}
               </ol>
+
+              {/* Milestones near the scroll date, beneath the job. Appearing
+                  takes room from the job card, which shifts up and scrolls if
+                  it no longer fits; this pane is capped and scrolls too. */}
+              {enhanced && (
+                <div className="rt__milestones" aria-live="polite">
+                  {visibleMilestones.map((m) => (
+                    <div key={m.id} className="rt__milestone">
+                      <MilestoneCard marker={m} color={milestoneColor(m)} />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
     </div>

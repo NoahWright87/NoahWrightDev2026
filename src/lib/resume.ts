@@ -52,16 +52,35 @@ export interface ResumeEntry {
 
 export type MarkerKind = "award" | "cert" | "education" | "training";
 
+/**
+ * An award, degree, course or certification. On the rail it is a short branch
+ * off the job it happened during; on the stage it gets a card of its own.
+ */
 export interface ResumeMarker {
   id: string;
+  /** The lane it branches off — the job it happened during. */
   track: TrackId;
   /** Decimal year the marker sits at. */
   date: number;
   dateLabel: string;
   label: string;
+  /** Who awarded or granted it. */
+  issuer?: string;
+  /** One or two lines, written for a civilian reader. */
   detail: string;
+  /** Distinctions such as "Summa cum laude · 3.97 GPA". */
+  honors?: string;
+  /** The certificate itself, under `public/`. */
+  href?: string;
   kind: MarkerKind;
 }
+
+export const MARKER_KIND_LABEL: Record<MarkerKind, string> = {
+  award: "Award",
+  cert: "Certification",
+  education: "Degree",
+  training: "Training",
+};
 
 /**
  * March 2020 — leaving active duty, joining the Reserve and starting at CGI all
@@ -109,9 +128,10 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     summary:
       "Enlisted, then rose from programmer to lead of 3 — owning the whole lifecycle with no PM, designer or QA.",
     highlights: [
-      "Hardened a $1M system: fixed 262 security risks (incl. SQL injection & RCE) and moved it off end-of-support frameworks, saving $220K+",
-      "Cut a 2-hour batch job to 1 minute with multithreading",
-      "Safeguarded PII for thousands of students; earned Security+",
+      "Found 190+ critical vulnerabilities and fixed 72 coding flaws, securing $1M in databases",
+      "Led a framework upgrade of the student information system: 645K lines of legacy code",
+      "Cut class archiving from 2+ hours to under a minute",
+      "Saved $220K+ by purging inactive LMS accounts to free up licenses",
     ],
     skills: ["C#", "ASP.NET", "Microsoft SQL Server"],
     colorGroup: "U.S. Air Force",
@@ -128,10 +148,10 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     kind: "promotion",
     summary: "Hand-picked to teach the 5-week course that prepares Airmen to supervise.",
     highlights: [
-      "Taught leadership and public speaking to 300+ Airmen",
+      "Delivered 4,032 hours of curriculum; 315 graduates earned 2,844 college credits",
+      "Beta-tested the largest overhaul of Air Force supervisor training in 20 years ($10M); it developed 16,000 Airmen and won us Team of the Quarter (Q2 2018)",
+      "Researched and rolled out Canvas LMS, later adopted by 67 schoolhouses",
       "Automated instructor duties with JS/VBA scripts, enabling 30% larger classes",
-      "Integrated PayPal for 2K reservations ($52K+) and went paperless, cutting printing 90%",
-      "Won Team of the Quarter (Q2 2019) for a new curriculum and LMS",
     ],
     skills: ["Teaching", "Public Speaking", "JavaScript", "VBA"],
     colorGroup: "U.S. Air Force",
@@ -266,9 +286,9 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
 ];
 
 /*
- * Newest first, matching the page. Most of these are dated to the year only;
- * the month is picked just to place them on the rail, and markers sharing a
- * year are spread apart so their diamonds don't sit on top of each other.
+ * Newest first, matching the page. Several are dated to the year only; the
+ * month is picked just to place them on the rail, spread out where a year has
+ * more than one.
  */
 export const RESUME_MARKERS: ResumeMarker[] = [
   {
@@ -277,7 +297,8 @@ export const RESUME_MARKERS: ResumeMarker[] = [
     date: 2021.7,
     dateLabel: "2021",
     label: "SEJPME I",
-    detail: "Senior Enlisted Joint Professional Military Education.",
+    issuer: "Joint Staff",
+    detail: "Senior Enlisted Joint Professional Military Education: how the services plan and work together.",
     kind: "training",
   },
   {
@@ -286,25 +307,20 @@ export const RESUME_MARKERS: ResumeMarker[] = [
     date: 2021.3,
     dateLabel: "2021",
     label: "NCO Academy",
-    detail: "Leadership course for mid-level noncommissioned officers.",
+    issuer: "U.S. Air Force",
+    detail: "The Air Force's leadership school for mid-level supervisors.",
     kind: "training",
-  },
-  {
-    id: "nco-of-the-quarter",
-    track: 1,
-    date: 2016.917,
-    dateLabel: "Dec 2016",
-    label: "NCO of the Quarter",
-    detail: "Quarterly award for noncommissioned officers.",
-    kind: "award",
   },
   {
     id: "afcm",
     track: 1,
-    date: 2020.0,
-    dateLabel: "2020",
+    date: 2020.05,
+    dateLabel: "Feb 2020",
     label: "Air Force Commendation Medal",
-    detail: "For improving both Airman Leadership School and the wider organization.",
+    issuer: "42d Force Support Squadron",
+    detail:
+      "For four years teaching Airman Leadership School: 4,032 hours of curriculum, 315 graduates, and Canvas LMS adopted by 67 schoolhouses.",
+    href: "/documents/wright-afcm-2020.pdf",
     kind: "award",
   },
   {
@@ -313,7 +329,9 @@ export const RESUME_MARKERS: ResumeMarker[] = [
     date: 2019.5,
     dateLabel: "2019",
     label: "B.S. Computer Science",
-    detail: "Trident University International. Summa cum laude, 3.97 GPA.",
+    issuer: "Trident University International",
+    detail: "Earned online while teaching full time.",
+    honors: "Summa cum laude · 3.97 GPA",
     kind: "education",
   },
   {
@@ -322,100 +340,90 @@ export const RESUME_MARKERS: ResumeMarker[] = [
     date: 2017.5,
     dateLabel: "2017",
     label: "A.S. Instructor of Technology & Military Science",
-    detail: "Community College of the Air Force.",
+    issuer: "Community College of the Air Force",
+    detail: "The Air Force's accredited community college.",
     kind: "education",
+  },
+  {
+    id: "nco-of-the-quarter",
+    track: 1,
+    date: 2016.917,
+    dateLabel: "Dec 2016",
+    label: "NCO of the Quarter",
+    detail: "Picked as the unit's top mid-level enlisted leader for the quarter.",
+    kind: "award",
   },
   {
     id: "epme-instructor-course",
     track: 1,
-    date: 2016.5,
+    date: 2016.35,
     dateLabel: "2016",
     label: "EPME Instructor Course",
-    detail: "Qualification to teach Enlisted Professional Military Education.",
+    issuer: "U.S. Air Force",
+    detail: "Certifies instructors for the Air Force's enlisted leadership schools.",
     kind: "training",
   },
   {
     id: "afam",
     track: 1,
-    date: 2016.083,
+    date: 2016.1,
     dateLabel: "Feb 2016",
     label: "Air Force Achievement Medal",
+    issuer: "Air University",
     detail:
-      "For hardening a $1M system at Headquarters, Air University: fixed hundreds of vulnerabilities and upgraded it off end-of-support frameworks, saving $220K+.",
+      "For four years as a programmer: 190+ critical vulnerabilities found, a 645K-line framework upgrade, and $220K+ saved.",
+    href: "/documents/wright-afam-2016.pdf",
     kind: "award",
+  },
+  {
+    id: "airman-of-the-year",
+    track: 1,
+    date: 2015.917,
+    dateLabel: "2015",
+    label: "Airman of the Year",
+    issuer: "Headquarters Air University",
+    detail: "Named the headquarters' top junior enlisted Airman for the year.",
+    kind: "award",
+  },
+  {
+    id: "security-plus",
+    track: 1,
+    date: 2015.7,
+    dateLabel: "2015",
+    label: "CompTIA Security+",
+    issuer: "CompTIA",
+    detail: "Industry-standard security certification, required for the role.",
+    kind: "cert",
   },
   {
     id: "ccaf-cs-tech",
     track: 1,
-    date: 2015.7,
+    date: 2015.45,
     dateLabel: "2015",
     label: "A.S. Computer Science Technology",
-    detail: "Community College of the Air Force.",
+    issuer: "Community College of the Air Force",
+    detail: "The Air Force's accredited community college.",
     kind: "education",
   },
   {
     id: "als",
     track: 1,
-    date: 2015.3,
+    date: 2015.2,
     dateLabel: "2015",
     label: "Airman Leadership School",
-    detail: "The supervisor course I went on to teach.",
+    issuer: "U.S. Air Force",
+    detail: "The 5-week course every Airman takes before supervising others. I went on to teach it.",
     kind: "training",
-  },
-  {
-    id: "airman-of-the-year",
-    track: 1,
-    date: 2015.0,
-    dateLabel: "Jan 2015",
-    label: "Airman of the Year",
-    detail: "Annual award, for the same work that earned the Achievement Medal.",
-    kind: "award",
   },
   {
     id: "airman-of-the-quarter",
     track: 1,
     date: 2013.917,
-    dateLabel: "Dec 2013",
+    dateLabel: "Q4 2013",
     label: "Airman of the Quarter",
-    detail: "Quarterly award for junior enlisted Airmen.",
+    issuer: "Headquarters Air University",
+    detail: "Named the headquarters' top junior enlisted Airman for the quarter.",
     kind: "award",
-  },
-];
-
-export const RESUME_SKILL_GROUPS: { category: string; skills: string[] }[] = [
-  {
-    category: "Leadership",
-    skills: [
-      "Engineering Management",
-      "Developer Productivity",
-      "DORA Metrics",
-      "AI Agents",
-      "Hiring",
-      "Teaching",
-      "Public Speaking",
-    ],
-  },
-  {
-    category: "Engineering",
-    skills: [
-      "C#",
-      "ASP.NET",
-      "Entity Framework",
-      "Java",
-      "gRPC",
-      "TypeScript",
-      "JavaScript",
-      "Vue.js",
-      "Python",
-      "SQL",
-      "Microsoft SQL Server",
-      "Google OR-Tools",
-      "Feature Flags",
-    ],
-  },
-  {
-    category: "Platform & Tools",
-    skills: ["GitHub Actions", "SonarQube", "Jenkins", "Microsoft Azure", "Splunk", "Linux", "Atlassian Suite"],
   },
 ];
 
@@ -494,11 +502,4 @@ export function yearToFraction(year: number): number {
 /** An entry's end year, treating an open-ended role as running to today. */
 export function entryEnd(entry: ResumeEntry): number {
   return entry.end ?? TIMELINE_END;
-}
-
-/** Markers that fall inside an entry's date range. */
-export function markersWithin(entry: ResumeEntry): ResumeMarker[] {
-  return RESUME_MARKERS.filter(
-    (m) => m.track === entry.track && m.date >= entry.start && m.date < entryEnd(entry)
-  );
 }

@@ -1,12 +1,11 @@
 "use client";
 
 import { Heading, Text, Pill } from "@noahwright/design";
-import { markersWithin, type ResumeEntry } from "@/lib/resume";
+import type { ResumeEntry } from "@/lib/resume";
 import "./job-card.css";
 
 /** One job, as shown on the timeline stage. */
 export function JobCard({ entry, color }: { entry: ResumeEntry; color: string }) {
-  const markers = markersWithin(entry);
   /* Full-time is the default and says nothing; part-time is the exception and
      is the whole reason a job can share a stretch of the timeline. */
   const showCommitment = entry.commitment !== "full-time";
@@ -28,16 +27,6 @@ export function JobCard({ entry, color }: { entry: ResumeEntry; color: string })
           <li key={highlight}>{highlight}</li>
         ))}
       </ul>
-
-      {markers.length > 0 && (
-        <ul className="jc__markers">
-          {markers.map((marker) => (
-            <li key={marker.id}>
-              <strong>{marker.label}</strong> <span>{marker.dateLabel}</span>
-            </li>
-          ))}
-        </ul>
-      )}
 
       <div className="jc__skills">
         {entry.skills.map((skill) => (

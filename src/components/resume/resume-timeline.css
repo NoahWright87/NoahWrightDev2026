@@ -49,6 +49,12 @@
   opacity: 0.22;
 }
 
+/* A milestone's branch is lighter than a job's lane, so it reads as a side
+   trip off the job rather than another job. */
+.rt__line--milestone {
+  stroke-width: 2;
+}
+
 .rt__cap {
   stroke-width: 3;
   stroke-linecap: round;
@@ -132,10 +138,8 @@
   cursor: pointer;
 }
 
-/* Milestone diamonds get a small target of their own, above the job targets.
-   Height is set inline so it stops short of any nearby job dot. */
+/* Milestone diamonds sit on their branch, off the lane; size is set inline. */
 .rt__jump--milestone {
-  width: 18px;
   z-index: 1;
 }
 
@@ -313,6 +317,40 @@
   width: 100%;
 }
 
+/* ---- milestones: a second pane beneath the job ---- */
+
+.rt__milestones {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.rt__milestones:empty {
+  display: none;
+}
+
+/* Capped, so a run of milestones can't push the job card off the pane; past
+   the cap it scrolls. The job card above gives way first and scrolls too. */
+.rt--enhanced .rt__milestones {
+  flex: 0 1 auto;
+  max-height: 46%;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding-top: 10px;
+}
+
+.rt__milestone {
+  animation: rt-milestone-in 220ms ease-out both;
+}
+
+@keyframes rt-milestone-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
 /* ---- narrow screens: thin rail, effect intact ---- */
 
 @media (max-width: 900px) {
@@ -350,5 +388,9 @@
   .rt__marker,
   .rt__jump-label {
     transition: none;
+  }
+
+  .rt__milestone {
+    animation: none;
   }
 }

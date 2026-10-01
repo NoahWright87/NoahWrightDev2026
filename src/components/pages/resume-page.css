@@ -17,44 +17,9 @@
   flex: none;
 }
 
-.resume__markers {
-  display: grid;
-  gap: 14px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.resume__marker {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-}
-
-.resume__marker-dot {
-  width: 10px;
-  height: 10px;
-  margin-top: 7px;
-  border-radius: 3px;
-  transform: rotate(45deg);
-  flex: none;
-}
-
-.resume__marker-head {
+.resume__cta {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 10px;
-}
-
-.resume__marker-date {
-  font-size: 0.8rem;
-  opacity: 0.7;
-  font-variant-numeric: tabular-nums;
-}
-
-.resume__skills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  align-items: center;
+  gap: 12px 24px;
 }

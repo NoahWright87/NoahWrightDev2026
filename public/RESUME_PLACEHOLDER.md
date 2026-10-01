@@ -11,5 +11,5 @@ The filename must match `SITE.resumeUrl` in `src/lib/site.ts` (currently `/noah-
 The file is served at `/noah-wright-resume-2026.pdf` and downloaded via the
 "Download Resume" button on the home and about pages.
 
-The Netlify `Content-Disposition: attachment` header rule in `netlify.toml` ensures
+The Netlify `Content-Disposition: attachment` header rule in `netlify.toml` (scoped to `/noah-wright-resume-*.pdf`) ensures
 it downloads rather than rendering in-browser.
