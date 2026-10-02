@@ -31,7 +31,9 @@ import {
   TIMELINE_START,
   PRIMARY_TRACK,
   RESUME_MARKERS,
+  MILESTONE_GROUPS,
   entryEnd,
+  type MilestoneGroup,
   type ResumeMarker,
   jobColorVar,
   markerEntry,
@@ -121,35 +123,34 @@ function StackedStop({
   onPick: (entryId: string) => void;
   after?: React.ReactNode;
 }) {
-  const stacked = entries.length > 1;
   return (
     <div className="rt__stack">
-      {stacked && (
-        <div className="rt__tabs" role="tablist" aria-label="Roles around this time">
-          {/* Ordered by track, then newest first, so the strip reads the way
-              the rail does. Which one is showing is carried by the selected
-              state, not by position. */}
-          {[...entries]
-            .sort((a, b) => a.track - b.track || b.start - a.start)
-            .map((entry) => {
-              const on = entry.id === shown.id;
-              return (
-                <button
-                  key={entry.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={on}
-                  tabIndex={isActiveStop ? 0 : -1}
-                  className={on ? "rt__tab rt__tab--on" : "rt__tab"}
-                  style={{ ["--lane-color" as string]: colorOf(entry) }}
-                  onClick={() => onPick(entry.id)}
-                >
-                  <span className="rt__tab-role">{entry.role}</span>
-                </button>
-              );
-            })}
-        </div>
-      )}
+      {/* Always shown, even with a single job, so the card below never moves
+          when a neighbouring job's tab comes and goes. */}
+      <div className="rt__tabs" role="tablist" aria-label="Roles around this time">
+        {/* Ordered by track, then newest first, so the strip reads the way
+            the rail does. Which one is showing is carried by the selected
+            state, not by position. */}
+        {[...entries]
+          .sort((a, b) => a.track - b.track || b.start - a.start)
+          .map((entry) => {
+            const on = entry.id === shown.id;
+            return (
+              <button
+                key={entry.id}
+                type="button"
+                role="tab"
+                aria-selected={on}
+                tabIndex={isActiveStop ? 0 : -1}
+                className={on ? "rt__tab rt__tab--on" : "rt__tab"}
+                style={{ ["--lane-color" as string]: colorOf(entry) }}
+                onClick={() => onPick(entry.id)}
+              >
+                <span className="rt__tab-role">{entry.role}</span>
+              </button>
+            );
+          })}
+      </div>
       <div className="rt__stack-card">
         <JobCard entry={shown} color={colorOf(shown)} />
       </div>
@@ -162,6 +163,66 @@ function StackedStop({
 function milestoneColor(marker: ResumeMarker): string {
   const entry = markerEntry(marker);
   return entry ? jobColorVar(entry) : "var(--primary)";
+}
+
+/**
+ * The milestone slot: a group's milestones as tabs over one card, mirroring
+ * the job slot above it. Tabs show even for a lone milestone so the card sits
+ * in the same place every time.
+ */
+function MilestoneSlot({
+  group,
+  shown,
+  onPick,
+}: {
+  group: MilestoneGroup;
+  shown: ResumeMarker;
+  onPick: (markerId: string) => void;
+}) {
+  /* The selected tab changes as you scroll through a group; keep it in view
+     within the strip. Scrolls the strip only, never the page. */
+  const stripRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    const strip = stripRef.current;
+    const tab = strip?.querySelector<HTMLElement>('[aria-selected="true"]');
+    if (!strip || !tab) return;
+    const left = tab.offsetLeft - strip.offsetLeft;
+    if (left < strip.scrollLeft || left + tab.offsetWidth > strip.scrollLeft + strip.clientWidth) {
+      strip.scrollTo({ left: Math.max(0, left - 24), behavior: "smooth" });
+    }
+  }, [shown.id]);
+
+  return (
+    <>
+      <div
+        ref={stripRef}
+        className="rt__tabs rt__tabs--scroll"
+        role="tablist"
+        aria-label="Awards, education and training"
+      >
+        {/* Newest first, matching the job tabs. */}
+        {[...group.markers].reverse().map((marker) => {
+          const on = marker.id === shown.id;
+          return (
+            <button
+              key={marker.id}
+              type="button"
+              role="tab"
+              aria-selected={on}
+              className={on ? "rt__tab rt__tab--on" : "rt__tab"}
+              style={{ ["--lane-color" as string]: milestoneColor(marker) }}
+              onClick={() => onPick(marker.id)}
+            >
+              <span className="rt__tab-role">{marker.short ?? marker.label}</span>
+            </button>
+          );
+        })}
+      </div>
+      <div className="rt__mslot-card">
+        <MilestoneCard marker={shown} color={milestoneColor(shown)} />
+      </div>
+    </>
+  );
 }
 
 export default function ResumeTimeline() {
@@ -302,59 +363,33 @@ export default function ResumeTimeline() {
     /*
      * Awards, degrees, training and certs are short branches off the lane of
      * the job they happened during: out, a node, and back in, like a feature
-     * branch. They branch toward the middle of the rail, clear of the year
-     * labels on the left. Milestones close together share one branch with a
-     * node for each, so a busy year reads as one branch with several commits
-     * rather than a zigzag.
+     * branch. They branch to the *outside* of the lane, away from the other
+     * one, so nothing crowds the gap between the two careers. Milestones close
+     * together are one group, drawn as one node with a count; its card lists
+     * them as tabs.
      */
     const laneGap = Math.abs(trackX(width, 2) - trackX(width, 1));
-    const branchOffset = laneGap * 0.45;
-    const BEND = 10;
-    const milestones = RESUME_MARKERS.map((marker) => {
-      const laneX = trackX(width, marker.track);
+    const BEND = 8;
+    const groupNodes = MILESTONE_GROUPS.map((group) => {
+      const laneX = trackX(width, group.track);
+      const outward = group.track === PRIMARY_TRACK ? -1 : 1;
+      /* As far out as the space beside the lane allows, without reaching the
+         rail's edge. */
+      const room = outward < 0 ? laneX - 7 : width - laneX - 7;
+      const x = laneX + outward * Math.max(4, Math.min(laneGap * 0.45, room));
+      const yNew = yearToY(group.end);
+      const yOld = yearToY(group.start);
       return {
-        marker,
+        group,
         laneX,
-        x: laneX + (marker.track === PRIMARY_TRACK ? branchOffset : -branchOffset),
-        y: yearToY(marker.date),
-      };
-    }).sort((a, b) => a.marker.track - b.marker.track || a.y - b.y);
-
-    const branches: { id: string; marker: ResumeMarker; d: string }[] = [];
-    let group: typeof milestones = [];
-    const closeGroup = () => {
-      if (!group.length) return;
-      const top = group[0].y;
-      const bottom = group[group.length - 1].y;
-      const { laneX, x } = group[0];
-      branches.push({
-        id: group[0].marker.id,
-        /* Colored by its oldest node: the job the branch leaves from. */
-        marker: group[group.length - 1].marker,
+        x,
+        y: (yNew + yOld) / 2,
         d:
-          `M ${laneX} ${bottom + BEND} ` +
-          `C ${laneX} ${bottom + BEND * 0.4}, ${x} ${bottom + BEND * 0.6}, ${x} ${bottom} ` +
-          `L ${x} ${top} ` +
-          `C ${x} ${top - BEND * 0.6}, ${laneX} ${top - BEND * 0.4}, ${laneX} ${top - BEND}`,
-      });
-      group = [];
-    };
-    for (const m of milestones) {
-      const last = group[group.length - 1];
-      if (last && (last.marker.track !== m.marker.track || m.y - last.y > 2 * BEND + 4)) {
-        closeGroup();
-      }
-      group.push(m);
-    }
-    closeGroup();
-
-    /* Tap targets for milestones on one branch are trimmed so neighbours a
-       few pixels apart don't cover each other. */
-    const milestoneTargets = milestones.map((m, i) => {
-      const gaps = [milestones[i - 1], milestones[i + 1]]
-        .filter((o) => o && o.x === m.x)
-        .map((o) => Math.abs(o!.y - m.y));
-      return { ...m, hitHeight: Math.max(4, Math.min(14, ...gaps)) };
+          `M ${laneX} ${yOld + BEND} ` +
+          `C ${laneX} ${yOld + BEND * 0.4}, ${x} ${yOld + BEND * 0.6}, ${x} ${yOld} ` +
+          `L ${x} ${yNew} ` +
+          `C ${x} ${yNew - BEND * 0.6}, ${laneX} ${yNew - BEND * 0.4}, ${laneX} ${yNew - BEND}`,
+      };
     });
 
     /** Read a rail position back as a date. Newest is at the top. */
@@ -430,8 +465,7 @@ export default function ResumeTimeline() {
 
     return {
       nodes,
-      milestones: milestoneTargets,
-      branches,
+      groupNodes,
       paths,
       branchSegments,
       primarySegments,
@@ -479,16 +513,16 @@ export default function ResumeTimeline() {
       : active.entry;
   const activeEntryIds = new Set(activeEntries.map((e) => e.id));
 
-  /** Where on the stop scale the marker crosses each milestone. */
-  const milestoneRaw = React.useMemo(() => {
+  /** Where on the stop scale the marker crosses each milestone group's node. */
+  const groupRaw = React.useMemo(() => {
     const out = new Map<string, number>();
     if (!geometry || !anchors) return out;
-    for (const m of geometry.milestones) {
+    for (const node of geometry.groupNodes) {
       for (let i = 0; i < stops.length; i++) {
         const a = anchors[i];
         const b = anchors[i + 1];
-        if (b > a && m.y >= a && m.y <= b) {
-          out.set(m.marker.id, i + (m.y - a) / (b - a));
+        if (b > a && node.y >= a && node.y <= b) {
+          out.set(node.group.id, i + (node.y - a) / (b - a));
           break;
         }
       }
@@ -496,19 +530,45 @@ export default function ResumeTimeline() {
     return out;
   }, [geometry, anchors, stops.length]);
 
-  /* Milestones near the scroll date, newest first so a card you have just
-     scrolled to arrives below the ones already up. */
-  const visibleMilestones =
-    enhanced && markerYear !== null
-      ? RESUME_MARKERS.filter((marker) => {
-          const raw = milestoneRaw.get(marker.id);
-          return (
-            Math.abs(markerYear - marker.date) <= NEARBY_YEARS ||
-            (raw !== undefined && Math.abs(scrollRaw - raw) <= MIN_DWELL)
-          );
-        })
-      : [];
-  const visibleMilestoneIds = new Set(visibleMilestones.map((m) => m.id));
+  /*
+   * The group near the scroll date, if any: within three months of its span,
+   * or close in scroll terms to its node. If two qualify, the nearer in time.
+   */
+  const activeGroup = React.useMemo(() => {
+    if (!enhanced || markerYear === null) return null;
+    let best: { group: MilestoneGroup; distance: number } | null = null;
+    for (const group of MILESTONE_GROUPS) {
+      const distance = Math.max(0, group.start - markerYear, markerYear - group.end);
+      const raw = groupRaw.get(group.id);
+      const near =
+        distance <= NEARBY_YEARS || (raw !== undefined && Math.abs(scrollRaw - raw) <= MIN_DWELL);
+      if (near && (!best || distance < best.distance)) best = { group, distance };
+    }
+    return best?.group ?? null;
+  }, [enhanced, markerYear, groupRaw, scrollRaw]);
+
+  /* Keep the last group on hand so the slot fades out with its content rather
+     than going blank first. */
+  const [slotGroup, setSlotGroup] = React.useState<MilestoneGroup | null>(null);
+  React.useEffect(() => {
+    if (activeGroup) setSlotGroup(activeGroup);
+  }, [activeGroup]);
+  const groupInSlot = activeGroup ?? slotGroup;
+
+  /** A clicked milestone tab; otherwise the one nearest the scroll date shows. */
+  const [milestonePick, setMilestonePick] = React.useState<{
+    group: string;
+    marker: string;
+  } | null>(null);
+  const shownMilestone = groupInSlot
+    ? ((milestonePick?.group === groupInSlot.id
+        ? groupInSlot.markers.find((m) => m.id === milestonePick.marker)
+        : undefined) ??
+      [...groupInSlot.markers].sort(
+        (a, b) =>
+          Math.abs(a.date - (markerYear ?? a.date)) - Math.abs(b.date - (markerYear ?? b.date))
+      )[0])
+    : null;
 
   /* Dot targets are capped to the gap between the two lanes so a service dot
      and a civilian one that start weeks apart never cover each other. On a
@@ -558,9 +618,8 @@ export default function ResumeTimeline() {
 
                   {geometry.ticks.map((tick) => {
                     const tickY = geometry.yearToY(tick);
-                    /* The date riding the marker sits in the same column as the
-                       tick labels, so a tick it is passing steps aside. */
-                    const covered = Math.abs(tickY - markerY) < 16;
+                    /* Right-aligned at the rail's far edge, leaving the left of
+                       the rail for milestone branches. */
                     return (
                       <g key={tick}>
                         <line
@@ -571,10 +630,10 @@ export default function ResumeTimeline() {
                           className="rt__tick-line"
                         />
                         <text
-                          x={2}
+                          x={rail.width - 2}
                           y={tickY - 3}
+                          textAnchor="end"
                           className="rt__tick-label"
-                          opacity={covered ? 0 : undefined}
                         >
                           {tick}
                         </text>
@@ -604,16 +663,16 @@ export default function ResumeTimeline() {
                             stroke={colorOf(segment.entry)}
                           />
                         ))}
-                        {geometry.branches.map((branch) => (
+                        {geometry.groupNodes.map((node) => (
                           <path
-                            key={branch.id}
+                            key={node.group.id}
                             className={
                               lit
                                 ? "rt__line rt__line--milestone"
                                 : "rt__line rt__line--milestone rt__line--dim"
                             }
-                            d={branch.d}
-                            stroke={milestoneColor(branch.marker)}
+                            d={node.d}
+                            stroke={milestoneColor(node.group.markers[0])}
                           />
                         ))}
                       </>
@@ -640,22 +699,37 @@ export default function ResumeTimeline() {
                     />
                   )}
 
-                  {geometry.milestones.map(({ marker, x, y }) => {
-                    const on = visibleMilestoneIds.has(marker.id);
+                  {geometry.groupNodes.map(({ group, x, y }) => {
+                    const on = activeGroup?.id === group.id;
                     const passed = y <= markerY;
-                    const color = milestoneColor(marker);
-                    const r = on ? 6 : 4.5;
+                    const color = milestoneColor(group.markers[0]);
+                    const count = group.markers.length;
+                    /* A group shows its count; a lone milestone is a plain,
+                       smaller diamond. */
+                    const r = count > 1 ? 8.5 : on ? 6 : 5;
                     return (
-                      <path
-                        key={marker.id}
-                        d={`M ${x} ${y - r} L ${x + r} ${y} L ${x} ${y + r} L ${x - r} ${y} Z`}
-                        fill={on || passed ? color : "var(--background)"}
-                        stroke={color}
-                        strokeWidth={2}
-                        strokeLinejoin="round"
-                        className="rt__milestone-node"
-                        opacity={on || passed ? 1 : 0.7}
-                      />
+                      <g key={group.id} className="rt__milestone-node">
+                        <path
+                          d={`M ${x} ${y - r} L ${x + r} ${y} L ${x} ${y + r} L ${x - r} ${y} Z`}
+                          fill={on || passed ? color : "var(--background)"}
+                          stroke={color}
+                          strokeWidth={on ? 2.5 : 2}
+                          strokeLinejoin="round"
+                          opacity={on || passed ? 1 : 0.75}
+                        />
+                        {count > 1 && (
+                          <text
+                            x={x}
+                            y={y}
+                            textAnchor="middle"
+                            dominantBaseline="central"
+                            className="rt__milestone-count"
+                            fill={on || passed ? "var(--background)" : color}
+                          >
+                            {count}
+                          </text>
+                        )}
+                      </g>
                     );
                   })}
 
@@ -711,26 +785,39 @@ export default function ResumeTimeline() {
               {enhanced &&
                 geometry &&
                 rail &&
-                geometry.milestones.map(({ marker, x, y, hitHeight }) => {
-                  const raw = milestoneRaw.get(marker.id);
+                geometry.groupNodes.map(({ group, x, y, laneX }) => {
+                  const raw = groupRaw.get(group.id);
                   if (raw === undefined) return null;
-                  const w = Math.min(14, jumpWidth * 0.6);
+                  const size = group.markers.length > 1 ? 20 : 14;
+                  /* Centred on the node, but never reaching across the lane:
+                     on a narrow rail the node is only a few pixels out, and a
+                     job's dot can sit right beside it. */
+                  const left =
+                    x < laneX
+                      ? Math.min(x - size / 2, laneX - 3 - size)
+                      : Math.max(x - size / 2, laneX + 3);
+                  const newest = group.markers[group.markers.length - 1];
                   return (
                     <button
-                      key={marker.id}
+                      key={group.id}
                       type="button"
                       className="rt__jump rt__jump--milestone"
                       style={{
                         top: y,
-                        left: x - w / 2,
-                        width: w,
-                        height: hitHeight,
-                        ["--label-shift" as string]: `${rail.width - x - w / 2 + 14}px`,
+                        left,
+                        width: size,
+                        height: size,
+                        ["--label-shift" as string]: `${rail.width - left - size + 14}px`,
                       }}
-                      onClick={() => scrollToRaw(settledRaw(raw))}
+                      onClick={() => {
+                        setMilestonePick(null);
+                        scrollToRaw(settledRaw(raw));
+                      }}
                     >
                       <span className="rt__jump-label">
-                        {marker.label} · {marker.dateLabel}
+                        {group.markers.length > 1
+                          ? `${group.markers.length} milestones · ${Math.floor(group.start)}–${Math.floor(group.end)}`
+                          : `${newest.label} · ${newest.dateLabel}`}
                       </span>
                     </button>
                   );
@@ -821,16 +908,22 @@ export default function ResumeTimeline() {
                 })}
               </ol>
 
-              {/* Milestones near the scroll date, beneath the job. Appearing
-                  takes room from the job card, which shifts up and scrolls if
-                  it no longer fits; this pane is capped and scrolls too. */}
+              {/* The milestone slot: a fixed space beneath the job slot, so
+                  milestones fade in and out in place and nothing moves. */}
               {enhanced && (
-                <div className="rt__milestones" aria-live="polite">
-                  {visibleMilestones.map((m) => (
-                    <div key={m.id} className="rt__milestone">
-                      <MilestoneCard marker={m} color={milestoneColor(m)} />
-                    </div>
-                  ))}
+                <div
+                  className={activeGroup ? "rt__mslot rt__mslot--on" : "rt__mslot"}
+                  aria-hidden={activeGroup ? undefined : true}
+                >
+                  {groupInSlot && shownMilestone && (
+                    <MilestoneSlot
+                      group={groupInSlot}
+                      shown={shownMilestone}
+                      onPick={(markerId) =>
+                        setMilestonePick({ group: groupInSlot.id, marker: markerId })
+                      }
+                    />
+                  )}
                 </div>
               )}
             </div>

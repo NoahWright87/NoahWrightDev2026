@@ -2,8 +2,9 @@
 
 .rt {
   --rt-top: 76px;
-  /* Wide enough for two lanes plus the year ticks down the left edge. */
-  --rt-rail-w: 152px;
+  /* The date gutter on the left, two lanes with room for milestone branches
+     on their outer sides, and the year ticks down the right edge. */
+  --rt-rail-w: 200px;
   position: relative;
 }
 
@@ -181,10 +182,17 @@
   min-width: 0;
 }
 
+/* Two fixed slots: the job on top, milestones beneath. Their sizes never
+   change, so cards coming and going fade in place instead of pushing anything
+   around. */
 .rt--enhanced .rt__stage {
   height: 100%;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  /* `minmax(0, 1fr)`, not the implicit `auto`: an auto column grows to fit a
+     tab strip's full single-row width and pushes the cards off a phone. */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 14px;
 }
 
 .rt__stops {
@@ -197,7 +205,6 @@
 
 .rt--enhanced .rt__stops {
   position: relative;
-  flex: 1;
   min-height: 0;
   display: block;
 }
@@ -234,20 +241,38 @@
   gap: 8px;
   width: 100%;
   min-height: 0;
-  /* The stack fills the pane, but its contents centre inside it, so a card
-     short enough to fit keeps its tab strip directly above it instead of the
-     strip riding at the top of the pane with a gap below. */
-  justify-content: center;
+  /* Top-aligned in its slot, so the tab strip and the card's heading sit in
+     the same place for every job. */
+  justify-content: flex-start;
 }
 
 .rt--enhanced .rt__stop--stacked > * {
   overflow: visible;
 }
 
+/* One row, always: extra tabs scroll sideways rather than wrapping, so the
+   strip is the same height whether it holds one tab or five. */
 .rt__tabs {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 6px;
+  flex: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.rt__tabs::-webkit-scrollbar {
+  display: none;
+}
+
+/* A strip that can outrun its slot fades at the right edge, so a cut-off tab
+   reads as "more this way" rather than as clipped. */
+.rt__tabs--scroll {
+  mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  padding-right: 28px;
+}
+
+.rt__tab {
   flex: none;
 }
 
@@ -317,8 +342,9 @@
   width: 100%;
 }
 
-/* ---- milestones: a second pane beneath the job ---- */
+/* ---- milestones ---- */
 
+/* The plain fallback list shows a job's milestones under its card. */
 .rt__milestones {
   display: grid;
   gap: 8px;
@@ -329,26 +355,35 @@
   display: none;
 }
 
-/* Capped, so a run of milestones can't push the job card off the pane; past
-   the cap it scrolls. The job card above gives way first and scrolls too. */
-.rt--enhanced .rt__milestones {
+/* The pinned view's milestone slot. It fades as a whole and keeps its last
+   content while fading out, so it never goes blank before it goes away. */
+.rt__mslot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 220ms ease, visibility 0s linear 220ms;
+}
+
+.rt__mslot--on {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 220ms ease;
+}
+
+.rt__mslot-card {
   flex: 0 1 auto;
-  max-height: 46%;
   min-height: 0;
   overflow-y: auto;
   scrollbar-width: thin;
-  padding-top: 10px;
 }
 
-.rt__milestone {
-  animation: rt-milestone-in 220ms ease-out both;
-}
-
-@keyframes rt-milestone-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
+.rt__milestone-count {
+  font-size: 9.5px;
+  font-weight: 800;
+  pointer-events: none;
 }
 
 /* ---- narrow screens: thin rail, effect intact ---- */
@@ -390,7 +425,7 @@
     transition: none;
   }
 
-  .rt__milestone {
-    animation: none;
+  .rt__mslot {
+    transition: none;
   }
 }

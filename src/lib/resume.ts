@@ -64,6 +64,8 @@ export interface ResumeMarker {
   date: number;
   dateLabel: string;
   label: string;
+  /** Shorter name for its tab, where `label` is long. */
+  short?: string;
   /** Who awarded or granted it. */
   issuer?: string;
   /** One or two lines, written for a civilian reader. */
@@ -317,6 +319,7 @@ export const RESUME_MARKERS: ResumeMarker[] = [
     date: 2020.05,
     dateLabel: "Feb 2020",
     label: "Air Force Commendation Medal",
+    short: "Commendation Medal",
     issuer: "42d Force Support Squadron",
     detail:
       "For four years teaching Airman Leadership School: 4,032 hours of curriculum, 315 graduates, and Canvas LMS adopted by 67 schoolhouses.",
@@ -340,6 +343,7 @@ export const RESUME_MARKERS: ResumeMarker[] = [
     date: 2017.5,
     dateLabel: "2017",
     label: "A.S. Instructor of Technology & Military Science",
+    short: "A.S. Instructional Tech",
     issuer: "Community College of the Air Force",
     detail: "The Air Force's accredited community college.",
     kind: "education",
@@ -369,6 +373,7 @@ export const RESUME_MARKERS: ResumeMarker[] = [
     date: 2016.1,
     dateLabel: "Feb 2016",
     label: "Air Force Achievement Medal",
+    short: "Achievement Medal",
     issuer: "Air University",
     detail:
       "For four years as a programmer: 190+ critical vulnerabilities found, a 645K-line framework upgrade, and $220K+ saved.",
@@ -391,6 +396,7 @@ export const RESUME_MARKERS: ResumeMarker[] = [
     date: 2015.7,
     dateLabel: "2015",
     label: "CompTIA Security+",
+    short: "Security+",
     issuer: "CompTIA",
     detail: "Industry-standard security certification, required for the role.",
     kind: "cert",
@@ -401,6 +407,7 @@ export const RESUME_MARKERS: ResumeMarker[] = [
     date: 2015.45,
     dateLabel: "2015",
     label: "A.S. Computer Science Technology",
+    short: "A.S. CS Technology",
     issuer: "Community College of the Air Force",
     detail: "The Air Force's accredited community college.",
     kind: "education",
@@ -480,6 +487,44 @@ export function jobColorVar(entry: ResumeEntry): string {
   const shade = Math.min(role, 3);
   return `var(--job-e${g}-${shade}, var(--job-e${g}-0, var(--primary)))`;
 }
+
+/**
+ * Milestones close together in time, drawn as one node on the rail and shown
+ * as tabs on one card. Without grouping, the six from 2015–16 sit a few pixels
+ * apart on a to-scale rail and bleed together.
+ */
+export interface MilestoneGroup {
+  id: string;
+  track: TrackId;
+  /** Oldest first. */
+  markers: ResumeMarker[];
+  start: number;
+  end: number;
+}
+
+/** Milestones on one lane this close (in years) to the previous share a group. */
+const GROUP_GAP = 0.45;
+
+export const MILESTONE_GROUPS: MilestoneGroup[] = (() => {
+  const sorted = [...RESUME_MARKERS].sort((a, b) => a.track - b.track || a.date - b.date);
+  const groups: MilestoneGroup[] = [];
+  for (const marker of sorted) {
+    const last = groups[groups.length - 1];
+    if (last && last.track === marker.track && marker.date - last.end <= GROUP_GAP) {
+      last.markers.push(marker);
+      last.end = marker.date;
+    } else {
+      groups.push({
+        id: marker.id,
+        track: marker.track,
+        markers: [marker],
+        start: marker.date,
+        end: marker.date,
+      });
+    }
+  }
+  return groups;
+})();
 
 /** The job a marker falls inside, so it can borrow that job's color. */
 export function markerEntry(marker: ResumeMarker): ResumeEntry | undefined {

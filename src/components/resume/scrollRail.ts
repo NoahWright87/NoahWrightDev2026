@@ -19,9 +19,17 @@ export const PACING_VH = 100;
 /* Rail geometry                                                       */
 /* ------------------------------------------------------------------ */
 
-/** Track centers sit proportionally inside the rail, so any rail width works. */
+/**
+ * Width kept clear at the rail's left edge for the date riding the scroll
+ * marker, so it never covers a lane or a milestone branching off one. Only on
+ * a wide rail; a phone's rail is too narrow to spare it.
+ */
+export const READOUT_GUTTER = 64;
+
+/** Track centers sit proportionally in the rail, right of the date gutter. */
 export function trackX(railWidth: number, track: number): number {
-  return railWidth * (0.3 + (track - 1) * 0.4);
+  const gutter = railWidth > 120 ? READOUT_GUTTER : 0;
+  return gutter + (railWidth - gutter) * (0.3 + (track - 1) * 0.4);
 }
 
 /**
