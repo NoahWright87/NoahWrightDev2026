@@ -1,0 +1,188 @@
+/* A tab strip over a card — the job slot and the milestone slot alike. */
+
+.ts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  height: 100%;
+  transition: opacity 220ms ease, visibility 0s linear 0s;
+}
+
+.ts--off {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 220ms ease, visibility 0s linear 220ms;
+}
+
+/* ---- tabs ---- */
+
+/* One row, always: extra tabs scroll sideways rather than wrapping, so the
+   strip is the same height whether it holds one tab or five. The right edge
+   fades so a cut-off tab reads as "more this way". */
+.ts__tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  flex: none;
+  min-height: 32px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-right: 28px;
+  mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+}
+
+.ts__tabs::-webkit-scrollbar {
+  display: none;
+}
+
+/* Spacing is a margin, not the strip's `gap`, so a leaving tab can take its
+   space with it as it closes. */
+.ts__tab {
+  flex: none;
+  display: flex;
+  align-items: center;
+  max-width: 22rem;
+  margin-right: 6px;
+  padding: 5px 12px;
+  border: 1px solid color-mix(in srgb, var(--tab-color) 40%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  overflow: hidden;
+  opacity: 0.7;
+  transition:
+    opacity 140ms ease,
+    background 140ms ease,
+    border-color 140ms ease;
+  animation: ts-tab-in 260ms ease-out both;
+}
+
+.ts__tab:hover {
+  opacity: 1;
+  background: color-mix(in srgb, var(--tab-color) 12%, transparent);
+}
+
+.ts__tab:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+.ts__tab--on {
+  opacity: 1;
+  background: color-mix(in srgb, var(--tab-color) 18%, transparent);
+  border-color: var(--tab-color);
+}
+
+/* Opens from nothing, so the tabs after it ease aside rather than jump. */
+@keyframes ts-tab-in {
+  from {
+    opacity: 0;
+    max-width: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-width: 0;
+    transform: translateX(-8px);
+  }
+}
+
+/* And closes back to nothing on the way out. */
+.ts__tab--leaving {
+  pointer-events: none;
+  animation: ts-tab-out 260ms ease-in both;
+}
+
+@keyframes ts-tab-out {
+  to {
+    opacity: 0;
+    max-width: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-width: 0;
+    transform: translateX(-8px);
+  }
+}
+
+.ts__tab-label {
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- cards ---- */
+
+/* Cards stack in one grid cell, so the outgoing and incoming card overlap
+   exactly while they crossfade. */
+.ts__cards {
+  display: grid;
+  /* One cell exactly the space left under the tabs. An implicit `auto` row
+     would grow to fit a tall card instead, and the card would spill out of
+     the slot rather than scroll inside it. */
+  grid-template-rows: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.ts__card {
+  grid-area: 1 / 1;
+  min-height: 0;
+  /* A card taller than its slot scrolls inside it. Overscroll chains, so a
+     swipe that reaches the end of the card carries on down the timeline. */
+  overflow-y: auto;
+  scrollbar-width: thin;
+  align-self: start;
+  max-height: 100%;
+}
+
+/* Unpinned, there is no slot height to fit, so the card is its full height. */
+.rt__list-item .ts__cards {
+  grid-template-rows: auto;
+}
+
+/* Staggered rather than a true cross-dissolve: the old card is mostly gone
+   before the new one is mostly in. */
+.ts__card--in {
+  animation: ts-card-in 200ms ease-out 90ms both;
+}
+
+.ts__card--leaving {
+  pointer-events: none;
+  animation: ts-card-out 160ms ease-in both;
+}
+
+@keyframes ts-card-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes ts-card-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ts,
+  .ts--off,
+  .ts__tab {
+    transition: none;
+  }
+
+  .ts__tab,
+  .ts__tab--leaving,
+  .ts__card--in,
+  .ts__card--leaving {
+    animation: none;
+  }
+
+  .ts__tab--leaving,
+  .ts__card--leaving {
+    display: none;
+  }
+}

@@ -20,6 +20,10 @@
   top: var(--rt-top);
   height: calc(100svh - var(--rt-top) - 18px);
   align-items: stretch;
+  /* Exactly the pane's height. The implicit `auto` row grows to fit a tall
+     card, which stretches the slots past the pane and moves the milestone
+     slot whenever the job card changes. */
+  grid-template-rows: minmax(0, 1fr);
 }
 
 /* ---- rail ---- */
@@ -195,189 +199,27 @@
   gap: 14px;
 }
 
-.rt__stops {
+.rt__slot {
+  min-height: 0;
+}
+
+/* The plain fallback: each job's slots in order, no pinning. */
+.rt__list {
+  min-width: 0;
   margin: 0;
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 26px;
+  gap: 28px;
 }
 
-.rt--enhanced .rt__stops {
-  position: relative;
-  min-height: 0;
-  display: block;
-}
-
-/* `stretch`, not `center`: a card taller than the pinned pane must be clipped
-   by the pane so `.rt__stack-card` can scroll it. Centering instead lets the
-   card grow past the pane in both directions, which on a phone slides the tab
-   strip up behind the site header and drops the last lines off the bottom —
-   content with no way to reach it. */
-.rt--enhanced .rt__stop {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: stretch;
-  gap: 16px;
-  /* Opacity is set inline from scroll position; no transition, or it would
-     lag behind the scroll it is meant to track. */
-}
-
-.rt--enhanced .rt__stop--gone {
-  visibility: hidden;
-}
-
-.rt__stop {
-  display: flex;
-  gap: 16px;
-}
-
-/* ---- stacked stop: one card on top, concurrent jobs behind it as tabs ---- */
-
-.rt__stack {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-  min-height: 0;
-  /* Top-aligned in its slot, so the tab strip and the card's heading sit in
-     the same place for every job. */
-  justify-content: flex-start;
-}
-
-.rt--enhanced .rt__stop--stacked > * {
-  overflow: visible;
-}
-
-/* One row, always: extra tabs scroll sideways rather than wrapping, so the
-   strip is the same height whether it holds one tab or five. */
-.rt__tabs {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 6px;
-  flex: none;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.rt__tabs::-webkit-scrollbar {
-  display: none;
-}
-
-/* A strip that can outrun its slot fades at the right edge, so a cut-off tab
-   reads as "more this way" rather than as clipped. */
-.rt__tabs--scroll {
-  mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
-  padding-right: 28px;
-}
-
-.rt__tab {
-  flex: none;
-}
-
-.rt__tab {
-  display: flex;
-  align-items: center;
-  padding: 5px 12px;
-  border: 1px solid color-mix(in srgb, var(--lane-color) 40%, transparent);
-  border-radius: 999px;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  opacity: 0.7;
-  transition: opacity 140ms ease, background 140ms ease;
-}
-
-.rt__tab:hover {
-  opacity: 1;
-  background: color-mix(in srgb, var(--lane-color) 12%, transparent);
-}
-
-.rt__tab:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
-
-.rt__tab--on {
-  opacity: 1;
-  background: color-mix(in srgb, var(--lane-color) 18%, transparent);
-  border-color: var(--lane-color);
-}
-
-/* The role name is all a tab carries, so it gets the room to say itself in
-   full where there is any — the longest here is 34 characters. It still
-   truncates rather than wraps, so the strip stays one row deep. */
-.rt__tab-role {
-  font-size: 0.8rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 36ch;
-}
-
-.rt__stack-card {
-  /* Shrink but never grow: the box is the card's own height while it fits, so
-     the stack can centre it as a unit with its tabs; past that it gives way to
-     the pane and scrolls. */
-  flex: 0 1 auto;
-  min-height: 0;
-  /* Only scrolls when the card is taller than the pane, which on a phone a few
-     of them are. Overscroll chains, so a swipe that reaches the end of a card
-     carries on scrolling the timeline rather than dead-ending. */
-  overflow-y: auto;
-  scrollbar-width: thin;
-  display: flex;
-  /* `safe` matters: plain `center` on an item taller than its box pushes the
-     top out the way scrolling cannot reach, so the card's heading is cut off
-     and unrecoverable. `safe center` centers a card that fits and falls back
-     to the top for one that does not. The plain value stays first for browsers
-     that would throw out the whole declaration. */
-  align-items: center;
-  align-items: safe center;
-}
-
-.rt__stack-card > * {
-  width: 100%;
-}
-
-/* ---- milestones ---- */
-
-/* The plain fallback list shows a job's milestones under its card. */
-.rt__milestones {
+.rt__list-item {
   display: grid;
-  gap: 8px;
-  align-content: start;
+  gap: 12px;
 }
 
-.rt__milestones:empty {
-  display: none;
-}
-
-/* The pinned view's milestone slot. It fades as a whole and keeps its last
-   content while fading out, so it never goes blank before it goes away. */
-.rt__mslot {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-height: 0;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 220ms ease, visibility 0s linear 220ms;
-}
-
-.rt__mslot--on {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 220ms ease;
-}
-
-.rt__mslot-card {
-  flex: 0 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  scrollbar-width: thin;
+.rt__list-item .ts {
+  height: auto;
 }
 
 .rt__milestone-count {
@@ -425,7 +267,4 @@
     transition: none;
   }
 
-  .rt__mslot {
-    transition: none;
-  }
 }

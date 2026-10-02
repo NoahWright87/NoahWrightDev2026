@@ -22,6 +22,7 @@ import * as React from "react";
 import { usePrefersReducedMotion } from "@noahwright/design";
 import { JobCard } from "./JobCard";
 import { MilestoneCard } from "./MilestoneCard";
+import { TabbedSlot, type SlotTab } from "./TabbedSlot";
 import {
   ENTRIES_CHRONOLOGICAL,
   ENTRIES_NEWEST_FIRST,
@@ -102,126 +103,47 @@ function entriesFor(stop: Stop, year: number | null): ResumeEntry[] {
   return [stop.entry, ...jobsAround(year).filter((e) => e.id !== stop.entry.id)];
 }
 
-/**
- * A stop's job, with anything else running around the same time as tabs —
- * a concurrent posting, or the job just before or after — so it is one click
- * away without ever taking the stage uninvited. `after` is rendered beneath the
- * card; the plain fallback list uses it for milestones.
- */
-function StackedStop({
-  entries,
-  shown,
-  isActiveStop,
-  colorOf,
-  onPick,
-  after,
-}: {
-  entries: ResumeEntry[];
-  shown: ResumeEntry;
-  isActiveStop: boolean;
-  colorOf: (entry: ResumeEntry) => string;
-  onPick: (entryId: string) => void;
-  after?: React.ReactNode;
-}) {
-  return (
-    <div className="rt__stack">
-      {/* Always shown, even with a single job, so the card below never moves
-          when a neighbouring job's tab comes and goes. */}
-      <div className="rt__tabs" role="tablist" aria-label="Roles around this time">
-        {/* Ordered by track, then newest first, so the strip reads the way
-            the rail does. Which one is showing is carried by the selected
-            state, not by position. */}
-        {[...entries]
-          .sort((a, b) => a.track - b.track || b.start - a.start)
-          .map((entry) => {
-            const on = entry.id === shown.id;
-            return (
-              <button
-                key={entry.id}
-                type="button"
-                role="tab"
-                aria-selected={on}
-                tabIndex={isActiveStop ? 0 : -1}
-                className={on ? "rt__tab rt__tab--on" : "rt__tab"}
-                style={{ ["--lane-color" as string]: colorOf(entry) }}
-                onClick={() => onPick(entry.id)}
-              >
-                <span className="rt__tab-role">{entry.role}</span>
-              </button>
-            );
-          })}
-      </div>
-      <div className="rt__stack-card">
-        <JobCard entry={shown} color={colorOf(shown)} />
-      </div>
-      {after}
-    </div>
-  );
-}
-
 /** Color a milestone by the job it happened during. */
 function milestoneColor(marker: ResumeMarker): string {
   const entry = markerEntry(marker);
   return entry ? jobColorVar(entry) : "var(--primary)";
 }
 
-/**
- * The milestone slot: a group's milestones as tabs over one card, mirroring
- * the job slot above it. Tabs show even for a lone milestone so the card sits
- * in the same place every time.
- */
-function MilestoneSlot({
-  group,
-  shown,
-  onPick,
-}: {
-  group: MilestoneGroup;
-  shown: ResumeMarker;
-  onPick: (markerId: string) => void;
-}) {
-  /* The selected tab changes as you scroll through a group; keep it in view
-     within the strip. Scrolls the strip only, never the page. */
-  const stripRef = React.useRef<HTMLDivElement>(null);
-  React.useEffect(() => {
-    const strip = stripRef.current;
-    const tab = strip?.querySelector<HTMLElement>('[aria-selected="true"]');
-    if (!strip || !tab) return;
-    const left = tab.offsetLeft - strip.offsetLeft;
-    if (left < strip.scrollLeft || left + tab.offsetWidth > strip.scrollLeft + strip.clientWidth) {
-      strip.scrollTo({ left: Math.max(0, left - 24), behavior: "smooth" });
-    }
-  }, [shown.id]);
+/** Job tabs, ordered by track and then newest first, as the rail reads. */
+function jobTabs(entries: ResumeEntry[]): SlotTab[] {
+  return [...entries]
+    .sort((a, b) => a.track - b.track || b.start - a.start)
+    .map((entry) => ({ id: entry.id, label: entry.role, color: jobColorVar(entry) }));
+}
 
+/** Milestone tabs, newest first to match the job tabs. */
+function milestoneTabs(markers: ResumeMarker[]): SlotTab[] {
+  return [...markers]
+    .sort((a, b) => b.date - a.date)
+    .map((marker) => ({
+      id: marker.id,
+      label: marker.short ?? marker.label,
+      color: milestoneColor(marker),
+    }));
+}
+
+/**
+ * A milestone slot that keeps its own tab selection. The plain fallback list
+ * uses it under each job; the pinned view drives its slot from scroll instead.
+ */
+function MilestonesSlot({ markers }: { markers: ResumeMarker[] }) {
+  const [pick, setPick] = React.useState<string | null>(null);
+  const tabs = milestoneTabs(markers);
+  const shown = markers.find((m) => m.id === pick) ?? markers.find((m) => m.id === tabs[0].id)!;
   return (
-    <>
-      <div
-        ref={stripRef}
-        className="rt__tabs rt__tabs--scroll"
-        role="tablist"
-        aria-label="Awards, education and training"
-      >
-        {/* Newest first, matching the job tabs. */}
-        {[...group.markers].reverse().map((marker) => {
-          const on = marker.id === shown.id;
-          return (
-            <button
-              key={marker.id}
-              type="button"
-              role="tab"
-              aria-selected={on}
-              className={on ? "rt__tab rt__tab--on" : "rt__tab"}
-              style={{ ["--lane-color" as string]: milestoneColor(marker) }}
-              onClick={() => onPick(marker.id)}
-            >
-              <span className="rt__tab-role">{marker.short ?? marker.label}</span>
-            </button>
-          );
-        })}
-      </div>
-      <div className="rt__mslot-card">
-        <MilestoneCard marker={shown} color={milestoneColor(shown)} />
-      </div>
-    </>
+    <TabbedSlot
+      tabs={tabs}
+      selectedId={shown.id}
+      onPick={setPick}
+      label="Awards, education and training"
+    >
+      <MilestoneCard marker={shown} color={milestoneColor(shown)} />
+    </TabbedSlot>
   );
 }
 
@@ -850,83 +772,60 @@ export default function ResumeTimeline() {
                 ))}
             </div>
 
-            <div className="rt__stage">
-              <ol className="rt__stops">
-                {stops.map((stop, index) => {
-                  const opacity =
-                    !enhanced
-                      ? 1
-                      : index === fade.active
-                        ? fade.activeOpacity
-                        : index === fade.next
-                          ? fade.nextOpacity
-                          : 0;
-                  const shown = opacity > 0.01;
-                  /* Outgoing cards drift up and away; incoming ones rise into
-                     place, so the handover reads as a swap, not a blink. */
-                  const leaving = index === fade.active && fade.next !== null;
-                  const drift = (1 - opacity) * 12 * (leaving ? -1 : 1);
+            {/* Two slots, the job above and milestones below, both the same
+                component. In the pinned view they hold fixed places and never
+                resize; the plain list stacks a job's slots in order. */}
+            {enhanced ? (
+              <div className="rt__stage">
+                <TabbedSlot
+                  className="rt__slot"
+                  tabs={jobTabs(activeEntries)}
+                  selectedId={selected.id}
+                  onPick={(entryId) => setTabPick({ stop: active.id, entry: entryId })}
+                  label="Roles around this time"
+                >
+                  <JobCard entry={selected} color={colorOf(selected)} />
+                </TabbedSlot>
+
+                {groupInSlot && shownMilestone ? (
+                  <TabbedSlot
+                    className="rt__slot"
+                    visible={activeGroup !== null}
+                    tabs={milestoneTabs(groupInSlot.markers)}
+                    selectedId={shownMilestone.id}
+                    onPick={(markerId) =>
+                      setMilestonePick({ group: groupInSlot.id, marker: markerId })
+                    }
+                    label="Awards, education and training"
+                  >
+                    <MilestoneCard marker={shownMilestone} color={milestoneColor(shownMilestone)} />
+                  </TabbedSlot>
+                ) : (
+                  <div className="rt__slot" aria-hidden="true" />
+                )}
+              </div>
+            ) : (
+              <ol className="rt__list">
+                {stops.map((stop) => {
+                  const markers = RESUME_MARKERS.filter(
+                    (m) => markerEntry(m)?.id === stop.entry.id
+                  );
                   return (
-                    <li
-                      key={stop.id}
-                      className={[
-                        "rt__stop",
-                        "rt__stop--stacked",
-                        enhanced && !shown && "rt__stop--gone",
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
-                      style={
-                        enhanced
-                          ? { opacity, transform: `translateY(${drift.toFixed(2)}px)` }
-                          : undefined
-                      }
-                      aria-hidden={enhanced && opacity < 0.5 ? true : undefined}
-                    >
-                      <StackedStop
-                        entries={entriesFor(stop, enhanced ? markerYear : null)}
-                        shown={stop.id === active.id ? selected : stop.entry}
-                        isActiveStop={stop.id === active.id}
-                        colorOf={colorOf}
-                        onPick={(entryId) => setTabPick({ stop: stop.id, entry: entryId })}
-                        after={
-                          /* The plain list has no pinned pane, so milestones
-                             follow the job they happened during instead. */
-                          enhanced ? null : (
-                            <div className="rt__milestones">
-                              {RESUME_MARKERS.filter(
-                                (m) => markerEntry(m)?.id === stop.entry.id
-                              ).map((m) => (
-                                <MilestoneCard key={m.id} marker={m} color={milestoneColor(m)} />
-                              ))}
-                            </div>
-                          )
-                        }
-                      />
+                    <li key={stop.id} className="rt__list-item">
+                      <TabbedSlot
+                        tabs={jobTabs([stop.entry])}
+                        selectedId={stop.entry.id}
+                        onPick={() => {}}
+                        label="Role"
+                      >
+                        <JobCard entry={stop.entry} color={colorOf(stop.entry)} />
+                      </TabbedSlot>
+                      {markers.length > 0 && <MilestonesSlot markers={markers} />}
                     </li>
                   );
                 })}
               </ol>
-
-              {/* The milestone slot: a fixed space beneath the job slot, so
-                  milestones fade in and out in place and nothing moves. */}
-              {enhanced && (
-                <div
-                  className={activeGroup ? "rt__mslot rt__mslot--on" : "rt__mslot"}
-                  aria-hidden={activeGroup ? undefined : true}
-                >
-                  {groupInSlot && shownMilestone && (
-                    <MilestoneSlot
-                      group={groupInSlot}
-                      shown={shownMilestone}
-                      onPick={(markerId) =>
-                        setMilestonePick({ group: groupInSlot.id, marker: markerId })
-                      }
-                    />
-                  )}
-                </div>
-              )}
-            </div>
+            )}
           </div>
     </div>
   );
