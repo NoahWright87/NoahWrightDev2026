@@ -17,15 +17,10 @@ the PDF, not design.
       worded that way at Noah's request for those keywords; the one-pager
       doesn't mention the dashboard.
 - [ ] **Review `RESUME_SUMMARY`**, the one line of prose at the top.
-- [ ] **Add the PDF.** The "Download PDF" button points at
-      `SITE.resumePdfUrl` (`/noah-wright-resume-2026.pdf`); the file is not in
-      the repo yet, so the button 404s. Drop it at
-      `public/noah-wright-resume-2026.pdf` (see `public/RESUME_PLACEHOLDER.md`).
-      `netlify.toml` already forces `Content-Disposition: attachment` for
-      `/noah-wright-resume-*.pdf`. Noah's one-pager Google Doc is the obvious
-      source; exporting it needs his OK.
-- [ ] Test the download across desktop Chrome, desktop Safari or Firefox, and
-      mobile Chrome once the file exists.
+- [ ] **PDF and site disagree on one figure.** The PDF says "Fixed 262
+      security risks"; the site follows the Achievement Medal citation (190+
+      critical vulnerabilities found, 72 coding flaws fixed). Worth matching on
+      the next export.
 - [ ] Recheck which cards overflow a 390px phone after each content pass.
 
 ## Ideas (not started)

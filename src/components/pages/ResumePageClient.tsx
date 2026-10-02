@@ -17,7 +17,7 @@ export default function ResumePageClient() {
             <a
               className="resume__download"
               href={SITE.resumePdfUrl}
-              download
+              download={SITE.resumePdfFilename}
               aria-label="Download resume as PDF"
             >
               <Button variant="solid" color="primary">
@@ -41,7 +41,7 @@ export default function ResumePageClient() {
           <a
             className="resume__download"
             href={SITE.resumePdfUrl}
-            download
+            download={SITE.resumePdfFilename}
             aria-label="Download resume as PDF"
           >
             <Button variant="solid" color="primary">
