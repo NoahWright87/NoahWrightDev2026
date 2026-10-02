@@ -244,9 +244,9 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     summary: "Scheduling and routing for clinicians who visit members at home.",
     highlights: [
       "Built a route optimization service on open-source OR-Tools, replacing a GCP service: $30K/mo saved, 10% less drive time",
-      "Championed flag-driven development, with reusable packages and processes that made feature flags easy",
+      "Drove feature flag adoption with a LaunchDarkly wrapper, enabling phased rollouts and reducing MTTR",
     ],
-    skills: ["Google OR-Tools", "Feature Flags"],
+    skills: ["Google OR-Tools", "LaunchDarkly", "Feature Flags"],
   },
   {
     id: "signify-manager",
