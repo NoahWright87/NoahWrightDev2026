@@ -14,11 +14,15 @@ export const SITE = {
   github: "https://github.com/NoahWright87",
   resumeUrl: "/resume",
   /**
-   * Downloadable resume. The file itself is not in the repo yet — drop it at
-   * `public/noah-wright-resume-2026.pdf` (see `public/RESUME_PLACEHOLDER.md`).
-   * `netlify.toml` already forces `Content-Disposition: attachment` for `/*.pdf`.
+   * Downloadable one-page resume, exported from Noah's Google Doc. Undated on
+   * purpose: replace the file in place when the resume changes, so links and
+   * bookmarks keep working and a downloaded copy never looks stale by name.
+   * Export it without the phone number: the file is public, and a number on a
+   * public page gets scraped.
    */
-  resumePdfUrl: "/noah-wright-resume-2026.pdf",
+  resumePdfUrl: "/noah-wright-resume.pdf",
+  /** The name a recruiter's browser saves it under. */
+  resumePdfFilename: "Noah-Wright-Resume.pdf",
 } as const;
 
 export const NAV_ITEMS = [

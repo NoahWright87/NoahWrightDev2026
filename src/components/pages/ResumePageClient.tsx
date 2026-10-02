@@ -1,16 +1,10 @@
 "use client";
 
-import { Container, Heading, Text, Button, Link, Pill } from "@noahwright/design";
+import { Container, Heading, Text, Button, Link } from "@noahwright/design";
 import SiteShell from "@/components/SiteShell";
 import ResumeTimeline from "@/components/resume/ResumeTimeline";
 import { SITE } from "@/lib/site";
-import {
-  RESUME_MARKERS,
-  RESUME_SKILL_GROUPS,
-  RESUME_SUMMARY,
-  jobColorVar,
-  markerEntry,
-} from "@/lib/resume";
+import { RESUME_SUMMARY } from "@/lib/resume";
 import "./resume-page.css";
 
 export default function ResumePageClient() {
@@ -23,7 +17,7 @@ export default function ResumePageClient() {
             <a
               className="resume__download"
               href={SITE.resumePdfUrl}
-              download
+              download={SITE.resumePdfFilename}
               aria-label="Download resume as PDF"
             >
               <Button variant="solid" color="primary">
@@ -39,56 +33,23 @@ export default function ResumePageClient() {
         <ResumeTimeline />
       </Container>
 
+      {/* A second chance to grab the one-pager after scrolling the whole
+          history. The full detail lives in the timeline above; the PDF is the
+          summary. */}
       <Container padding="lg">
-        <Container direction="vertical" itemSpacing="md" padding="none">
-          <Heading level={2}>Education, Awards &amp; Certifications</Heading>
-          <ul className="resume__markers">
-            {RESUME_MARKERS.map((marker) => {
-              const entry = markerEntry(marker);
-              return (
-                <li key={marker.id} className="resume__marker">
-                  <span
-                    className="resume__marker-dot"
-                    style={{ background: entry ? jobColorVar(entry) : "var(--primary)" }}
-                    aria-hidden="true"
-                  />
-                  <div>
-                    <div className="resume__marker-head">
-                      <strong>{marker.label}</strong>
-                      <span className="resume__marker-date">{marker.dateLabel}</span>
-                    </div>
-                    <Text tone="muted">{marker.detail}</Text>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        </Container>
-      </Container>
-
-      <Container padding="lg">
-        <Container direction="vertical" itemSpacing="md" padding="none">
-          <Heading level={2}>Skills</Heading>
-          {RESUME_SKILL_GROUPS.map((group) => (
-            <Container key={group.category} direction="vertical" itemSpacing="xs" padding="none">
-              <Heading level={3}>{group.category}</Heading>
-              <div className="resume__skills">
-                {group.skills.map((skill) => (
-                  <Pill key={skill} variant="secondary" size="small">
-                    {skill}
-                  </Pill>
-                ))}
-              </div>
-            </Container>
-          ))}
-        </Container>
-      </Container>
-
-      <Container padding="lg">
-        <Container direction="horizontal" itemSpacing="md" padding="none" wrap="always">
-          <Link href={SITE.resumePdfUrl}>Download PDF</Link>
+        <div className="resume__cta">
+          <a
+            className="resume__download"
+            href={SITE.resumePdfUrl}
+            download={SITE.resumePdfFilename}
+            aria-label="Download resume as PDF"
+          >
+            <Button variant="solid" color="primary">
+              Download the one-page PDF
+            </Button>
+          </a>
           <Link href="/contact">Get in touch</Link>
-        </Container>
+        </div>
       </Container>
     </SiteShell>
   );

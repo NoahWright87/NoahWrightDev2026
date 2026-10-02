@@ -52,10 +52,18 @@ a {
   }
 }
 
-/* Site header: logo (phones) or name (wider screens) on the left, nav pushed
-   right beside the theme toggle. Same 768px breakpoint as MobileNav. */
+/* Site header: the logo always, plus the name on wider screens, on the left;
+   nav pushed right beside the theme toggle. Same 768px breakpoint as
+   MobileNav. */
+.site-home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .site-logo {
-  display: none;
+  display: block;
+  flex: none;
   width: 36px;
   height: 36px;
 }
@@ -63,10 +71,6 @@ a {
 @media (max-width: 768px) {
   .site-home-link {
     text-decoration: none;
-  }
-
-  .site-logo {
-    display: block;
   }
 
   /* Visually hidden, still read out as the link's name. */

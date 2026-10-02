@@ -1,9 +1,6 @@
 /**
- * TEMPORARY — shared machinery for the pinned-rail prototypes (`/resume6`–`/resume8`).
- *
- * All three pin a branch-style tree to the left and reveal one job at a time as
- * you scroll. This module holds the parts they agree on: pacing, rail geometry,
- * and the scroll-progress math.
+ * Machinery for the resume timeline: pacing, rail geometry, and the
+ * scroll-progress math.
  */
 
 import type { ResumeEntry } from "@/lib/resume";
@@ -22,9 +19,17 @@ export const PACING_VH = 100;
 /* Rail geometry                                                       */
 /* ------------------------------------------------------------------ */
 
-/** Track centers sit proportionally inside the rail, so any rail width works. */
+/**
+ * Width kept clear at the rail's left edge for the date riding the scroll
+ * marker, so it never covers a lane or a milestone branching off one. Only on
+ * a wide rail; a phone's rail is too narrow to spare it.
+ */
+export const READOUT_GUTTER = 64;
+
+/** Track centers sit proportionally in the rail, right of the date gutter. */
 export function trackX(railWidth: number, track: number): number {
-  return railWidth * (0.3 + (track - 1) * 0.4);
+  const gutter = railWidth > 120 ? READOUT_GUTTER : 0;
+  return gutter + (railWidth - gutter) * (0.3 + (track - 1) * 0.4);
 }
 
 /**
@@ -65,12 +70,16 @@ export function makeYearToY(
   };
 }
 
-/** A curve bending the civilian lane back into the service lane. */
+/**
+ * A curve bending the civilian lane into the service lane. Works in either
+ * direction; newest-first it rises from `fromY` up to `toY`.
+ */
 export function mergeCurve(opts: { railWidth: number; fromY: number; toY: number }): string {
   const { railWidth, fromY, toY } = opts;
   const serviceX = trackX(railWidth, 1);
   const civilianX = trackX(railWidth, 2);
-  const span = Math.max(12, toY - fromY);
+  const delta = toY - fromY;
+  const span = Math.sign(delta || -1) * Math.max(12, Math.abs(delta));
   return (
     `C ${civilianX} ${fromY + span * 0.6}, ${serviceX} ${toY - span * 0.6}, ` +
     `${serviceX} ${toY}`
@@ -80,63 +89,59 @@ export function mergeCurve(opts: { railWidth: number; fromY: number; toY: number
 export interface RailPaths {
   serviceX: number;
   civilianX: number;
-  /** Whole-lane path. Callers drawing per-job segments use `branchCurve` instead. */
-  service: string;
-  /** Fork curve plus the whole civilian lane, as one path. */
-  branch: string;
   /** Just the fork curve, for callers drawing the lane in colored segments. */
   branchCurve: string;
-  /** Where on the service lane the branch leaves — above the node it leads to. */
+  /** Where on the service lane the branch leaves — below the node it leads to. */
   branchFromY: number;
   serviceEndY: number;
   overlapTop: number;
   overlapBottom: number;
 }
 
-/** How far above its first node the branch leaves the service lane. */
+/** How far below its first node the branch leaves the service lane. */
 const BRANCH_SPAN = 42;
 
 /**
- * Build the two lane paths.
+ * Build the fork between the two lanes.
  *
- * The branch leaves the service lane *above* the first node of the new lane and
- * arrives at that node from the top, the way a branch reads in a commit graph.
- * Curving away at the node's own height instead would leave the dot sitting
- * over a line that starts below it, so the new lane looks like it appears from
- * nowhere. The divergence point being slightly earlier than the fork date is
- * the usual convention — the dot still sits exactly on its date.
+ * The rail runs newest-first, so time goes *up* the page, the way
+ * `git log --graph` reads. The branch leaves the service lane *below* the first
+ * node of the new lane — slightly earlier in time — and arrives at that node
+ * from underneath. Curving away at the node's own height instead would leave the
+ * dot sitting over a line that starts beside it, so the new lane looks like it
+ * appears from nowhere. The divergence point being slightly earlier than the
+ * fork date is the usual convention — the dot still sits exactly on its date.
  */
 export function buildRailPaths(opts: {
   railWidth: number;
-  topY: number;
-  bottomY: number;
+  /** Where the service lane begins — its oldest point, so the lowest. */
+  serviceStartY: number;
   /** The first node on the branched lane. The curve lands here. */
   branchToY: number;
+  /** Where the service lane ends — its newest point, so above the fork. */
   serviceEndY: number;
 }): RailPaths {
-  const { railWidth, topY, bottomY, branchToY, serviceEndY } = opts;
+  const { railWidth, serviceStartY, branchToY, serviceEndY } = opts;
   const serviceX = trackX(railWidth, 1);
   const civilianX = trackX(railWidth, 2);
 
   /* Never reach back past the start of the lane being branched from. */
-  const span = Math.max(12, Math.min(BRANCH_SPAN, branchToY - topY));
-  const branchFromY = branchToY - span;
+  const span = Math.max(12, Math.min(BRANCH_SPAN, serviceStartY - branchToY));
+  const branchFromY = branchToY + span;
 
   const branchCurve =
     `M ${serviceX} ${branchFromY} ` +
-    `C ${serviceX} ${branchFromY + span * 0.45}, ${civilianX} ${branchToY - span * 0.55}, ` +
+    `C ${serviceX} ${branchFromY - span * 0.45}, ${civilianX} ${branchToY + span * 0.55}, ` +
     `${civilianX} ${branchToY}`;
 
   return {
     serviceX,
     civilianX,
-    service: `M ${serviceX} ${topY} L ${serviceX} ${serviceEndY}`,
-    branch: `${branchCurve} L ${civilianX} ${bottomY}`,
     branchCurve,
     branchFromY,
     serviceEndY,
-    overlapTop: branchToY,
-    overlapBottom: serviceEndY,
+    overlapTop: serviceEndY,
+    overlapBottom: branchToY,
   };
 }
 
@@ -177,7 +182,7 @@ export interface StopFade {
  * deliberately: the handover is the only part of the scroll where the stage is
  * not showing a readable card, so it should pass quickly.
  */
-const FADE_BAND = 0.14;
+const FADE_BAND = 0.1;
 
 /**
  * The outgoing card clears before the incoming one is substantially there. A
@@ -190,11 +195,34 @@ const OUT_RAMP = 0.5;
 const IN_DELAY = 0.35;
 
 /**
- * Fraction of a slice the incoming card is already settled for before the
- * marker actually reaches its dot. Without it the card arrives at the exact
- * frame the marker lands, so tapping a dot catches the job still fading in.
+ * How far, as a fraction of a slice, card changes trail the marker. Each slice
+ * is one job's own stretch of time, so the handover belongs right at the
+ * boundary: this centres it there, the outgoing card fading just before the
+ * marker crosses into the next job and the incoming one settling just after.
+ * Running it much earlier shows a job's card while the date already reads the
+ * next job — up to a year early in a long one — and pairs milestones with the
+ * wrong job.
  */
-const SETTLE = 0.12;
+const CARD_LAG = FADE_BAND * 0.4;
+
+/**
+ * Where a jump lands within a stop's slice: just past the handover, so the
+ * card is fully in when the scroll stops.
+ */
+export const LAND_OFFSET = CARD_LAG + 0.02;
+
+/**
+ * Nudge a scroll target out of a card handover, so a jump never stops with
+ * two cards half-faded. Milestones near a job boundary need this: the point
+ * where the marker crosses them can fall inside the handover.
+ */
+export function settledRaw(raw: number): number {
+  const boundary = Math.round(raw);
+  const before = boundary - FADE_BAND + CARD_LAG - 0.02;
+  const after = boundary + LAND_OFFSET;
+  if (boundary === 0 || raw <= before || raw >= after) return raw;
+  return raw < boundary ? before : after;
+}
 
 function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value));
@@ -225,7 +253,7 @@ export function stopFade(progress: number, count: number): StopFade {
   const markerIndex = Math.min(Math.floor(raw), count - 1);
   const local = raw - markerIndex;
 
-  const shifted = Math.min(raw + SETTLE, count - 0.0001);
+  const shifted = Math.min(Math.max(0, raw - CARD_LAG), count - 0.0001);
   const active = Math.min(Math.floor(shifted), count - 1);
   const cardLocal = shifted - active;
 

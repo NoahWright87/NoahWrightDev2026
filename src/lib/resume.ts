@@ -1,17 +1,11 @@
 /**
- * Resume content — transcribed from Noah's LinkedIn profile (Sep 2026).
+ * Resume content. Facts and voice come from Noah's one-page resume (Google Doc,
+ * Sep 2026) and his LinkedIn profile; the page runs a little longer than the
+ * one-pager but keeps its style: short, punchy, number-first, no novels.
  *
- * Summaries and highlights are his own words, copied verbatim rather than
- * rewritten. A few things carried over as-is and want a human pass:
- *
- * - `usaf-trainee` has no summary or highlights; that entry was cut off in the
- *   source and nothing has been invented to fill it.
- * - `signify-manager` still carries his "*More to come*" placeholder bullet.
- * - `signify-senior` runs to Sep 2025 while `signify-manager` starts Aug 2024,
- *   so the two overlap by a year on LinkedIn. Transcribed as given.
- * - LinkedIn truncates skill tags ("+7 skills"), so `skills` holds only the
- *   ones actually visible.
- * - `RESUME_SUMMARY` is the one piece of prose not taken from the profile.
+ * Copy rules: lead with a strong verb or a number, keep a summary to one line,
+ * and never invent a metric. Anything still wanting Noah's numbers is listed in
+ * `src/app/resume/resume.todo.md`.
  */
 
 /**
@@ -56,18 +50,39 @@ export interface ResumeEntry {
   colorGroup?: string;
 }
 
-export type MarkerKind = "award" | "cert" | "education";
+export type MarkerKind = "award" | "cert" | "education" | "training";
 
+/**
+ * An award, degree, course or certification. On the rail it is a short branch
+ * off the job it happened during; on the stage it gets a card of its own.
+ */
 export interface ResumeMarker {
   id: string;
+  /** The lane it branches off — the job it happened during. */
   track: TrackId;
   /** Decimal year the marker sits at. */
   date: number;
   dateLabel: string;
   label: string;
+  /** Shorter name for its tab, where `label` is long. */
+  short?: string;
+  /** Who awarded or granted it. */
+  issuer?: string;
+  /** One or two lines, written for a civilian reader. */
   detail: string;
+  /** Distinctions such as "Summa cum laude · 3.97 GPA". */
+  honors?: string;
+  /** The certificate itself, under `public/`. */
+  href?: string;
   kind: MarkerKind;
 }
+
+export const MARKER_KIND_LABEL: Record<MarkerKind, string> = {
+  award: "Award",
+  cert: "Certification",
+  education: "Degree",
+  training: "Training",
+};
 
 /**
  * March 2020 — leaving active duty, joining the Reserve and starting at CGI all
@@ -91,133 +106,112 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     dateLabel: "Jul 2008 — May 2011",
     commitment: "full-time",
     kind: "role",
-    summary:
-      "Hired as a temp worker, I programmed myself out of a job and became the de facto head of IT for this small company. I spent my time there automating tasks, allowing us to scale our volume of sales without a proportional increase in headcount.",
+    summary: "Hired as a temp; automated my way into being the de facto head of IT.",
     highlights: [
-      "Integrated with UPS/USPS APIs to automate carrier selection. Eliminated $30K/year of manual labor",
-      "Crafted web scrapers to gather product/vendor info and implemented barcode-scanner system to improve inventory accuracy",
-      "Maintained our retail website and social media accounts, producing weekly marketing videos",
-      "Automated the entire business, speeding processes and reducing errors with automated double-checks",
+      "Integrated UPS/USPS APIs to auto-select carriers, eliminating $30K/yr of manual labor",
+      "Automated order processing end to end, scaling sales without adding headcount",
+      "Built web scrapers and a barcode-scanner system to keep inventory accurate",
+      "Ran the retail site and social media, shipping a marketing video every week",
     ],
-    skills: ["Visual Basic for Applications (VBA)", "SQL"],
+    skills: ["Visual Basic for Applications (VBA)", "SQL", "Web Scraping"],
   },
   {
-    id: "usaf-trainee",
+    /* Covers basic and technical training too (May–Dec 2011), the way Noah's
+       one-pager does; a separate trainee card had nothing to say. */
+    id: "usaf-programmer",
     track: 1,
-    role: "Trainee",
-    org: "United States Air Force",
+    role: "Programmer & Team Lead, Air University",
+    org: "U.S. Air Force",
     start: 2011.333,
-    end: 2011.917,
-    dateLabel: "May 2011 — Dec 2011",
+    end: 2016.167,
+    dateLabel: "May 2011 — Mar 2016",
     commitment: "full-time",
     kind: "role",
-    // Cut off in the source screenshots — needs Noah's own words.
-    summary: "",
-    highlights: [],
-    skills: [],
-    colorGroup: "U.S. Air Force",
-  },
-  {
-    id: "usaf-team-lead",
-    track: 1,
-    role: "Software Development Team Lead",
-    org: "United States Air Force",
-    start: 2011.917,
-    end: 2016.167,
-    dateLabel: "Dec 2011 — Mar 2016",
-    commitment: "full-time",
-    kind: "promotion",
     summary:
-      "My first USAF assignment, where I rose from individual contributor to tech lead with 3 direct reports. I managed the entire software development lifecycle from requirements gathering to final delivery -- all without a project manager, UX designer, or QA tester. We produced C# and ASP.NET modules for a DotNetNuke system that communicated with internal and external systems via a shared, on-premise service bus.",
+      "Enlisted, then rose from programmer to lead of 3 — owning the whole lifecycle with no PM, designer or QA.",
     highlights: [
-      "Resolved 262 code security vulnerabilities, including SQL injection and remote execution risks",
-      "Refactored legacy code to introduce multithreaded processing, reducing 2-hour runtime to 1 minute",
-      "Earned Security+ certification and safeguarded PII of thousands of USAF students",
-      "Earned multiple Airman of the Quarter awards, an Air Force Achievement Medal, and was selected for a prestigious Developmental Special Duty",
+      "Found 190+ critical vulnerabilities and fixed 72 coding flaws, securing $1M in databases",
+      "Led a framework upgrade of the student information system: 645K lines of legacy code",
+      "Cut class archiving from 2+ hours to under a minute",
+      "Saved $220K+ by purging inactive LMS accounts to free up licenses",
     ],
-    skills: ["Microsoft SQL Server", "ASP.NET"],
+    skills: ["C#", "ASP.NET", "Microsoft SQL Server"],
     colorGroup: "U.S. Air Force",
   },
   {
     id: "usaf-instructor",
     track: 1,
-    role: "Enlisted Professional Military Education Instructor",
-    org: "United States Air Force",
+    role: "Instructor, Airman Leadership School",
+    org: "U.S. Air Force",
     start: 2016.167,
     end: 2020.083,
     dateLabel: "Mar 2016 — Feb 2020",
     commitment: "full-time",
     kind: "promotion",
-    summary:
-      "I was hand-selected by leadership for this special position which involves preparing Airmen to be supervisors. I taught at the Airman Leadership School, which is a 5-week course that is required to attain the rank of Staff Sergeant and be assigned direct reports. While not a software engineering position, I still brought my coding skills to bear on the workplace, automating tasks wherever possible.",
+    summary: "Hand-picked to teach the 5-week course that prepares Airmen to supervise.",
     highlights: [
-      "Wrote JavaScript/Visual Basic scripts to automate administrative duties. Increased class size 30% without adding headcount",
-      "Integrated PayPal checkout, enabling 2K reservations worth >$52K. Drove paperless effort, eliminating 90% of printed material",
-      "Taught leadership and public speaking skills to hundreds of Airmen and managed graduation ceremonies with hundreds in attendance",
-      "We earned Team of the Quarter (Q2 2019) for pioneering a new curriculum and learning management system",
-      "Awarded the Air Force Commendation Medal for contributions that improved both our school and the wider organization",
+      "Delivered 4,032 hours of curriculum; 315 graduates earned 2,844 college credits",
+      "Beta-tested the largest overhaul of Air Force supervisor training in 20 years ($10M); it developed 16,000 Airmen and won us Team of the Quarter (Q2 2018)",
+      "Researched and rolled out Canvas LMS, later adopted by 67 schoolhouses",
+      "Automated instructor duties with JS/VBA scripts, enabling 30% larger classes",
     ],
-    skills: ["Teaching", "Learning Management Systems"],
+    skills: ["Teaching", "Public Speaking", "JavaScript", "VBA"],
     colorGroup: "U.S. Air Force",
   },
   {
     id: "usaf-reserve",
     track: 1,
-    role: "Non-Commissioned Officer in Charge",
-    org: "US Air Force Reserve",
+    role: "Manager & Trainer, Cybersecurity Unit",
+    org: "U.S. Air Force Reserve",
     start: 2020.167,
     end: 2022.333,
     dateLabel: "Mar 2020 — May 2022",
     commitment: "part-time",
     kind: "role",
-    summary:
-      "In 2020, I transitioned from active duty to the Reserves to settle down, be with family, and focus on programming. With my unique background, I was selected to teach the incoming personnel.",
+    summary: "Part-time Reserve service alongside a civilian engineering career.",
     highlights: [
-      "Taught Windows terminal, Python scripting, and public speaking fundamentals to unit's cybersecurity Airmen.",
-      "Trained unit on using Splunk to investigate threats. Created script to automate creation of queries.",
-      "Mentored three direct reports. Wrote performance reviews, and reported issues to leadership.",
+      "Managed 3 direct reports: performance reviews, disciplinary plans, career mentorship",
+      "Taught Windows/Linux terminal, Python scripting and public speaking",
+      "Automated Splunk query-writing for the unit's threat hunting",
     ],
-    skills: ["Visual Basic for Applications (VBA)", "Microsoft PowerPoint"],
+    skills: ["Python", "Splunk", "Linux"],
     colorGroup: "U.S. Air Force",
   },
   {
     id: "cgi",
     track: 2,
-    role: "Senior .NET Developer",
+    role: "Software Engineer",
     org: "CGI",
     start: 2020.167,
     end: 2021.333,
     dateLabel: "Mar 2020 — May 2021",
     commitment: "full-time",
     kind: "role",
-    summary:
-      "I exited active duty in the USAF and joined a scrum team at a local insurance company. Our focus was on a large refactoring effort, but we were also all learning the \"new normal\" of remote work due to COVID.",
+    summary: "Scrum team refactoring an insurance platform — remote from the first month of COVID.",
     highlights: [
-      "Refactored legacy service to implement DI & automated testing. Increased code coverage from 0% to 70% in one sprint",
-      "Used SonarQube to identify and correct 250+ tech debt issues. Mentored junior engineers on best practices",
-      "Maintained .NET microservices that communicated with internal and external REST APIs",
-      "As part of a scrum team, I demoed features, reviewed code, managed Jenkins build pipelines, and provided production support",
+      "Led the automated testing effort: inverted a legacy service's dependencies, raising coverage 0% ⇒ 70% in one sprint",
+      "Fixed 250+ tech-debt issues flagged by SonarQube; mentored junior engineers",
+      "Ran Jenkins pipelines, reviewed code and covered prod support for .NET microservices",
     ],
-    skills: ["ASP.NET", "Atlassian Suite"],
+    skills: ["C#", "ASP.NET", "Jenkins", "SonarQube"],
   },
   {
     id: "sovereign",
     track: 2,
-    role: "Senior Software Developer",
+    role: "Senior Software Engineer",
     org: "Sovereign Sportsman Solutions",
     start: 2021.333,
     end: 2022.167,
     dateLabel: "May 2021 — Mar 2022",
     commitment: "full-time",
     kind: "role",
-    summary:
-      "As part of a remote scrum team, I built websites for local and state governments to help their citizens apply for and manage various permits. We worked closely with our government partners to gather requirements and deliver full-stack .NET solutions.",
+    summary: "Full-stack .NET for government permitting web apps.",
     highlights: [
-      "Developed and maintained full-stack .NET applications using C#, Entity Framework, MVC, Vue.js, and MS SQL Server",
-      "Led full-stack development for new feature. Gathered requirements, designed DB schema, wrote CRUD pages",
-      "Customer-centric team involved much direct interaction with our clients, gathering requirements and discussing design",
+      "Led a new feature end to end: requirements, DB schema, CRUD pages",
+      "Built with C#, Entity Framework, Kendo UI, Vue.js and SQL Server",
+      "Worked directly with government clients on requirements and design",
     ],
-    skills: ["Microsoft Azure", "ASP.NET MVC"],
+    skills: ["C#", "Entity Framework", "Vue.js", "Kendo UI"],
   },
   {
     id: "google",
@@ -229,77 +223,108 @@ export const RESUME_ENTRIES: ResumeEntry[] = [
     dateLabel: "Mar 2022 — Mar 2023",
     commitment: "full-time",
     kind: "role",
-    summary:
-      "I was invited to apply to Google after completing the Google Foobar challenge. While there, I worked on the Payments Platform, which provided tools for internal teams to make and receive payments.",
+    summary: "Payments Platform, which moves money for Google's internal teams. Recruited via the Foobar challenge.",
     highlights: [
-      "Maintained TypeScript and closure template front ends, applying accessibility best practices.",
-      "Implemented secure proxy for gRPC calls. Wrote Java code for backend microservices.",
-      "Led documentation and code health effort. Improved onboarding/on-call docs and fixed flaky tests.",
+      "Maintained Java gRPC microservices, a TypeScript frontend and the SQL database behind the platform",
+      "Built a secure proxy for gRPC calls",
+      "Led a code-health push: fixed flaky tests, improved onboarding and on-call docs",
     ],
-    skills: ["Linux", "Java"],
+    skills: ["Java", "gRPC", "TypeScript", "SQL"],
   },
   {
     id: "signify-senior",
     track: 2,
-    role: "Senior Software Engineer",
+    role: "Senior Software Engineer, Scheduling",
     org: "Signify Health",
     start: 2023.167,
-    end: 2025.667,
-    dateLabel: "Mar 2023 — Sep 2025",
+    end: 2024.583,
+    dateLabel: "Mar 2023 — Aug 2024",
     commitment: "full-time",
     kind: "role",
-    summary:
-      "I joined Signify Health as a senior software engineer and worked on the Scheduling and Optimization systems at the company. We're a healthcare company that sends medical providers to our member's homes to give health assessments. My team works on scheduling those members and optimizing the routes the providers take.",
+    summary: "Scheduling and routing for clinicians who visit members at home.",
     highlights: [
-      "Utilized open source OR Tools to optimize routes. Eliminated $30K/month on similar products and reduced drive times by 10%",
-      "Championed flag-driven development, establishing processes and reusable packages to make flag use easier",
+      "Built a route optimization service on open-source OR-Tools, replacing a GCP service: $30K/mo saved, 10% less drive time",
+      "Drove feature flag adoption with a LaunchDarkly wrapper, enabling phased rollouts and reducing MTTR",
     ],
-    skills: [],
+    skills: ["Google OR-Tools", "LaunchDarkly", "Feature Flags"],
   },
   {
     id: "signify-manager",
     track: 2,
-    role: "Software Engineering Manager",
+    role: "Software Engineering Manager, Scheduling",
     org: "Signify Health",
     start: 2024.583,
-    end: null,
-    dateLabel: "Aug 2024 — Present",
+    end: 2025.583,
+    dateLabel: "Aug 2024 — Aug 2025",
     commitment: "full-time",
     kind: "promotion",
-    summary:
-      "I was promoted to manager after contributing strongly to my first team at Signify Health. I have since managed a few teams there, with my largest including 9 direct reports. I initially continued in the Scheduling domain, am now managing the Engineering Enablement Team.",
+    summary: "Promoted to lead the 9-SWE Scheduling team.",
     highlights: [
-      "Engineering Enablement: Standardized SonarQube implementation, enforcing scans on all PRs and mandating stricter quality gates",
-      "Engineering Enablement: *More to come*",
-      "Scheduling and Optimization: Drastically improved efficiency of backend code, reducing average latency of scheduling app by 90%",
-      "Scheduling and Optimization: Implemented new visit types, safety-based restrictions, and improved integration with scheduling partners",
-      "Scheduling and Optimization: Contributed to overhaul of interviewing process, developing new questions and rubrics for engineer candidates",
-      "Scheduling and Optimization: Led Tech Talk sessions, finding participants and sharing information with 100+ software engineers weekly",
-      "Scheduling and Optimization: Improved team documentation and implemented processes to accelerate team velocity",
+      "Cut web app latency 90% (minutes ⇒ seconds): found the cause, coordinated fixes across repos and teams",
+      "Eliminated near-daily alerts by directing the team to harden code while on call",
+      "Unified support intake for 6+ teams, giving the visibility to prioritize bug fixes",
     ],
-    skills: ["Software Management", "Engineering Management"],
+    skills: ["Engineering Management", "On-Call", "Performance Tuning"],
+  },
+  {
+    id: "signify-enablement",
+    track: 2,
+    role: "Software Engineering Manager, Engineering Enablement",
+    org: "Signify Health",
+    start: 2025.583,
+    end: null,
+    dateLabel: "Aug 2025 — Present",
+    commitment: "full-time",
+    kind: "promotion",
+    summary: "Stood up the team that sets standards and owns shared tooling for 30+ engineering teams.",
+    highlights: [
+      "Automated the SDLC with a fleet of AI agents: POC to 100+ repos in 6 months, now merging 700+ PRs a month",
+      "Led 4 SWEs; partnered with Principals and SRE to set org-wide standards",
+      "Built an engineering metrics dashboard tracking DORA metrics and velocity",
+      "Hands-on EM: surveyed users, ran the backlog, hired, mentored, reviewed and shipped code",
+    ],
+    skills: ["Engineering Management", "AI Agents", "DORA Metrics", "Developer Productivity"],
   },
 ];
 
+/*
+ * Newest first, matching the page. Several are dated to the year only; the
+ * month is picked just to place them on the rail, spread out where a year has
+ * more than one.
+ */
 export const RESUME_MARKERS: ResumeMarker[] = [
   {
-    id: "ccaf-programming",
+    id: "sejpme",
     track: 1,
-    // LinkedIn gives the year only; placed mid-year for positioning.
-    date: 2015.5,
-    dateLabel: "2015",
-    label: "A.S. Computer Programming",
-    detail: "Community College of the Air Force.",
-    kind: "education",
+    date: 2021.7,
+    dateLabel: "2021",
+    label: "SEJPME I",
+    issuer: "Joint Staff",
+    detail: "Senior Enlisted Joint Professional Military Education: how the services plan and work together.",
+    kind: "training",
   },
   {
-    id: "ccaf-instructional-tech",
+    id: "nco-academy",
     track: 1,
-    date: 2017.5,
-    dateLabel: "2017",
-    label: "A.S. Educational/Instructional Technology",
-    detail: "Community College of the Air Force.",
-    kind: "education",
+    date: 2021.3,
+    dateLabel: "2021",
+    label: "NCO Academy",
+    issuer: "U.S. Air Force",
+    detail: "The Air Force's leadership school for mid-level supervisors.",
+    kind: "training",
+  },
+  {
+    id: "afcm",
+    track: 1,
+    date: 2020.05,
+    dateLabel: "Feb 2020",
+    label: "Air Force Commendation Medal",
+    short: "Commendation Medal",
+    issuer: "42d Force Support Squadron",
+    detail:
+      "For four years teaching Airman Leadership School: 4,032 hours of curriculum, 315 graduates, and Canvas LMS adopted by 67 schoolhouses.",
+    href: "/documents/wright-afcm-2020.pdf",
+    kind: "award",
   },
   {
     id: "trident-bs",
@@ -307,56 +332,121 @@ export const RESUME_MARKERS: ResumeMarker[] = [
     date: 2019.5,
     dateLabel: "2019",
     label: "B.S. Computer Science",
-    detail: "Trident University International. Summa Cum Laude.",
+    issuer: "Trident University International",
+    detail: "Earned online while teaching full time.",
+    honors: "Summa cum laude · 3.97 GPA",
     kind: "education",
   },
   {
-    id: "afcm",
+    id: "ccaf-instructional-tech",
     track: 1,
-    date: 2020.0,
-    dateLabel: "2020",
-    label: "Air Force Commendation Medal",
+    date: 2017.5,
+    dateLabel: "2017",
+    label: "A.S. Instructor of Technology & Military Science",
+    short: "A.S. Instructional Tech",
+    issuer: "Community College of the Air Force",
+    detail: "The Air Force's accredited community college.",
+    kind: "education",
+  },
+  {
+    id: "nco-of-the-quarter",
+    track: 1,
+    date: 2016.917,
+    dateLabel: "Dec 2016",
+    label: "NCO of the Quarter",
+    detail: "Picked as the unit's top mid-level enlisted leader for the quarter.",
+    kind: "award",
+  },
+  {
+    id: "epme-instructor-course",
+    track: 1,
+    date: 2016.35,
+    dateLabel: "2016",
+    label: "EPME Instructor Course",
+    issuer: "U.S. Air Force",
+    detail: "Certifies instructors for the Air Force's enlisted leadership schools.",
+    kind: "training",
+  },
+  {
+    id: "afam",
+    track: 1,
+    date: 2016.1,
+    dateLabel: "Feb 2016",
+    label: "Air Force Achievement Medal",
+    short: "Achievement Medal",
+    issuer: "Air University",
     detail:
-      "Awarded for contributions that improved both the Airman Leadership School and the wider organization.",
+      "For four years as a programmer: 190+ critical vulnerabilities found, a 645K-line framework upgrade, and $220K+ saved.",
+    href: "/documents/wright-afam-2016.pdf",
+    kind: "award",
+  },
+  {
+    id: "airman-of-the-year",
+    track: 1,
+    date: 2015.917,
+    dateLabel: "2015",
+    label: "Airman of the Year",
+    issuer: "Headquarters Air University",
+    detail: "Named the headquarters' top junior enlisted Airman for the year.",
+    kind: "award",
+  },
+  {
+    id: "security-plus",
+    track: 1,
+    date: 2015.7,
+    dateLabel: "2015",
+    label: "CompTIA Security+",
+    short: "Security+",
+    issuer: "CompTIA",
+    detail: "Industry-standard security certification, required for the role.",
+    kind: "cert",
+  },
+  {
+    id: "ccaf-cs-tech",
+    track: 1,
+    date: 2015.45,
+    dateLabel: "2015",
+    label: "A.S. Computer Science Technology",
+    short: "A.S. CS Technology",
+    issuer: "Community College of the Air Force",
+    detail: "The Air Force's accredited community college.",
+    kind: "education",
+  },
+  {
+    id: "als",
+    track: 1,
+    date: 2015.2,
+    dateLabel: "2015",
+    label: "Airman Leadership School",
+    issuer: "U.S. Air Force",
+    detail: "The 5-week course every Airman takes before supervising others. I went on to teach it.",
+    kind: "training",
+  },
+  {
+    id: "airman-of-the-quarter",
+    track: 1,
+    date: 2013.917,
+    dateLabel: "Q4 2013",
+    label: "Airman of the Quarter",
+    issuer: "Headquarters Air University",
+    detail: "Named the headquarters' top junior enlisted Airman for the quarter.",
     kind: "award",
   },
 ];
 
-export const RESUME_SKILL_GROUPS: { category: string; skills: string[] }[] = [
-  {
-    category: "Leadership",
-    skills: ["Engineering Management", "Software Management", "Teaching", "Learning Management Systems"],
-  },
-  {
-    category: "Engineering",
-    skills: [
-      "Java",
-      "ASP.NET",
-      "ASP.NET MVC",
-      "Microsoft SQL Server",
-      "SQL",
-      "Visual Basic for Applications (VBA)",
-    ],
-  },
-  {
-    category: "Platform & Tools",
-    skills: ["Linux", "Microsoft Azure", "Atlassian Suite", "Microsoft PowerPoint"],
-  },
-];
-
-/**
- * The one piece of prose here not taken from the profile — assembled from the
- * dates above. Worth replacing with Noah's own words.
- */
+/** The line at the top of the page, after the tagline on Noah's one-pager. */
 export const RESUME_SUMMARY =
-  "Software engineering manager at Signify Health, currently leading the Engineering Enablement team. Nearly nine years of active-duty U.S. Air Force service, then two more in the Reserve alongside a civilian engineering career.";
+  "Engineering manager with 15+ years in software, remote since 2020. Ex-Googler and U.S. Air Force vet, now leading Engineering Enablement at Signify Health.";
 
 /* ------------------------------------------------------------------ */
 /* Helpers shared across the prototypes                                */
 /* ------------------------------------------------------------------ */
 
-/** Entries sorted oldest-first, the reading order every variant uses. */
+/** Entries sorted oldest-first. Colors and concurrency are worked out on this. */
 export const ENTRIES_CHRONOLOGICAL = [...RESUME_ENTRIES].sort((a, b) => a.start - b.start);
+
+/** Entries sorted newest-first — the order the page reads in. */
+export const ENTRIES_NEWEST_FIRST = [...ENTRIES_CHRONOLOGICAL].reverse();
 
 /* ------------------------------------------------------------------ */
 /* Per-job colors                                                      */
@@ -398,6 +488,44 @@ export function jobColorVar(entry: ResumeEntry): string {
   return `var(--job-e${g}-${shade}, var(--job-e${g}-0, var(--primary)))`;
 }
 
+/**
+ * Milestones close together in time, drawn as one node on the rail and shown
+ * as tabs on one card. Without grouping, the six from 2015–16 sit a few pixels
+ * apart on a to-scale rail and bleed together.
+ */
+export interface MilestoneGroup {
+  id: string;
+  track: TrackId;
+  /** Oldest first. */
+  markers: ResumeMarker[];
+  start: number;
+  end: number;
+}
+
+/** Milestones on one lane this close (in years) to the previous share a group. */
+const GROUP_GAP = 0.45;
+
+export const MILESTONE_GROUPS: MilestoneGroup[] = (() => {
+  const sorted = [...RESUME_MARKERS].sort((a, b) => a.track - b.track || a.date - b.date);
+  const groups: MilestoneGroup[] = [];
+  for (const marker of sorted) {
+    const last = groups[groups.length - 1];
+    if (last && last.track === marker.track && marker.date - last.end <= GROUP_GAP) {
+      last.markers.push(marker);
+      last.end = marker.date;
+    } else {
+      groups.push({
+        id: marker.id,
+        track: marker.track,
+        markers: [marker],
+        start: marker.date,
+        end: marker.date,
+      });
+    }
+  }
+  return groups;
+})();
+
 /** The job a marker falls inside, so it can borrow that job's color. */
 export function markerEntry(marker: ResumeMarker): ResumeEntry | undefined {
   return ENTRIES_CHRONOLOGICAL.find(
@@ -408,19 +536,15 @@ export function markerEntry(marker: ResumeMarker): ResumeEntry | undefined {
   );
 }
 
-/** Decimal year -> 0..1 position across the whole timeline. */
+/**
+ * Decimal year -> 0..1 position down the timeline. Newest-first, so today is 0
+ * and the start of the career is 1.
+ */
 export function yearToFraction(year: number): number {
-  return (year - TIMELINE_START) / (TIMELINE_END - TIMELINE_START);
+  return (TIMELINE_END - year) / (TIMELINE_END - TIMELINE_START);
 }
 
 /** An entry's end year, treating an open-ended role as running to today. */
 export function entryEnd(entry: ResumeEntry): number {
   return entry.end ?? TIMELINE_END;
-}
-
-/** Markers that fall inside an entry's date range. */
-export function markersWithin(entry: ResumeEntry): ResumeMarker[] {
-  return RESUME_MARKERS.filter(
-    (m) => m.track === entry.track && m.date >= entry.start && m.date < entryEnd(entry)
-  );
 }

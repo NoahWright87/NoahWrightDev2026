@@ -43,8 +43,8 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
           shadow={false}
           left={
             <Link href="/" className="site-home-link">
-              {/* Phones show the logo; wider screens show the name. The name stays
-                  in the accessible text either way (see .site-name in globals.css). */}
+              {/* The logo always; the name too on wider screens. On phones the
+                  name stays in the accessible text (see .site-name in globals.css). */}
               <Logo className="site-logo" />
               <strong className="site-name">{SITE.name}</strong>
             </Link>

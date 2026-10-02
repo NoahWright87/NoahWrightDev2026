@@ -11,7 +11,10 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
+# Only the resume downloads, saved under a name a recruiter will recognise. The
+# award citations under /documents/ open in the browser from their "View
+# citation" links.
 [[headers]]
-  for = "/*.pdf"
+  for = "/noah-wright-resume.pdf"
   [headers.values]
-    Content-Disposition = "attachment"
+    Content-Disposition = 'attachment; filename="Noah-Wright-Resume.pdf"'
