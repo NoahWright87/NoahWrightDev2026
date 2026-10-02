@@ -74,7 +74,7 @@ Use this file to keep short, durable notes that help future chat sessions resume
 ## Logo
 
 - Noah's avatar logo (silhouette, collar, tie, glasses) lives as path data in `src/lib/logo.ts`, with its embedded C2PA metadata stripped. It is painted from the theme, not fixed colors: silhouette = secondary, collar = secondary mixed 55% with background, tie = primary, glasses = background. `components/Logo.tsx` + `logo.css` do this with live CSS variables; `app/icon.tsx` (SVG favicon, with a `prefers-color-scheme` swap) and `app/apple-icon.tsx` (180px PNG on the light background) compute the same colors from `theme.ts`.
-- The header shows the logo on phones (≤768px, the MobileNav breakpoint) and the name on wider screens; the name stays in the link's accessible text on phones. The old `favicon.ico` was the create-next-app default and was deleted.
+- The header shows the logo **at every width**, with the name beside it on wider screens (>768px, the MobileNav breakpoint); on phones the name stays in the link's accessible text. Noah asked for the logo to always be there (it used to be phones-only). The old `favicon.ico` was the create-next-app default and was deleted.
 
 ## Project Screenshots
 
