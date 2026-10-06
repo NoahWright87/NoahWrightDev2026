@@ -56,6 +56,7 @@ export const projects: Project[] = [
       "The Gear Designer with a purple spoked gear and sliders for teeth, hub, and cutouts",
       "The Gear Designer with an orange 36-tooth gear, hexagon hub, and round cutouts",
     ]),
+    liveUrl: "https://gears.noahwright.dev",
     repoUrl: "https://github.com/NoahWright87/gears",
   },
   {

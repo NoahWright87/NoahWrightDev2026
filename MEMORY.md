@@ -80,7 +80,7 @@ Use this file to keep short, durable notes that help future chat sessions resume
 
 - `public/images/projects/{id}/{1..3}.webp` are real captures made by running each project locally (the live sites were blocked by the build environment's network policy). Provenance and how to replace them are in that folder's README; per-image alt text lives in `src/lib/projects.ts`.
 
-- `vr` and `gears` were added to the projects page (newest first). `gears` has no hosted site, so `Project.liveUrl` is optional and the Live Site button is hidden for it. `vr`'s `https://vr.noahwright.dev` is the repo's *planned* URL, unverified (unreachable from the build environment); confirm it, and the `gears` hosting, with Noah.
+- `vr` and `gears` are on the projects page (newest first). Gears is live at gears.noahwright.dev. `Project.liveUrl` is optional. `vr`'s `https://vr.noahwright.dev` is the repo's *planned* URL, unverified; confirm with Noah.
 
 ## Portrait Assets
 
