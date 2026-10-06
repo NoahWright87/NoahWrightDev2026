@@ -62,9 +62,11 @@ export default function ProjectsPageClient() {
                         GitHub
                       </Button>
                     </Link>
-                    <Link href={project.liveUrl} isExternal>
-                      <Button variant="solid">Live Site</Button>
-                    </Link>
+                    {project.liveUrl ? (
+                      <Link href={project.liveUrl} isExternal>
+                        <Button variant="solid">Live Site</Button>
+                      </Link>
+                    ) : null}
                   </Container>
                 </CardFooter>
               }
