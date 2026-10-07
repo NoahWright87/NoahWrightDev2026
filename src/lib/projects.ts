@@ -18,7 +18,8 @@ export interface Project {
   tags: string[];
   status: "active" | "archived" | "wip";
   images: ProjectImage[];
-  liveUrl: string;
+  /** Omit when a project has no hosted version. */
+  liveUrl?: string;
   repoUrl: string;
 }
 
@@ -28,6 +29,36 @@ export interface Project {
  * Keep entries in reverse-chronological order.
  */
 export const projects: Project[] = [
+  {
+    id: "vr",
+    name: "VR - WebXR prototypes for the Quest",
+    summary:
+      "A pile of WebXR experiments for the Meta Quest browser: no app store, no install, just open a link. Pistols at Dawn is the flagship sandbox, Punch Pop makes your fists the locomotion, and a set of shared interaction primitives ties it all together. Built with A-Frame and a small Vite multi-page build.",
+    tags: ["WebXR", "A-Frame", "VR", "Game Dev"],
+    status: "active",
+    images: projectImages("vr", [
+      "The VR prototypes landing page with cards for Pistols at Dawn, Punch Pop, and Cube Pop",
+      "Pistols at Dawn: a ghost-town main street under a welcome sign, with VR controllers in hand",
+      "Punch Pop: colorful blocky figures on a checkered floor, with tracked hands up front",
+    ]),
+    liveUrl: "https://vr.noahwright.dev",
+    repoUrl: "https://github.com/NoahWright87/vr",
+  },
+  {
+    id: "gears",
+    name: "Gears - A silly gear game and designer",
+    summary:
+      "A tiny idle-style gear game that started as a Gemini chat and grew a companion Gear Designer: tweak teeth, hubs, cutouts, and colors with a live SVG preview, then copy the path or download the SVG. Single-file, no build step.",
+    tags: ["Game Dev", "SVG", "Vibe Coding", "Vanilla JS"],
+    status: "wip",
+    images: projectImages("gears", [
+      "The Gears game: a red gear with a dashed range ring and upgrade buttons",
+      "The Gear Designer with a purple spoked gear and sliders for teeth, hub, and cutouts",
+      "The Gear Designer with an orange 36-tooth gear, hexagon hub, and round cutouts",
+    ]),
+    liveUrl: "https://gears.noahwright.dev",
+    repoUrl: "https://github.com/NoahWright87/gears",
+  },
   {
     id: "doors97",
     name: "Doors 97 - The OS that never was",
