@@ -57,6 +57,7 @@ Use this file to keep short, durable notes that help future chat sessions resume
 
 - The dark theme block from `buildThemeCss` must use `:root[data-theme="dark"]`. The design system's own dark defaults use that selector, so a bare `[data-theme="dark"]` loses on specificity and dark mode silently shows the design system's navy/blue instead of the site palette.
 - Easter eggs live in `src/components/EasterEggs.tsx` (mounted by `SiteShell`): a console greeting, and the Konami code rains portraits for 6s (reduced motion keeps only the toast). The hero photo also shows a "psst… N more of me" hover hint pointing at /portraits.
+- **Text adventure (planned, `TODOs/text-adventure.todo.md`)**: the console links to a semi-hidden `/adventure`; the editor at `/adventure/editor` is **public** on purpose (showing how it's built is portfolio). **Noah writes all the content** so it doesn't read as AI; Claude builds only the engine, editor and page. **Old-school parser, no LLM or embeddings** (considered and parked). The world is areas of grid tiles joined by teleporters (buildings, stairs, elevators).
 - The 404 (`src/app/not-found.tsx`) is a Doors 97 blue screen; any key except Tab/modifiers goes home. Its fixed blue/grey colors are deliberate, not missed theme tokens.
 
 - The header uses `Header`'s `left`/`right` slots (logo/name left; `MobileNav` + theme toggle right). Since design PR #25, slots without a tooltip aren't `position: relative`, so the phone dropdown spans the full header, and `aria-current="page"` links are styled by the design system.

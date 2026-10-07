@@ -48,6 +48,7 @@ Clear statement of when this TODO file can be deleted.
 |---|---|---|
 | hero-taglines.todo.md | 4 | Parked (revisit with Noah) |
 | visual-tests-ci.todo.md | 6 | Parked (low priority, issue #18) |
+| text-adventure.todo.md | 4 (whimsy) | Planned |
 
 ## Route-local TODO files
 
