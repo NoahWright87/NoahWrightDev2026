@@ -84,16 +84,11 @@ a {
   }
 }
 
-/* Orange rules marking where the header ends and the footer begins, replacing
-   their faint default shadows. Header/Footer have no border option yet
-   (NoahWright87/design#29). */
+/* An orange rule marking where the header ends, replacing its faint default
+   shadow. Header has no border option yet (NoahWright87/design#29). The footer is
+   a SceneFooter now: its deep-sea panel marks the page's end by itself. */
 .nw-header {
   border-bottom: 2px solid var(--primary);
-}
-
-.nw-footer {
-  box-shadow: none;
-  border-top: 2px solid var(--primary);
 }
 
 /* Footer contact icons: every page doubles as a business card. */

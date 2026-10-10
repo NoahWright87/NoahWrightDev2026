@@ -5,10 +5,9 @@ import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Header,
-  Footer,
+  SceneFooter,
   Layout,
   Container,
-  Text,
   Link,
   MobileNav,
   ToggleIcon,
@@ -28,7 +27,23 @@ const CONTACT_LINKS = [
   { label: "GitHub", href: SITE.github, icon: <GitHubIcon size={20} />, external: true },
 ] as const;
 
-export default function SiteShell({ children }: { children: React.ReactNode }) {
+// The footer's horizon scene: the sun and moon sit toward the middle so their reflections
+// stay clear of the © line (left) and the contact icons (right). Module-level so the
+// reference is stable across renders. The scene itself ships in the design package and
+// loads lazily; see SceneFooter's spec there.
+const FOOTER_SCENE_OPTIONS = { sunX: 0.62, moonX: 0.38 };
+
+export default function SiteShell({
+  children,
+  calmFooter = false,
+}: {
+  children: React.ReactNode;
+  /**
+   * Show only the footer's still, CSS-only look and never load its animation.
+   * For pages that are already busy (the pinned resume timeline) or have a look of their own (404).
+   */
+  calmFooter?: boolean;
+}) {
   const [isDark, setIsDark] = useState(false);
   const pathname = usePathname();
 
@@ -79,10 +94,11 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
         />
       }
       footer={
-        <Footer
-          left={
-            <Text tone="muted">© {new Date().getFullYear()} {SITE.name}</Text>
-          }
+        <SceneFooter
+          scene="horizon"
+          sceneOptions={FOOTER_SCENE_OPTIONS}
+          animate={!calmFooter}
+          left={<span>© {new Date().getFullYear()} {SITE.name}</span>}
           right={
             <div className="site-footer__links">
               {CONTACT_LINKS.map((link) => (
