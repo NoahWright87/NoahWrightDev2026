@@ -6,9 +6,13 @@ A hand-written, old-school text adventure as an easter egg: the console points c
 ## Decisions (Oct 2026, with Noah)
 - **Noah writes the content.** Claude builds the engine, the editor and the page, never the story, rooms or dialogue. Only a tiny, obviously-placeholder test world ships in code.
 - **Old-school and cheap.** A hand-written verb/noun parser with synonyms. No LLM, no embeddings, no model downloads. (Discussed and parked: a tiny embedding model as a "did you mean" fallback, an opt-in in-browser LLM, and an author-time synonym helper in the editor.)
-- **Played on `/adventure`, not in the console.** The console greeting links to it. The page can be richer than a terminal (map, inventory and so on), so it isn't limited to what a console can do. It stays semi-hidden: out of the nav and the sitemap.
+- **Played on `/adventure`, not in the console.** The console greeting links to it. The page can be richer than a terminal (map, inventory and so on), so it isn't limited to what a console can do. It stays semi-hidden: out of the nav (but indexed; see below).
 - **The world is areas of grid tiles joined by teleporters.** Each area is its own 2D grid, and neighbouring tiles connect with compass exits. A teleporter links a tile to a tile in any area, which covers going into a building, stairs, and elevators (one room with several destinations behind interactions).
 - **The editor is public** at `/adventure/editor`, since showing how it is built is part of the portfolio. Visitors can tinker, but nothing they do touches the real game.
+- **Spoilers are allowed but tucked away.** The editor opens a small example world by default. The site's real world is one of a few built-in worlds in a "Load" menu, next to uploading a file.
+- **Both pages are indexed.** It's an easter egg, not a secret. They're out of the nav, but nothing blocks search engines, and they can go in the sitemap.
+- **Publishing is export → commit.** No server write and no dev-only "save to repo" button.
+- **"Save to local"** stores the world in localStorage so it can be playtested. Visitors can build their own this way, and it's how Noah tests his before committing.
 
 ## Scope In
 - **Engine** (`src/lib/adventure/`): pure TS with no React, shared by the game page and the editor's playtest.
@@ -25,14 +29,21 @@ A hand-written, old-school text adventure as an easter egg: the console points c
   - **Items:** aliases, description, portable or not, rules.
   - **Characters:** aliases, description, dialogue topics with conditions, rules.
   - **Flags:** declared with a name and a note.
+- **Built-in worlds** live as JSON files fetched on demand, so the real world isn't bundled into the editor:
+  - `example`: small, and loaded by default.
+  - `site`: the real game.
+  - `blank`: an empty starting point.
 - **`/adventure`**: the game, a terminal-style log and input with command history (↑/↓) and a reveal-as-you-go map. Inventory and map panels are extras beyond what a terminal can do. Works on phones.
+  - It plays the site world by default. When a locally saved world exists, it offers to play that one instead (e.g. `/adventure?world=local`), with a clear "you're playing your own world" banner.
 - **`/adventure/editor`**, public:
   - **Map view:** pick an area; click an empty cell to add a tile; click an edge to cycle open → wall → locked; drag items and characters onto tiles. Badges mark contents, locks, teleporters and missing text. Teleporters show as linked markers that jump to the other end.
   - **Tile inspector:** tabs for Description, Exits, Contents, Rules. Rules are edited as form rows, not code.
   - **Libraries:** items, characters and flags, each showing where it is used.
   - **Playtest pane:** the real engine; start from any tile; live inventory and flags.
   - **Checks:** unreachable tiles, a lock whose key can't be obtained, flags set but never read (or read but never set), missing descriptions, duplicate aliases in one tile, teleporters pointing at missing tiles.
-  - **Persistence:** drafts autosave to localStorage, and JSON can be imported and exported. Noah publishes by exporting and committing the file; there is no server write.
+  - **Load menu:** the built-in worlds (example, site, blank) and "Upload a file…". Uploaded JSON is validated and its format version checked before it replaces the current world, with a confirm if there are unsaved changes.
+  - **Save to local** writes the world to localStorage. There is one saved slot to start, and both the playtest pane and `/adventure?world=local` play it. Unsaved edits also autosave as a draft, so a refresh doesn't lose work.
+  - **Export** downloads the JSON. Noah publishes by committing it as the `site` world.
 - Console greeting gets a line pointing to `/adventure`.
 
 ## Scope Out
@@ -42,9 +53,8 @@ A hand-written, old-school text adventure as an easter egg: the console points c
 - Sound and images, for now.
 
 ## Open Questions
-- Should the public editor open the real world (spoilers for anyone who finds it) or a sample world, with the real one a click away?
-- `/adventure` metadata: `noindex`, or just leave it out of the sitemap and nav?
-- Is a dev-only "save to repo" button worth it, or is export → commit enough?
+- Who writes the `example` world? It's content, so by default Noah does. Until then, Claude ships a deliberately dry, tiny one that only demonstrates the mechanics (a locked door, a key, a teleporter, one character).
+- Should there be one local save slot, or several named ones? Start with one.
 
 ## Dependencies
 None. This sits beside the existing easter eggs in `src/components/EasterEggs.tsx`.
@@ -59,13 +69,17 @@ None. This sits beside the existing easter eggs in `src/components/EasterEggs.ts
 - [ ] Editor libraries (items, characters, flags) with "used in"
 - [ ] Editor playtest pane
 - [ ] Editor checks
-- [ ] Editor localStorage drafts + import/export
+- [ ] Built-in worlds (example, site, blank) as on-demand JSON
+- [ ] Editor Load menu (built-ins + upload with validation), Save to local, draft autosave, Export
+- [ ] `/adventure?world=local` plays the saved world, with a banner
+- [ ] Add both pages to the sitemap
 - [ ] Console greeting links to `/adventure`
 - [ ] Add `/adventure` and the editor to MEMORY.md
 
 ## Verification
 - Every engine rule type is exercised by the placeholder world in a playtest.
-- The editor round-trips: export → import gives an identical world.
+- The editor round-trips: export → upload gives an identical world.
+- Save to local → `/adventure?world=local` plays the edited world. A malformed upload is rejected with a readable error and leaves the current world untouched.
 - Both pages work at 390px and 1280px in light and dark.
 - `npm run lint` and `npm run build` pass.
 
