@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -10,15 +9,13 @@ import {
   Container,
   Link,
   MobileNav,
-  ToggleIcon,
-  toggleThemeMode,
-  initThemeMode,
 } from "@noahwright/design";
 import EasterEggs from "@/components/EasterEggs";
 import Logo from "@/components/Logo";
 import EmailIcon from "@/components/icons/EmailIcon";
 import GitHubIcon from "@/components/icons/GitHubIcon";
 import LinkedInIcon from "@/components/icons/LinkedInIcon";
+import SettingsMenu from "@/components/SettingsMenu";
 import { NAV_ITEMS, SITE } from "@/lib/site";
 
 const CONTACT_LINKS = [
@@ -39,17 +36,13 @@ export default function SiteShell({
 }: {
   children: React.ReactNode;
   /**
-   * Show only the footer's still, CSS-only look and never load its animation.
+   * Show only the footer's still, CSS-only look and never load its animation, unless the reader
+   * picked a footer style in the ⚙️ menu (that explicit choice wins everywhere).
    * For pages that are already busy (the pinned resume timeline) or have a look of their own (404).
    */
   calmFooter?: boolean;
 }) {
-  const [isDark, setIsDark] = useState(false);
   const pathname = usePathname();
-
-  useEffect(() => {
-    setIsDark(initThemeMode() === "dark");
-  }, []);
 
   return (
     <Layout
@@ -80,15 +73,8 @@ export default function SiteShell({
                   </NextLink>
                 ))}
               </MobileNav>
-              <ToggleIcon
-                preset="moon-sun"
-                isToggled={isDark}
-                onChange={() => {
-                  const next = toggleThemeMode();
-                  setIsDark(next === "dark");
-                }}
-                label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-              />
+              {/* Theme and footer style: the ⚙️ menu replaced the one-tap moon/sun toggle. */}
+              <SettingsMenu />
             </>
           }
         />
