@@ -1,25 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Header,
-  Footer,
+  SceneFooter,
   Layout,
   Container,
-  Text,
   Link,
   MobileNav,
-  ToggleIcon,
-  toggleThemeMode,
-  initThemeMode,
 } from "@noahwright/design";
 import EasterEggs from "@/components/EasterEggs";
 import Logo from "@/components/Logo";
 import EmailIcon from "@/components/icons/EmailIcon";
 import GitHubIcon from "@/components/icons/GitHubIcon";
 import LinkedInIcon from "@/components/icons/LinkedInIcon";
+import SettingsMenu from "@/components/SettingsMenu";
 import { NAV_ITEMS, SITE } from "@/lib/site";
 
 const CONTACT_LINKS = [
@@ -28,13 +24,25 @@ const CONTACT_LINKS = [
   { label: "GitHub", href: SITE.github, icon: <GitHubIcon size={20} />, external: true },
 ] as const;
 
-export default function SiteShell({ children }: { children: React.ReactNode }) {
-  const [isDark, setIsDark] = useState(false);
-  const pathname = usePathname();
+// The footer's horizon scene: the sun and moon sit toward the middle so their reflections
+// stay clear of the © line (left) and the contact icons (right). Module-level so the
+// reference is stable across renders. The scene itself ships in the design package and
+// loads lazily; see SceneFooter's spec there.
+const FOOTER_SCENE_OPTIONS = { sunX: 0.62, moonX: 0.38 };
 
-  useEffect(() => {
-    setIsDark(initThemeMode() === "dark");
-  }, []);
+export default function SiteShell({
+  children,
+  calmFooter = false,
+}: {
+  children: React.ReactNode;
+  /**
+   * Show only the footer's still, CSS-only look and never load its animation, unless the reader
+   * picked a footer style in the ⚙️ menu (that explicit choice wins everywhere).
+   * For pages that are already busy (the pinned resume timeline) or have a look of their own (404).
+   */
+  calmFooter?: boolean;
+}) {
+  const pathname = usePathname();
 
   return (
     <Layout
@@ -65,24 +73,18 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
                   </NextLink>
                 ))}
               </MobileNav>
-              <ToggleIcon
-                preset="moon-sun"
-                isToggled={isDark}
-                onChange={() => {
-                  const next = toggleThemeMode();
-                  setIsDark(next === "dark");
-                }}
-                label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-              />
+              {/* Theme and footer style: the ⚙️ menu replaced the one-tap moon/sun toggle. */}
+              <SettingsMenu />
             </>
           }
         />
       }
       footer={
-        <Footer
-          left={
-            <Text tone="muted">© {new Date().getFullYear()} {SITE.name}</Text>
-          }
+        <SceneFooter
+          scene="horizon"
+          sceneOptions={FOOTER_SCENE_OPTIONS}
+          animate={!calmFooter}
+          left={<span>© {new Date().getFullYear()} {SITE.name}</span>}
           right={
             <div className="site-footer__links">
               {CONTACT_LINKS.map((link) => (

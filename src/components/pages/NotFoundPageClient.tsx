@@ -27,7 +27,7 @@ export default function NotFoundPageClient() {
   }, [router]);
 
   return (
-    <SiteShell>
+    <SiteShell calmFooter>
       <Container padding="lg">
         <div className="bsod" role="alert">
           <span className="bsod__badge">Doors</span>

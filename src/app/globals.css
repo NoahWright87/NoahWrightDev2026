@@ -84,16 +84,11 @@ a {
   }
 }
 
-/* Orange rules marking where the header ends and the footer begins, replacing
-   their faint default shadows. Header/Footer have no border option yet
-   (NoahWright87/design#29). */
+/* An orange rule marking where the header ends, replacing its faint default
+   shadow. Header has no border option yet (NoahWright87/design#29). The footer is
+   a SceneFooter now: its deep-sea panel marks the page's end by itself. */
 .nw-header {
   border-bottom: 2px solid var(--primary);
-}
-
-.nw-footer {
-  box-shadow: none;
-  border-top: 2px solid var(--primary);
 }
 
 /* Footer contact icons: every page doubles as a business card. */
@@ -246,4 +241,86 @@ a {
   .portrait-lightbox {
     animation: none;
   }
+}
+
+/* The ⚙️ settings menu in the header: a round button like the old theme toggle, opening the
+   design system's Menu with two groups of radio options (theme, footer style). */
+.settings-menu .nw-menu__trigger {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.settings-menu .nw-menu__panel {
+  min-width: 270px;
+}
+
+.settings-group {
+  padding: 4px 2px 6px;
+}
+
+.settings-group__title {
+  padding: 4px 10px 6px;
+  font-size: var(--text-xs, 0.75rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.settings-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.settings-option:hover:not(:disabled),
+.settings-option:focus-visible {
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+}
+
+.settings-option:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+.settings-option:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.settings-option__mark {
+  flex: none;
+  width: 1.1em;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.settings-option__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-option__hint {
+  font-size: var(--text-xs, 0.75rem);
+  opacity: 0.7;
+}
+
+.settings-note {
+  margin: 4px 10px 2px;
+  font-size: var(--text-xs, 0.75rem);
+  opacity: 0.8;
 }

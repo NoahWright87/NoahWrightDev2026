@@ -9,7 +9,7 @@ import "./resume-page.css";
 
 export default function ResumePageClient() {
   return (
-    <SiteShell>
+    <SiteShell calmFooter>
       <Container padding="lg">
         <Container direction="vertical" itemSpacing="md" padding="none">
           <div className="resume__head">
