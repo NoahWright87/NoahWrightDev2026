@@ -53,7 +53,7 @@ a {
 }
 
 /* Site header: the logo always, plus the name on wider screens, on the left;
-   nav pushed right beside the theme toggle. Same 768px breakpoint as
+   nav pushed right beside the settings menu (phones rearrange, see below). Same 768px breakpoint as
    MobileNav. */
 .site-home-link {
   display: inline-flex;
@@ -81,6 +81,39 @@ a {
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;
+  }
+}
+
+/* Phones: hamburger on the left, logo in the middle, ⚙️ on the right (two menus side by side on
+   the right read as one muddle). MobileNav and the settings menu share the header's right slot,
+   so that slot dissolves (display: contents) and its two children are ordered as header items.
+   The 40px hamburger box matches the ⚙️ button so the logo sits at the true center. */
+@media (max-width: 768px) {
+  .nw-header__slot--right,
+  .nw-header__slot--right > .nw-header__slot-element {
+    display: contents;
+  }
+
+  .nw-header__slot--center {
+    display: none;
+  }
+
+  .nw-header .nw-mobile-nav {
+    order: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+  }
+
+  .nw-header__slot--left {
+    order: 1;
+    margin-inline: auto;
+  }
+
+  .nw-header .settings-menu {
+    order: 2;
   }
 }
 
