@@ -115,7 +115,7 @@ function run(world: World, state: GameState, command: Command, output: OutputLin
 
   const teleporter = findTeleporter(world, state, command.text);
   if (teleporter) {
-    useTeleporter(world, state, teleporter, output);
+    takeTeleporter(world, state, teleporter, output);
     return;
   }
 
@@ -236,7 +236,7 @@ function findTeleporter(world: World, state: GameState, text: string): Teleporte
   );
 }
 
-function useTeleporter(world: World, state: GameState, t: Teleporter, output: OutputLine[]) {
+function takeTeleporter(world: World, state: GameState, t: Teleporter, output: OutputLine[]) {
   if (!allHold(state, t.conditions)) {
     output.push({ kind: "text", text: t.blockedText || message(world, "cantGo") });
     return;

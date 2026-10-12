@@ -60,21 +60,25 @@ A hand-written, old-school text adventure as an easter egg: the console points c
 None. This sits beside the existing easter eggs in `src/components/EasterEggs.tsx`.
 
 ## Tasks
-- [ ] World types, format version and a tiny placeholder test world
-- [ ] Parser (with unit-style checks for synonyms, directions, `it`, filler words)
-- [ ] Engine: movement, edges, teleporters, items, characters, rules, flags, save/restore
-- [ ] `/adventure` page: log, input, history, map, inventory
-- [ ] Editor map view: areas, tiles, edges, teleporters, placement
-- [ ] Editor tile inspector and rules forms
-- [ ] Editor libraries (items, characters, flags) with "used in"
-- [ ] Editor playtest pane
-- [ ] Editor checks
-- [ ] Built-in worlds (example, site, blank) as on-demand JSON
-- [ ] Editor Load menu (built-ins + upload with validation), Save to local, draft autosave, Export
-- [ ] `/adventure?world=local` plays the saved world, with a banner
-- [ ] Add both pages to the sitemap
-- [ ] Console greeting links to `/adventure`
-- [ ] Add `/adventure` and the editor to MEMORY.md
+- [x] World types, format version and a tiny placeholder test world
+- [x] Parser (with unit-style checks for synonyms, directions, `it`, filler words)
+- [x] Engine: movement, edges, teleporters, items, characters, rules, flags, save/restore
+- [x] `/adventure` page: log, input, history, map, inventory
+- [x] Editor map view: areas, tiles, edges, teleporters, placement
+- [x] Editor tile inspector and rules forms
+- [x] Editor libraries (items, characters, flags) with "used in"
+- [x] Editor playtest pane
+- [x] Editor checks
+- [x] Built-in worlds (example, site, blank) as on-demand JSON
+- [x] Editor Load menu (built-ins + upload with validation), Save to local, draft autosave, Export
+- [x] `/adventure?world=local` plays the saved world, with a banner
+- [x] Add both pages to the sitemap
+- [x] Console greeting links to `/adventure`
+- [x] Add `/adventure` and the editor to MEMORY.md
+- [ ] **Noah:** write the real `example.json` (the current one is a dry placeholder that only demonstrates mechanics)
+- [ ] **Noah:** write `site.json` (currently a one-room "Coming soon")
+- [ ] Maybe: drag items/characters onto map tiles (placement is through the room's Contents tab for now, which also works on phones)
+- [ ] Maybe: several named local save slots (one slot for now)
 
 ## Verification
 - Every engine rule type is exercised by the placeholder world in a playtest.

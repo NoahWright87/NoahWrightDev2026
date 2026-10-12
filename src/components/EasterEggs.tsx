@@ -8,7 +8,8 @@ import "./easter-eggs.css";
 
 // Site-wide easter eggs, mounted once by SiteShell. Nothing here is visible
 // until someone goes looking:
-// - A hello in the browser console for anyone who opens DevTools.
+// - A hello in the browser console for anyone who opens DevTools, pointing
+//   them at the text adventure (/adventure).
 // - The Konami code (↑↑↓↓←→←→BA) rains portraits down the screen.
 
 const KONAMI = [
@@ -49,6 +50,11 @@ export default function EasterEggs() {
     console.log(
       `Poking around? The source for this site is on GitHub: ${SITE.github}/NoahWrightDev2026\n` +
         "Psst: try the Konami code.",
+    );
+    console.log(
+      `%c> go north\n%cFancy a text adventure? ${window.location.origin}/adventure`,
+      `font-family: monospace; color: ${theme.secondary}`,
+      "font-family: monospace",
     );
   }, []);
 

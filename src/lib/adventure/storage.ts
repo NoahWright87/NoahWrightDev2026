@@ -88,16 +88,22 @@ export interface Draft {
   world: World;
   /** Which built-in or "upload" or "local" it started from, for the toolbar. */
   source: string;
+  /** Whether it had changes that weren't saved or exported. */
+  dirty: boolean;
 }
 
 export function loadDraft(): Draft | null {
   const text = read(DRAFT_KEY);
   if (!text) return null;
   try {
-    const data = JSON.parse(text) as { world: unknown; source?: unknown };
+    const data = JSON.parse(text) as { world: unknown; source?: unknown; dirty?: unknown };
     const result = validateWorld(data.world);
     if (!result.ok) return null;
-    return { world: result.world, source: typeof data.source === "string" ? data.source : "draft" };
+    return {
+      world: result.world,
+      source: typeof data.source === "string" ? data.source : "draft",
+      dirty: data.dirty !== false,
+    };
   } catch {
     return null;
   }

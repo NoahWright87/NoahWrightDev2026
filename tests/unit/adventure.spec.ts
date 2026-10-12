@@ -16,8 +16,9 @@ function loadWorld(name: string): World {
 
 /** Plays commands in order and returns the final state plus all text said. */
 function play(world: World, commands: string[]): { state: GameState; said: string } {
-  let { state, output } = newGame(world);
-  const lines = output.map((l) => l.text);
+  const start = newGame(world);
+  let state = start.state;
+  const lines = start.output.map((l) => l.text);
   for (const command of commands) {
     const result = step(world, state, command);
     state = result.state;

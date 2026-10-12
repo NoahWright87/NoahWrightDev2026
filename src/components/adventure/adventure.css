@@ -1,0 +1,227 @@
+/* Text adventure: the game page and the pieces the editor's playtest reuses.
+   The terminal is dark in both themes on purpose (a terminal is the joke), so
+   its base colors are fixed and only the accents come from the theme. */
+
+.adv-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg) var(--spacing-md);
+}
+
+.adv-page__header p {
+  margin-top: var(--spacing-xs);
+}
+
+/* Muted intro text would otherwise hide its links. Shared with the editor. */
+.adv-page__header a,
+.ed-header a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.adv-banner {
+  margin: 0;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+.adv-banner--error {
+  border-left-color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+}
+
+.adv-game {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 14rem;
+  gap: var(--spacing-md);
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .adv-game {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---- terminal ---- */
+
+.adv-term {
+  --adv-term-bg: color-mix(in srgb, var(--secondary) 22%, #0d050c);
+  --adv-term-fg: #efe3ee;
+  --adv-term-dim: #b9a6b7;
+  display: flex;
+  flex-direction: column;
+  height: min(70vh, 34rem);
+  min-height: 18rem;
+  border-radius: var(--radius);
+  background: var(--adv-term-bg);
+  color: var(--adv-term-fg);
+  font-family: var(--font-family-mono);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  cursor: text;
+}
+
+.adv-term__log {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--spacing-md);
+  overscroll-behavior: contain;
+}
+
+.adv-line {
+  margin: 0 0 0.6em;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.adv-line--title {
+  margin-top: 1em;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--primary) 70%, #fff);
+}
+
+.adv-line--echo {
+  margin-top: 1em;
+  color: var(--adv-term-dim);
+}
+
+.adv-line--system {
+  color: var(--adv-term-dim);
+}
+
+.adv-line--error {
+  color: #ffb3a1;
+}
+
+.adv-line--end {
+  font-weight: 700;
+  color: color-mix(in srgb, var(--primary) 60%, #fff);
+}
+
+.adv-term__prompt {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-top: 1px solid color-mix(in srgb, var(--adv-term-fg) 15%, transparent);
+}
+
+.adv-term__caret {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.adv-term__prompt input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  /* 16px+ stops iOS zooming into the field. */
+  font-size: max(1rem, 16px);
+  caret-color: var(--primary);
+}
+
+.adv-term__prompt input:focus {
+  outline: none;
+}
+
+.adv-term:focus-within {
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+/* ---- side panel ---- */
+
+.adv-game__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+@media (max-width: 768px) {
+  .adv-game__side {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+}
+
+.adv-map {
+  margin: 0;
+}
+
+.adv-map svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.adv-map figcaption {
+  margin-top: var(--spacing-xs);
+  font-size: var(--text-sm);
+  opacity: 0.75;
+}
+
+.adv-map__cell {
+  fill: color-mix(in srgb, var(--secondary) 25%, var(--background));
+  stroke: var(--secondary);
+  stroke-width: 1.5;
+}
+
+.adv-map__cell--here {
+  fill: var(--primary);
+  stroke: var(--primary);
+}
+
+.adv-map__link {
+  stroke: var(--secondary);
+  stroke-width: 3;
+}
+
+.adv-map__link--locked {
+  stroke-dasharray: 2 3;
+}
+
+.adv-map__portal {
+  fill: var(--foreground);
+}
+
+.adv-inventory h2 {
+  margin: 0 0 var(--spacing-xs);
+  font-size: var(--text-md);
+}
+
+.adv-inventory ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.adv-inventory p {
+  margin: 0;
+  opacity: 0.75;
+}
+
+.adv-inventory button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--primary);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.adv-turns {
+  margin: 0;
+  font-size: var(--text-sm);
+  opacity: 0.75;
+}
