@@ -1,0 +1,219 @@
+{
+  "format": 1,
+  "title": "The Example Shed",
+  "author": "Placeholder (replace me)",
+  "intro": "This is the example world. It's small on purpose: every room exists to show one mechanic. Type \"help\" if you're stuck.",
+  "start": { "area": "yard", "x": 0, "y": 0 },
+  "areas": {
+    "yard": {
+      "name": "Yard",
+      "tiles": {
+        "0,0": {
+          "name": "Front gate",
+          "description": "A wooden gate stands open. A sign is nailed to the post. The garden is east and a path runs south.",
+          "scenery": [
+            {
+              "names": ["sign", "post"],
+              "description": "The sign reads: \"Rooms connect to their neighbours unless there's a wall or a lock between them.\""
+            }
+          ]
+        },
+        "1,0": {
+          "name": "Garden",
+          "description": "Overgrown beds and a hedge along the south side.",
+          "items": ["key"],
+          "characters": ["cat"],
+          "scenery": [
+            {
+              "names": ["hedge", "beds"],
+              "description": "The hedge is a wall in the editor. There's no getting through it."
+            }
+          ]
+        },
+        "0,1": {
+          "name": "Path",
+          "description": "A gravel path. A shed sits to the east."
+        },
+        "1,1": {
+          "name": "Shed door",
+          "description": "The door of a small shed.",
+          "details": [
+            { "conditions": [{ "type": "flag", "flag": "shed_unlocked", "not": true }], "text": "It's padlocked." },
+            { "conditions": [{ "type": "flag", "flag": "shed_unlocked" }], "text": "The padlock hangs open." }
+          ],
+          "scenery": [
+            { "names": ["door", "shed", "padlock", "lock"], "description": "A plain door with a brass padlock." }
+          ],
+          "teleporters": [
+            {
+              "id": "tp-shed-in",
+              "label": "into the shed",
+              "commands": ["in", "enter", "enter shed", "go in shed", "go into shed"],
+              "to": { "area": "shed", "x": 0, "y": 0 },
+              "conditions": [{ "type": "flag", "flag": "shed_unlocked" }],
+              "blockedText": "The door is padlocked."
+            }
+          ],
+          "rules": [
+            {
+              "id": "rule-unlock-shed",
+              "verbs": ["unlock", "use", "open"],
+              "nouns": ["padlock", "door", "shed", "lock"],
+              "conditions": [
+                { "type": "hasItem", "item": "key" },
+                { "type": "flag", "flag": "shed_unlocked", "not": true }
+              ],
+              "effects": [{ "type": "setFlag", "flag": "shed_unlocked" }],
+              "text": "The key turns and the padlock drops open."
+            },
+            {
+              "id": "rule-unlock-shed-nokey",
+              "verbs": ["unlock", "open"],
+              "nouns": ["padlock", "door", "shed", "lock"],
+              "conditions": [
+                { "type": "hasItem", "item": "key", "not": true },
+                { "type": "flag", "flag": "shed_unlocked", "not": true }
+              ],
+              "text": "You'd need a key."
+            }
+          ]
+        }
+      },
+      "edges": {
+        "1,0:s": { "kind": "wall" }
+      }
+    },
+    "shed": {
+      "name": "Shed",
+      "tiles": {
+        "0,0": {
+          "name": "Inside the shed",
+          "description": "Dusty shelves. A pull cord hangs from the ceiling.",
+          "details": [
+            { "conditions": [{ "type": "flag", "flag": "light_on", "not": true }], "text": "It's too dark to see the back of the shed." },
+            { "conditions": [{ "type": "flag", "flag": "light_on" }], "text": "The bulb lights a workbench to the east." }
+          ],
+          "scenery": [
+            { "names": ["cord", "pull cord", "light", "bulb", "switch"], "description": "A cord for the light." },
+            { "names": ["shelves", "shelf"], "description": "Nothing on them but dust." }
+          ],
+          "teleporters": [
+            {
+              "id": "tp-shed-out",
+              "label": "out",
+              "commands": ["out", "exit", "leave", "go outside"],
+              "to": { "area": "yard", "x": 1, "y": 1 }
+            }
+          ],
+          "rules": [
+            {
+              "id": "rule-light",
+              "verbs": ["pull", "turn on", "use", "tug"],
+              "nouns": ["cord", "light", "bulb", "switch"],
+              "conditions": [{ "type": "flag", "flag": "light_on", "not": true }],
+              "effects": [{ "type": "setFlag", "flag": "light_on" }],
+              "text": "Click. A bare bulb comes on."
+            },
+            {
+              "id": "rule-light-again",
+              "verbs": ["pull", "turn on", "use", "tug"],
+              "nouns": ["cord", "light", "bulb", "switch"],
+              "conditions": [{ "type": "flag", "flag": "light_on" }],
+              "text": "It's already on."
+            }
+          ]
+        },
+        "1,0": {
+          "name": "Workbench",
+          "description": "A cluttered workbench. A ladder leads up to a loft.",
+          "scenery": [
+            { "names": ["workbench", "bench"], "description": "Tools, mostly rusty." },
+            { "names": ["ladder"], "description": "It goes up. That's a teleporter to another area." }
+          ],
+          "teleporters": [
+            {
+              "id": "tp-loft-up",
+              "label": "up the ladder",
+              "commands": ["up", "u", "climb", "climb ladder", "climb up", "go up ladder"],
+              "to": { "area": "loft", "x": 0, "y": 0 }
+            }
+          ]
+        }
+      },
+      "edges": {
+        "0,0:e": {
+          "kind": "locked",
+          "opensWhen": [{ "type": "flag", "flag": "light_on" }],
+          "lockedText": "It's too dark to find your way further in."
+        }
+      }
+    },
+    "loft": {
+      "name": "Loft",
+      "tiles": {
+        "0,0": {
+          "name": "Loft",
+          "description": "A low loft under the roof.",
+          "items": ["trophy"],
+          "teleporters": [
+            {
+              "id": "tp-loft-down",
+              "label": "down the ladder",
+              "commands": ["down", "d", "climb down", "go down ladder"],
+              "to": { "area": "shed", "x": 1, "y": 0 }
+            }
+          ],
+          "onEnter": [
+            { "id": "enter-loft", "once": true, "text": "You climb up for the first time. (This line only shows once.)" }
+          ]
+        }
+      },
+      "edges": {}
+    }
+  },
+  "items": {
+    "key": {
+      "name": "brass key",
+      "aliases": ["key"],
+      "description": "A small brass key.",
+      "rules": [
+        { "id": "rule-polish-key", "verbs": ["polish", "rub", "clean"], "text": "It's a bit shinier now." }
+      ]
+    },
+    "trophy": {
+      "name": "trophy",
+      "aliases": ["cup"],
+      "description": "A small plastic trophy that says EXAMPLE.",
+      "rules": [
+        {
+          "id": "rule-take-trophy",
+          "verbs": ["take"],
+          "effects": [{ "type": "giveItem", "item": "trophy" }, { "type": "endGame", "text": "You've got the trophy. That's the whole example. Type \"restart\" to go again." }],
+          "text": "You pick up the trophy."
+        }
+      ]
+    }
+  },
+  "characters": {
+    "cat": {
+      "name": "cat",
+      "aliases": ["kitty"],
+      "description": "A grey cat, watching you.",
+      "greeting": "The cat blinks at you.",
+      "topics": [
+        { "keywords": ["key"], "text": "The cat looks at the shed." },
+        { "keywords": ["shed"], "text": "The cat looks at the key, then at you." }
+      ],
+      "rules": [
+        { "id": "rule-pet-cat", "verbs": ["pet", "stroke"], "text": "The cat allows it." }
+      ]
+    }
+  },
+  "flags": {
+    "shed_unlocked": { "note": "The padlock on the shed is open." },
+    "light_on": { "note": "The shed light is on." }
+  },
+  "messages": {
+    "waited": "You wait. The cat doesn't."
+  }
+}

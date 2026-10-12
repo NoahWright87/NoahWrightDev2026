@@ -1,0 +1,22 @@
+{
+  "format": 1,
+  "title": "Coming soon",
+  "author": "Noah Wright",
+  "intro": "Noah hasn't written this adventure yet. The editor at /adventure/editor has a small example to play with in the meantime.",
+  "start": { "area": "main", "x": 0, "y": 0 },
+  "areas": {
+    "main": {
+      "name": "Main",
+      "tiles": {
+        "0,0": {
+          "name": "An empty room",
+          "description": "Fresh paint. Nothing here yet."
+        }
+      },
+      "edges": {}
+    }
+  },
+  "items": {},
+  "characters": {},
+  "flags": {}
+}

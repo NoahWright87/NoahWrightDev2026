@@ -2,6 +2,8 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests",
+  // Logic tests have their own config (playwright.unit.config.ts) and need no server.
+  testIgnore: "unit/**",
   snapshotDir: "./tests/__snapshots__",
   // Run against the production build via `next start` for stable snapshots.
   // `npm run test:visual` starts the server automatically.
