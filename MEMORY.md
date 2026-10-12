@@ -82,6 +82,8 @@ Use this file to keep short, durable notes that help future chat sessions resume
 
 - `vr` and `gears` are on the projects page (newest first). Gears is live at gears.noahwright.dev. `Project.liveUrl` is optional. `vr`'s `https://vr.noahwright.dev` is the repo's *planned* URL, unverified; confirm with Noah.
 
+- `bet-on-anything` is on the projects page (newest first, status `wip`). It has **no `liveUrl`**: the repo's roadmap still lists deploy and the first production Worker as unconfirmed, so no hosted URL is known. Add one once Noah confirms it.
+
 ## Portrait Assets
 
 - The original photograph and ten generated portrait styles live in `public/images/noah/`; that directory's README records provenance, filenames and art direction.

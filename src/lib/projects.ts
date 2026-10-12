@@ -30,6 +30,20 @@ export interface Project {
  */
 export const projects: Project[] = [
   {
+    id: "bet-on-anything",
+    name: "Bet on Anything - Friendly wagers with friends",
+    summary:
+      "A game for friends and family: one person hosts a table, everyone joins with a room code, and you wager play-money chips on whatever's going on around you. Bets can have several guesses, the house backs \"Not that\", and everyone sees chips and payouts update live. Next.js front end on my design system, with a Cloudflare Workers backend that keeps one Durable Object per table.",
+    tags: ["Next.js", "Cloudflare Workers", "WebSockets", "TypeScript"],
+    status: "wip",
+    images: projectImages("bet-on-anything", [
+      "The Bet on Anything landing page with a room code field, a JOIN button, and a HOST button",
+      "A Bet on Anything table with two open bets, chip stacks for each guess, and the players' chips in the footer",
+      "The New bet dialog asking for the bet, a first guess, and a stake in chips",
+    ]),
+    repoUrl: "https://github.com/NoahWright87/bet-on-anything",
+  },
+  {
     id: "vr",
     name: "VR - WebXR prototypes for the Quest",
     summary:
