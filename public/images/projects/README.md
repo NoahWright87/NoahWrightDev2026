@@ -14,6 +14,7 @@ Each project was cloned from GitHub and run locally, then captured with Playwrig
 | `lee` | `NoahWright87/lee` (`game` workspace) | Team select · Battle · Merge into "Bru Lee" |
 | `vr` | `NoahWright87/vr` (`vite build`, served statically) | Landing page · Pistols at Dawn · Punch Pop |
 | `gears` | `NoahWright87/gears` (static HTML; Tailwind CDN swapped for the npm build) | Game · Designer (purple spokes) · Designer (orange hex hub) |
+| `bet-on-anything` | `NoahWright87/bet-on-anything` (`next dev` + `wrangler dev` worker; two browser contexts, host "Noah" and guest "Andy", so the table has real bets and players) | Landing · Table with bets · New bet dialog |
 | `noahwrightdev2026` | This repo (`next start`) | Home (light) · Resume timeline · Home (dark) |
 
 To replace a shot, keep the same filename and 16:9 framing so the carousel crops it the same way.
