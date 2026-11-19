@@ -3,8 +3,6 @@
  * scroll-progress math.
  */
 
-import type { ResumeEntry } from "@/lib/resume";
-
 /* ------------------------------------------------------------------ */
 /* Pacing                                                             */
 /* ------------------------------------------------------------------ */
@@ -30,44 +28,6 @@ export const READOUT_GUTTER = 64;
 export function trackX(railWidth: number, track: number): number {
   const gutter = railWidth > 120 ? READOUT_GUTTER : 0;
   return gutter + (railWidth - gutter) * (0.3 + (track - 1) * 0.4);
-}
-
-/**
- * Piecewise-linear map from a decimal year to a rail pixel offset, anchored on
- * the node positions. Lets the rail place the fork and the end of service at
- * dates that fall between two stops.
- */
-export function makeYearToY(
-  points: { start: number; y: number }[],
-  height: number
-): (year: number) => number {
-  return (year: number) => {
-    if (points.length === 0) return 0;
-    if (points.length === 1) return points[0].y;
-
-    if (year <= points[0].start) {
-      const [a, b] = [points[0], points[1]];
-      const span = b.start - a.start;
-      if (span <= 0) return a.y;
-      return Math.max(0, a.y + ((year - a.start) / span) * (b.y - a.y));
-    }
-
-    for (let i = 0; i < points.length - 1; i++) {
-      const a = points[i];
-      const b = points[i + 1];
-      if (year >= a.start && year <= b.start) {
-        const span = b.start - a.start;
-        if (span <= 0) return b.y;
-        return a.y + ((year - a.start) / span) * (b.y - a.y);
-      }
-    }
-
-    const a = points[points.length - 2];
-    const b = points[points.length - 1];
-    const span = b.start - a.start;
-    if (span <= 0) return b.y;
-    return Math.min(height, b.y + ((year - b.start) / span) * (b.y - a.y));
-  };
 }
 
 /**
@@ -280,12 +240,4 @@ export function stopFade(progress: number, count: number): StopFade {
     position: active + u,
     local,
   };
-}
-
-/** Entries live at a given year — one normally, two through the overlap. */
-export function entriesAtYear(entries: ResumeEntry[], year: number, endOfTime: number): ResumeEntry[] {
-  return entries.filter((entry) => {
-    const end = entry.end ?? endOfTime;
-    return year >= entry.start && year < end;
-  });
 }
