@@ -34,7 +34,7 @@ export default function ProjectsPageClient() {
                   ))}
                 </Container>
               ) : undefined}
-              image={
+              image={project.images.length > 0 ? (
                 <Carousel
                   items={project.images.map((image) => (
                     <Image
@@ -46,7 +46,7 @@ export default function ProjectsPageClient() {
                   ))}
                   aria-label={`${project.name} screenshots`}
                 />
-              }
+              ) : undefined}
               mediaPosition={index % 2 === 0 ? "left" : "right"}
               longDescription={<Text>{project.summary}</Text>}
               footer={
