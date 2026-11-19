@@ -17,6 +17,7 @@ export interface Project {
   summary: string;
   tags: string[];
   status: "active" | "archived" | "wip";
+  /** Empty until screenshots are captured; the card then shows no media. */
   images: ProjectImage[];
   /** Omit when a project has no hosted version. */
   liveUrl?: string;
@@ -29,6 +30,28 @@ export interface Project {
  * Keep entries in reverse-chronological order.
  */
 export const projects: Project[] = [
+  {
+    id: "army-of-one",
+    name: "Army of One - Control an army, one soldier at a time",
+    summary:
+      "You play one soldier per life, and every past life replays as an echo beside the next one. Save a soldier you once watched die and you can pick them back up from the timeline later. Built with Phaser 4 on a headless simulation that the tests and a CLI can run too.",
+    tags: ["Game Dev", "Phaser", "Simulation", "TypeScript"],
+    status: "wip",
+    images: [],
+    liveUrl: "https://noahwright87.github.io/army-of-one/",
+    repoUrl: "https://github.com/NoahWright87/army-of-one",
+  },
+  {
+    id: "level-up-learning",
+    name: "Level Up Learning - School practice that levels you up",
+    summary:
+      "Learning games for kids that track experience in each subject, so practice feels like leveling up a character. Spelling quizzes read words aloud, math sprints have combos and fireworks, and matching drills work for any subject, with progress saved in the browser for each player. A web rewrite of a desktop app I started in 2021, built with Next.js on my design system.",
+    tags: ["Next.js", "Education", "React", "TypeScript"],
+    status: "active",
+    images: [],
+    liveUrl: "https://learning.noahwright.dev",
+    repoUrl: "https://github.com/NoahWright87/LevelUpLearning",
+  },
   {
     id: "bet-on-anything",
     name: "Bet on Anything - Friendly wagers with friends",
@@ -72,6 +95,17 @@ export const projects: Project[] = [
     ]),
     liveUrl: "https://gears.noahwright.dev",
     repoUrl: "https://github.com/NoahWright87/gears",
+  },
+  {
+    id: "wfh",
+    name: "WFH - Games and icebreakers for remote teams",
+    summary:
+      "A shelf of icebreakers and dumb little games for work-from-home teams, all running in the browser with nothing to install or host. Buzzword Bingo is playable now, with more activities lined up. Built with Astro and React islands on my design system.",
+    tags: ["Astro", "React", "Remote Work", "Design System"],
+    status: "wip",
+    images: [],
+    liveUrl: "https://nw-wfh.netlify.app",
+    repoUrl: "https://github.com/NoahWright87/wfh",
   },
   {
     id: "doors97",
@@ -121,18 +155,25 @@ export const projects: Project[] = [
   },
   {
     id: "lee",
-    name: "Lee - An auto-battler and word pun",
+    name: "Lee - A one-thumb naval autobattler",
     summary:
-      "An auto-battler roguelike TCG that imagines all adverbs are names of a character.  Draft your team of dastardly characters and watch them battle mercilessly against a wildly varied cast of opponents.  Features a Lee character creator and full game with shops, inventories, leveling characters, merging, and more.",
-    tags: ["Game Dev", "Auto-Battler", "Shared Engine", "React"],
+      "Steer the boat with one thumb while your crew of Lees runs the guns, bails water, and boards enemy ships on their own. Sail a branching sea map between ports, spend gold on ships, crew, and parts, and take on rival boats and sea monsters called Nesses. Built with Phaser 3, one phase at a time, each testing whether a piece of the game is fun.",
+    tags: ["Game Dev", "Auto-Battler", "Phaser", "TypeScript"],
     status: "active",
-    images: projectImages("lee", [
-      "Lee team selection: character cards like Kind Lee and Swift Lee",
-      "Lee auto-battle in progress on the grid, with units targeting each other",
-      "Lee merge screen combining Stern Lee and Basic Lee into Bru Lee",
-    ]),
+    images: [],
     liveUrl: "https://lee.noahwright.dev",
     repoUrl: "https://github.com/NoahWright87/lee",
+  },
+  {
+    id: "repo-report",
+    name: "Repo Report - Sprint reports without the slide deck",
+    summary:
+      "An interactive sprint report viewer that replaces the usual slide deck. Each report is a JSON file of slides and widgets like metric tables, charts, markdown, and contributor summaries, so adding one needs no rebuild. Keyboard navigation, a slide picker, and dark mode included.",
+    tags: ["React", "Vite", "Data Viz", "TypeScript"],
+    status: "active",
+    images: [],
+    liveUrl: "https://noahwright87.github.io/repo-report/",
+    repoUrl: "https://github.com/NoahWright87/repo-report",
   },
   {
     id: "noahwrightdev2026",
