@@ -7,8 +7,9 @@ and its overlap, plus a downloadable PDF.
 ## Status
 The layout is **settled and shipped** at `/resume`. Eight prototypes were compared
 over two rounds; the winner is now the page and the rest are deleted. Real
-content is in, transcribed from LinkedIn — what remains is content cleanup and
-the PDF, not design.
+content is in, following Noah's one-page resume (LinkedIn as the fallback), and
+the PDF ships as `public/noah-wright-resume.pdf`. What remains is content
+cleanup, not design.
 
 ## Outstanding
 - [ ] **Numbers from Noah.** Still thin: `google` (no metrics) and
