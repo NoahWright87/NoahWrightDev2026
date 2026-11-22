@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 const ROUTES = [
-  { name: "home", path: "/", heading: "Noah Wright" },
+  { name: "home", path: "/", heading: "I'm Noah" },
   { name: "projects", path: "/projects", heading: "Projects" },
   { name: "about", path: "/about", heading: "About" },
   { name: "contact", path: "/contact", heading: "Get in Touch" },

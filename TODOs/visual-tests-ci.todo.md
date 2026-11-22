@@ -21,7 +21,7 @@ Run the Playwright visual suite on a PR when a label is added, and let CI regene
 ## Tasks
 - [ ] Add the label-triggered workflow
 - [ ] Generate Linux baselines in CI and delete the `-win32` ones
-- [ ] Fix the `home` test, which looks for a "Noah Wright" heading (the page's heading is "👋 I'm Noah")
+- [x] Fix the `home` test, which looks for a "Noah Wright" heading (the page's heading is "👋 I'm Noah")
 - [ ] Add `/resume` (scroll-and-sample, not full-page) and the 404 page to the suite
 
 ## Verification
