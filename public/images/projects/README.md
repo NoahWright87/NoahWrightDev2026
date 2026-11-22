@@ -11,10 +11,11 @@ Each project was cloned from GitHub and run locally, then captured with Playwrig
 | `doors97` | `NoahWright87/toybox` (`vite`) | Start menu and windows · Bomb Finder · Goober Dress-Up |
 | `nw-design` | `NoahWright87/design` (Storybook) | `sites-personal-portfolio--home` · `components-organisms-hero--rotating-tagline-and-media` · Card story with controls |
 | `swarm` | `NoahWright87/swarm-game` (`vite`) | Early wave · Grown swarm (via the `window.addShip()` dev hook) · Level-up screen |
-| `lee` | `NoahWright87/lee` (`game` workspace) | Team select · Battle · Merge into "Bru Lee" |
 | `vr` | `NoahWright87/vr` (`vite build`, served statically) | Landing page · Pistols at Dawn · Punch Pop |
 | `gears` | `NoahWright87/gears` (static HTML; Tailwind CDN swapped for the npm build) | Game · Designer (purple spokes) · Designer (orange hex hub) |
 | `bet-on-anything` | `NoahWright87/bet-on-anything` (`next dev` + `wrangler dev` worker; two browser contexts, host "Noah" and guest "Andy", so the table has real bets and players) | Landing · Table with bets · New bet dialog |
 | `noahwrightdev2026` | This repo (`next start`) | Home (light) · Resume timeline · Home (dark) |
 
 To replace a shot, keep the same filename and 16:9 framing so the carousel crops it the same way.
+
+Not captured yet: `army-of-one`, `level-up-learning`, `wfh`, `repo-report`, and `lee` (the old shots showed the grid autobattler, which is now in the repo's `legacy/` folder). Their cards render without media until shots are added here and listed in `projects.ts`.
