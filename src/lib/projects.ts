@@ -85,7 +85,7 @@ export const projects: Project[] = [
     id: "gears",
     name: "Gears - A silly gear game and designer",
     summary:
-      "A tiny idle-style gear game that started as a Gemini chat and grew a companion Gear Designer: tweak teeth, hubs, cutouts, and colors with a live SVG preview, then copy the path or download the SVG. Single-file, no build step.",
+      "A tiny idle-style gear game that started as a Gemini chat and grew a companion Gear Designer: tweak teeth, hubs, cutouts, and colors with a live SVG preview, then copy the path or download the SVG. The game logic is still plain JavaScript, now served by Vite with a shared header from my design system.",
     tags: ["Game Dev", "SVG", "Vibe Coding", "Vanilla JS"],
     status: "wip",
     images: projectImages("gears", [
