@@ -26,7 +26,6 @@ export interface Project {
 
 /**
  * Manually curated project cards.
- * Add real entries here during the projects-page phase.
  * Keep entries in reverse-chronological order.
  */
 export const projects: Project[] = [
