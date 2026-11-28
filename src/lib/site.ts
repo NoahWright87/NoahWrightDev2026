@@ -4,11 +4,9 @@
  * grepped and replaced during the content-authoring phase.
  */
 
+/** The words on the site live in `@/content/copy`; this file holds names, links and paths. */
 export const SITE = {
   name: "Noah Wright",
-  tagline: "Engineering leader building tools that help teams move faster",
-  description:
-    "I'm an engineering manager leading an Engineering Enablement team: we build the tools, guardrails, and AI-powered workflows that help engineers ship faster and safer. Before that, ten years in the U.S. Air Force. After hours, I build games and toys that are mostly an excuse to try new things.",
   email: "noah@noahwright.dev",
   linkedIn: "https://www.linkedin.com/in/noah-wright-dev/",
   github: "https://github.com/NoahWright87",

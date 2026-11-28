@@ -17,12 +17,13 @@ import {
 import SiteShell from "@/components/SiteShell";
 import { SITE } from "@/lib/site";
 import { portraits } from "@/lib/portraits";
+import { COPY, fill } from "@/content/copy";
 
 const EXPLORE_CARDS = [
-  { title: "Projects", description: "See what I've built.", href: "/projects" },
-  { title: "About Me", description: "The story behind the resume.", href: "/about" },
-  { title: "Resume", description: "Experience, skills, and the PDF.", href: "/resume" },
-  { title: "Get in Touch", description: "Say hello or start a conversation.", href: "/contact" },
+  { ...COPY.home.exploreCards.projects, href: "/projects" },
+  { ...COPY.home.exploreCards.about, href: "/about" },
+  { ...COPY.home.exploreCards.resume, href: "/resume" },
+  { ...COPY.home.exploreCards.contact, href: "/contact" },
 ] as const;
 
 // Real portrait + ten AI-generated style variations (full detail in @/lib/portraits
@@ -33,22 +34,7 @@ const PORTRAIT_SLIDES = portraits.map(({ id, file, alt }) => (
   <Image key={id} src={`/images/noah/web/${file}.webp`} alt={alt} rounded="none" />
 ));
 
-const HERO_TITLES = [
-  "👔 Software engineering manager",
-  "🏗️ Builder of useful software",
-  "😎 Building cool little side projects",
-  "🤓 Nerding out over AI",
-  "🧙 Wielding AI minions like a computer wizard",
-  "💺 Chair Force veteran 🫡",
-  "🇺🇸 Air Force veteran 🫡",
-  "🧑‍🔬 Computer scientist experimenting with AI",
-  "🤡 Lifelong self-deprecating jokester",
-  "🎮 Been gaming since before I could read",
-  "🧑‍💻 Always curious, lifelong learner",
-  "🛠️ Tinkerer, over-engineerer, problem-solver",
-  "🚧 Learning in public -- pardon the mess!",
-  "🤖 Keeping robots busy on my side projects",
-] as const;
+const HERO_TITLES: readonly string[] = COPY.home.heroTitles.map((entry) => entry.text);
 
 function shuffle<T>(items: readonly T[]): T[] {
   const shuffled = [...items];
@@ -75,22 +61,22 @@ export default function HomePageClient() {
       <Hero
         background="subtle"
         bottomBorder="gradient"
-        title={<Heading level={1}>👋 I&apos;m Noah</Heading>}
+        title={<Heading level={1}>{COPY.home.greeting.text}</Heading>}
         tagline={
           <Heading level={2}>
             <TextCarousel items={[...heroTitles]} animation="typewriter" />
           </Heading>
         }
-        description={<Text>{SITE.description}</Text>}
+        description={<Text>{COPY.site.description.text}</Text>}
         actions={
           <>
             <Link href="/projects">
               <Button variant="solid" color="primary">
-                My Projects
+                {COPY.home.projectsButton.text}
               </Button>
             </Link>
             <Link href={SITE.resumeUrl}>
-              <Button variant="outline">Resume</Button>
+              <Button variant="outline">{COPY.home.resumeButton.text}</Button>
             </Link>
           </>
         }
@@ -99,7 +85,7 @@ export default function HomePageClient() {
           // support `aria-label`) since the carousel inside is `decorative`
           // (aria-hidden) — without a label of its own, the link would have no
           // accessible name at all.
-          <a href="/portraits" aria-label="See Noah's other portrait styles" className="home-hero-photo-link">
+          <a href="/portraits" aria-label={COPY.home.photoLinkLabel.text} className="home-hero-photo-link">
             <Carousel
               items={PORTRAIT_SLIDES}
               aspectRatio="1 / 1"
@@ -110,18 +96,18 @@ export default function HomePageClient() {
             />
             {/* Hover hint; decorative, since the link's aria-label already says where it goes. */}
             <span className="home-hero-photo-hint" aria-hidden="true">
-              psst… {portraits.length - 1} more of me
+              {fill(COPY.home.photoHint, { n: portraits.length - 1 })}
             </span>
           </a>
         }
       />
 
       <Container padding="lg">
-        <Heading level={2}>Explore</Heading>
+        <Heading level={2}>{COPY.home.exploreHeading.text}</Heading>
         <CardGrid minCardWidth="220px">
           {EXPLORE_CARDS.map((card) => (
-            <Card key={card.href} href={card.href} title={card.title} interactive>
-              <Text tone="muted">{card.description}</Text>
+            <Card key={card.href} href={card.href} title={card.title.text} interactive>
+              <Text tone="muted">{card.description.text}</Text>
             </Card>
           ))}
         </CardGrid>

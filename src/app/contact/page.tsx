@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { COPY } from "@/content/copy";
 import ContactPageClient from "@/components/pages/ContactPageClient";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Get in touch with Noah Wright. Interested in opportunities, collaborations, or just want to connect? Reach out via email or LinkedIn.",
+  description: COPY.contact.metaDescription.text,
 };
 
 export default function ContactPage() {

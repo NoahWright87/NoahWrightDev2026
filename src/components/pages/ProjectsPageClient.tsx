@@ -4,17 +4,15 @@ import { Container, Heading, Text, Card, CardFooter, Link, Image, Button, Pill, 
 import GitHubIcon from "../icons/GitHubIcon";
 import SiteShell from "@/components/SiteShell";
 import { projects } from "@/lib/projects";
+import { COPY } from "@/content/copy";
 
 export default function ProjectsPageClient() {
   return (
     <SiteShell>
       <Container padding="xl">
         <Container direction="vertical" itemSpacing="lg">
-          <Heading level={1}>Projects</Heading>
-          <Text>
-            A mix of tools, games, and platform experiments that reflect how I like to build:
-            practical foundations, interesting technical constraints, and a little room for play.
-          </Text>
+          <Heading level={1}>{COPY.projects.heading.text}</Heading>
+          <Text>{COPY.projects.intro.text}</Text>
         </Container>
       </Container>
 

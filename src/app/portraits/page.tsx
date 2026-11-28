@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
+import { COPY } from "@/content/copy";
 import PortraitsPageClient from "@/components/pages/PortraitsPageClient";
 
 export const metadata: Metadata = {
   title: "Portraits",
-  description:
-    "The real photo and ten AI-generated style reimaginings behind the home page hero's rotating portrait.",
+  description: COPY.portraits.metaDescription.text,
 };
 
 export default function PortraitsPage() {

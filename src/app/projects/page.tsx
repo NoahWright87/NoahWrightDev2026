@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
+import { COPY } from "@/content/copy";
 import ProjectsPageClient from "@/components/pages/ProjectsPageClient";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description:
-    "Explore software, game, and design system projects by Noah Wright, including live demos and source code.",
+  description: COPY.projects.metaDescription.text,
 };
 
 export default function ProjectsPage() {

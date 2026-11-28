@@ -2,6 +2,7 @@
 import Script from "next/script";
 import { theme, darkTheme } from "@/lib/theme";
 import { buildThemeCss } from "@/lib/themeCss";
+import { COPY } from "@/content/copy";
 import "@noahwright/design/styles.css";
 import "./globals.css";
 
@@ -10,13 +11,11 @@ export const metadata: Metadata = {
     default: "Noah Wright",
     template: "%s | Noah Wright",
   },
-  description:
-    "Engineering leader, software engineer, USAF veteran, father. Building great products and great teams.",
+  description: COPY.site.metaDescription.text,
   metadataBase: new URL("https://noahwright.dev"),
   openGraph: {
     title: "Noah Wright",
-    description:
-      "Engineering leader, software engineer, USAF veteran, father. Building great products and great teams.",
+    description: COPY.site.metaDescription.text,
     siteName: "Noah Wright",
     url: "https://noahwright.dev",
     type: "website",

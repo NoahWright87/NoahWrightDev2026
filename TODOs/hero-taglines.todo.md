@@ -37,7 +37,7 @@ AI at work and home · making and playing games · serious about the craft but w
 - [ ] Anything missing, e.g. the Google Foobar story?
 
 ## Tasks (once the list is settled)
-- [ ] Replace `HERO_TITLES` in `src/components/pages/HomePageClient.tsx`
+- [ ] Replace `COPY.home.heroTitles` in `src/content/copy.ts` (mark the new lines `author: "noah"`)
 - [ ] Raise the dwell time to about 3.5s (`interval` on `TextCarousel`; the default is 2.5s)
 
 ## Done When

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
+import { COPY } from "@/content/copy";
 import HistoryPageClient from "@/components/pages/HistoryPageClient";
 
 export const metadata: Metadata = {
   title: "History",
-  description:
-    "A brief timeline of Noah Wright's developer website iterations and how the current site evolved.",
+  description: COPY.history.metaDescription.text,
 };
 
 export default function HistoryPage() {

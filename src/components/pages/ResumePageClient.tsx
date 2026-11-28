@@ -5,6 +5,7 @@ import SiteShell from "@/components/SiteShell";
 import ResumeTimeline from "@/components/resume/ResumeTimeline";
 import { SITE } from "@/lib/site";
 import { RESUME_SUMMARY } from "@/lib/resume";
+import { COPY } from "@/content/copy";
 import "./resume-page.css";
 
 export default function ResumePageClient() {
@@ -13,7 +14,7 @@ export default function ResumePageClient() {
       <Container padding="lg">
         <Container direction="vertical" itemSpacing="md" padding="none">
           <div className="resume__head">
-            <Heading level={1}>Resume</Heading>
+            <Heading level={1}>{COPY.resume.heading.text}</Heading>
             <a
               className="resume__download"
               href={SITE.resumePdfUrl}
@@ -21,7 +22,7 @@ export default function ResumePageClient() {
               aria-label="Download resume as PDF"
             >
               <Button variant="solid" color="primary">
-                Download PDF
+                {COPY.resume.downloadButton.text}
               </Button>
             </a>
           </div>
@@ -45,10 +46,10 @@ export default function ResumePageClient() {
             aria-label="Download resume as PDF"
           >
             <Button variant="solid" color="primary">
-              Download the one-page PDF
+              {COPY.resume.downloadAgainButton.text}
             </Button>
           </a>
-          <Link href="/contact">Get in touch</Link>
+          <Link href="/contact">{COPY.resume.contactLink.text}</Link>
         </div>
       </Container>
     </SiteShell>
