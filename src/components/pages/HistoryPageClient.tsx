@@ -4,17 +4,15 @@ import { Container, Heading, Text, Link, Pill, Button, Card, CardFooter } from "
 import GitHubIcon from "@/components/icons/GitHubIcon";
 import SiteShell from "@/components/SiteShell";
 import { siteVersions } from "@/lib/siteHistory";
+import { COPY } from "@/content/copy";
 
 export default function HistoryPageClient() {
   return (
     <SiteShell>
       <Container padding="xl">
         <Container direction="vertical" itemSpacing="lg">
-          <Heading level={1}>Site History</Heading>
-          <Text>
-            Every version of this site that made it into the world. The old blog is still
-            online, if you want to see how things have changed.
-          </Text>
+          <Heading level={1}>{COPY.history.heading.text}</Heading>
+          <Text>{COPY.history.intro.text}</Text>
         </Container>
       </Container>
 

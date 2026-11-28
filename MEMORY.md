@@ -106,6 +106,12 @@ Use this file to keep short, durable notes that help future chat sessions resume
 - Colors come from the theme: sun = `--primary`, sea = a deepened `--secondary`. Override with the design package's `--nw-scene-*` tokens only if needed.
 - The site's visual snapshots (`tests/__snapshots__`) predate the footer and need regenerating on CI's platform.
 
+## Site Copy (Nov 2026)
+
+- Page copy lives in `src/content/copy.ts`, every entry marked `author: "ai"` or `author: "noah"`. Noah wants the site to sound like him, not like AI, and is rewriting it a small piece at a time: a recurring PR picks one `author: "ai"` entry and asks him to rewrite it (or keep it), then flips it to `"noah"`.
+- New or changed copy goes in that file, marked `"ai"` unless Noah wrote it. Don't reword `"noah"` entries.
+- The data files (`src/lib/resume.ts`, `projects.ts`, `portraits.ts`, `siteHistory.ts`) keep their own copy and aren't marked yet.
+
 ## Update Rule
 
 Keep notes short and factual. Update this file when a decision would matter to a new chat.

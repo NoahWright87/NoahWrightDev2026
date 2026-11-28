@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { Container, Heading, Text, Card, CardGrid, Image, Link } from "@noahwright/design";
 import SiteShell from "@/components/SiteShell";
 import { portraits, fullImageSrc, PORTRAIT_NOTE, type Portrait } from "@/lib/portraits";
+import { COPY } from "@/content/copy";
 
 const README_URL =
   "https://github.com/NoahWright87/NoahWrightDev2026/blob/main/public/images/noah/README.md";
@@ -54,12 +55,12 @@ export default function PortraitsPageClient() {
     <SiteShell>
       <Container padding="xl">
         <Container direction="vertical" itemSpacing="md">
-          <Heading level={1}>The Many Faces of Noah</Heading>
+          <Heading level={1}>{COPY.portraits.heading.text}</Heading>
           <Text>{PORTRAIT_NOTE}</Text>
           <Text tone="muted">
-            Curious about the prompts?{" "}
+            {COPY.portraits.promptsQuestion.text}{" "}
             <Link href={README_URL} isExternal>
-              Full notes on GitHub
+              {COPY.portraits.promptsLink.text}
             </Link>
             .
           </Text>

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
+import { COPY } from "@/content/copy";
 import ResumePageClient from "@/components/pages/ResumePageClient";
 
 export const metadata: Metadata = {
   title: "Resume",
-  description:
-    "Noah Wright's resume, presented as a branching timeline of a dual career in the U.S. Air Force and civilian software engineering.",
+  description: COPY.resume.metaDescription.text,
 };
 
 export default function ResumePage() {

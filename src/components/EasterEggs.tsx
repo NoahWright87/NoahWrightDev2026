@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { portraits } from "@/lib/portraits";
 import { SITE } from "@/lib/site";
 import { theme } from "@/lib/theme";
+import { COPY, fill } from "@/content/copy";
 import "./easter-eggs.css";
 
 // Site-wide easter eggs, mounted once by SiteShell. Nothing here is visible
@@ -43,12 +44,12 @@ export default function EasterEggs() {
     if (greeted) return;
     greeted = true;
     console.log(
-      "%c👋 Hi, fellow nerd!",
+      `%c${COPY.easterEggs.consoleGreeting.text}`,
       `font-size: 16px; font-weight: bold; color: ${theme.primary}`,
     );
     console.log(
-      `Poking around? The source for this site is on GitHub: ${SITE.github}/NoahWrightDev2026\n` +
-        "Psst: try the Konami code.",
+      `${fill(COPY.easterEggs.consoleSource, { url: `${SITE.github}/NoahWrightDev2026` })}\n` +
+        COPY.easterEggs.consoleKonami.text,
     );
   }, []);
 
@@ -76,7 +77,7 @@ export default function EasterEggs() {
 
   return (
     <div className="portrait-rain" aria-hidden="true">
-      <div className="portrait-rain__toast">🕹️ 30 extra lives granted</div>
+      <div className="portrait-rain__toast">{COPY.easterEggs.konamiToast.text}</div>
       {drops.map((drop) => (
         // eslint-disable-next-line @next/next/no-img-element -- decorative, short-lived sprites
         <img

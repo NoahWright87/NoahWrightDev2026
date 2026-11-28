@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { darkTheme } from "@/lib/theme";
+import { COPY } from "@/content/copy";
 
 // Link-preview card for LinkedIn, Slack, etc. Rendered once at build time.
 // Uses the original JPEG portrait: the OG renderer can't decode WebP.
@@ -9,7 +10,7 @@ import { darkTheme } from "@/lib/theme";
 // Reads the portrait from disk, so it must run on Node.js, not the Edge runtime.
 export const runtime = "nodejs";
 
-export const alt = "Noah Wright: engineering leader, builder of useful software, Air Force veteran";
+export const alt = COPY.site.ogImageAlt.text;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -41,7 +42,7 @@ export default async function OpenGraphImage() {
         />
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <div style={{ fontSize: 88, fontWeight: 700, lineHeight: 1 }}>Noah Wright</div>
-          <div style={{ fontSize: 40, color: darkTheme.primary }}>Engineering leader · Builder · Veteran</div>
+          <div style={{ fontSize: 40, color: darkTheme.primary }}>{COPY.site.ogImageTagline.text}</div>
           <div style={{ fontSize: 32, opacity: 0.8 }}>noahwright.dev</div>
         </div>
       </div>
